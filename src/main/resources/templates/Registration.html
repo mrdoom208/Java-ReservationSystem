@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" sizes="100x100" href="/img/LogoRound.png">
     <link rel="stylesheet" href="/css/main.css">
 </head>
-<body>
+<body data-page="registration">
 <!-- Navigation Bar -->
 <nav class="navbar">
     <div class="navbar-left">
@@ -26,7 +26,7 @@
     </div>
 
     <!-- Mobile Menu Toggle -->
-    <button class="navbar-toggle" onclick="toggleMobileMenu()">☰</button>
+    <button class="navbar-toggle" onclick="toggleMobileMenu()">&#9776;</button>
 </nav>
 
 <!-- Mobile Menu -->
@@ -80,128 +80,6 @@
     </div>
 </div>
 
-<script>
-    // Mobile menu toggle
-    function toggleMobileMenu() {
-        const menu = document.getElementById('mobileMenu');
-        menu.classList.toggle('active');
-    }
-
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(event) {
-        const menu = document.getElementById('mobileMenu');
-        const toggle = document.querySelector('.navbar-toggle');
-
-        if (!menu.contains(event.target) && !toggle.contains(event.target)) {
-            menu.classList.remove('active');
-        }
-    });
-
-    const agree = document.getElementById('agree');
-    const proceedBtn = document.getElementById('submit');
-    const form = document.getElementById('infoForm');
-    const phoneInput = document.getElementById("Phone");
-    const PREFIX = "+63";
-
-    agree.addEventListener('change', () => {
-        proceedBtn.disabled = !agree.checked;
-    });
-
-    phoneInput.value = PREFIX;
-
-    phoneInput.addEventListener("input", (e) => {
-        let value = phoneInput.value;
-
-        if (!value.startsWith(PREFIX)) {
-            value = PREFIX;
-        }
-
-        let digits = value.slice(PREFIX.length).replace(/\D/g, "");
-        digits = digits.slice(0, 10);
-
-        let formatted = PREFIX;
-        if (digits.length > 0) {
-            formatted += " " + digits.slice(0, 3);
-        }
-        if (digits.length > 3) {
-            formatted += " " + digits.slice(3, 6);
-        }
-        if (digits.length > 6) {
-            formatted += " " + digits.slice(6, 10);
-        }
-
-        phoneInput.value = formatted;
-    });
-
-    phoneInput.addEventListener("keydown", (e) => {
-        const cursorPos = phoneInput.selectionStart;
-        if (cursorPos <= PREFIX.length + 1 && (e.key === "Backspace" || e.key === "Delete")) {
-            e.preventDefault();
-        }
-    });
-
-    phoneInput.addEventListener("paste", (e) => {
-        e.preventDefault();
-        const pasted = e.clipboardData.getData("text").replace(/\D/g, "");
-        const digits = pasted.slice(-10);
-
-        let formatted = PREFIX;
-        if (digits.length > 0) {
-            formatted += " " + digits.slice(0, 3);
-        }
-        if (digits.length > 3) {
-            formatted += " " + digits.slice(3, 6);
-        }
-        if (digits.length > 6) {
-            formatted += " " + digits.slice(6, 10);
-        }
-
-        phoneInput.value = formatted;
-    });
-
-    form.addEventListener('submit', function(e) {
-        if (!form.checkValidity()) {
-            return;
-        }
-
-        proceedBtn.classList.add('loading');
-        proceedBtn.disabled = true;
-
-        const cleanPhone = phoneInput.value.replace(/\s/g, '');
-        phoneInput.value = cleanPhone;
-    });
-
-    const formInputs = form.querySelectorAll('input, select');
-    formInputs.forEach((input, index) => {
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-
-                if (index === formInputs.length - 1 && !proceedBtn.disabled) {
-                    form.requestSubmit();
-                } else {
-                    const nextInput = formInputs[index + 1];
-                    if (nextInput) {
-                        nextInput.focus();
-                    }
-                }
-            }
-        });
-    });
-
-    proceedBtn.addEventListener('mousedown', function() {
-        if (!this.disabled) {
-            this.style.transform = 'scale(0.98)';
-        }
-    });
-
-    proceedBtn.addEventListener('mouseup', function() {
-        this.style.transform = '';
-    });
-
-    proceedBtn.addEventListener('mouseleave', function() {
-        this.style.transform = '';
-    });
-</script>
+<script src="/js/script.js"></script>
 </body>
 </html>

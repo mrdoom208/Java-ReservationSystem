@@ -7,7 +7,7 @@
     <title>Login Reservation</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
-<body>
+<body data-page="login">
 <!-- Navigation Bar -->
 <nav class="navbar">
     <div class="navbar-left">
@@ -26,7 +26,7 @@
     </div>
 
     <!-- Mobile Menu Toggle -->
-    <button class="navbar-toggle" onclick="toggleMobileMenu()">☰</button>
+    <button class="navbar-toggle" onclick="toggleMobileMenu()">&#9776;</button>
 </nav>
 
 <!-- Mobile Menu -->
@@ -50,99 +50,6 @@
         <button type="submit" id="open">Login</button>
     </form>
 </div>
-
-<script>
-    // Mobile menu toggle
-    function toggleMobileMenu() {
-        const menu = document.getElementById('mobileMenu');
-        menu.classList.toggle('active');
-    }
-
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(event) {
-        const menu = document.getElementById('mobileMenu');
-        const toggle = document.querySelector('.navbar-toggle');
-
-        if (!menu.contains(event.target) && !toggle.contains(event.target)) {
-            menu.classList.remove('active');
-        }
-    });
-
-    const form = document.getElementById('login');
-    const submitBtn = document.getElementById('open');
-    const phoneInput = document.getElementById('Phone');
-    const referenceInput = document.getElementById('Reference');
-
-    phoneInput.addEventListener('input', function(e) {
-        let value = this.value.replace(/\D/g, '');
-
-        if (value.startsWith('63')) {
-            value = value.slice(2);
-        }
-
-        if (value.length > 0) {
-            let formatted = '+63';
-            if (value.length > 0) {
-                formatted += ' ' + value.slice(0, 3);
-            }
-            if (value.length > 3) {
-                formatted += ' ' + value.slice(3, 6);
-            }
-            if (value.length > 6) {
-                formatted += ' ' + value.slice(6, 10);
-            }
-            this.value = formatted;
-        }
-    });
-
-    referenceInput.addEventListener('input', function(e) {
-        this.value = this.value.toUpperCase();
-    });
-
-    form.addEventListener('submit', function(e) {
-        if (!form.checkValidity()) {
-            return;
-        }
-
-        submitBtn.classList.add('loading');
-        submitBtn.disabled = true;
-
-        const cleanPhone = phoneInput.value.replace(/\s/g, '');
-        phoneInput.value = cleanPhone;
-    });
-
-    const formInputs = form.querySelectorAll('input');
-    formInputs.forEach((input, index) => {
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-
-                if (index === formInputs.length - 1 && form.checkValidity()) {
-                    form.requestSubmit();
-                } else {
-                    const nextInput = formInputs[index + 1];
-                    if (nextInput) {
-                        nextInput.focus();
-                    }
-                }
-            }
-        });
-    });
-
-    submitBtn.addEventListener('mousedown', function() {
-        if (!this.disabled) {
-            this.style.transform = 'scale(0.98)';
-        }
-    });
-
-    submitBtn.addEventListener('mouseup', function() {
-        this.style.transform = '';
-    });
-
-    submitBtn.addEventListener('mouseleave', function() {
-        this.style.transform = '';
-    });
-</script>
 
 <script src="/js/script.js"></script>
 </body>

@@ -30,7 +30,7 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('/img/background.png') no-repeat center center/cover;
+    background: url(`/img/background.png`) no-repeat center center/cover;
     opacity: 0.05;
     pointer-events: none;
 }
@@ -278,7 +278,6 @@ body.reservation-page {
     background: #FFF8F0;
     border-radius: 8px;
     padding: 80px 50px 40px;
-    margin
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     border-top: 4px solid #dc2626;
 }
