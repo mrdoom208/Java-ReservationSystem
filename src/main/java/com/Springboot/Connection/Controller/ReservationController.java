@@ -25,6 +25,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -51,6 +52,11 @@ public class ReservationController {
     @RequestMapping("/")
     public String showForm() {
 
+        return "Home";
+    }
+
+    @RequestMapping("/register")
+    public String showRegistration() {
         return "Registration";
     }
 
@@ -91,9 +97,9 @@ public class ReservationController {
         reservation.setPrefer(reservationDTO.getPrefer());
         reservation.setReference(String.format("RSV-%05d", reservationRepository.count() + 1));
         reservation.setPax(reservationDTO.getPax());
-        reservation.setDate(LocalDate.now());
+        reservation.setDate(LocalDate.now(ZoneOffset.UTC));
         reservation.setStatus("Pending");
-        reservation.setReservationPendingtime(LocalTime.now());
+        reservation.setReservationPendingtime(LocalTime.now(ZoneOffset.UTC));
         reservation.setCustomer(newCustomer);
         reservationRepository.save(reservation);
 

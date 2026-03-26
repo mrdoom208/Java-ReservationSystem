@@ -211,13 +211,19 @@ function setupEnterNavigation(form, selector, submitGuard) {
     });
 }
 
+const APP_TIME_ZONE = "Asia/Manila";
+
 function parseServerDateTime(dateTimeString) {
     if (!dateTimeString) {
         return null;
     }
 
-    const normalized = String(dateTimeString).trim().replace(" ", "T");
-    const date = new Date(normalized);
+    const normalized = String(dateTimeString)
+        .trim()
+        .replace(" ", "T")
+        .replace(/Z$/, "+00:00");
+    const withOffset = /([+-]\d{2}:\d{2})$/.test(normalized) ? normalized : `${normalized}+00:00`;
+    const date = new Date(withOffset);
     return Number.isNaN(date.getTime()) ? null : date;
 }
 
@@ -233,7 +239,8 @@ function formatDateTime(date) {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
-        hour12: true
+        hour12: true,
+        timeZone: APP_TIME_ZONE
     });
 }
 

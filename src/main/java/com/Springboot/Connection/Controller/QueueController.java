@@ -27,6 +27,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -132,7 +133,7 @@ public class QueueController {
 
             // Format for display with timezone awareness
             // Assuming your server times are in UTC, convert to ISO 8601 format with 'Z' indicator
-            DateTimeFormatter isoFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+            DateTimeFormatter isoFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
             // For the "Created" display, format it nicely but client will convert to local
             DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -148,13 +149,13 @@ public class QueueController {
             model.addAttribute("status", reservation.getStatus());
 
             // Send as ISO format strings - JavaScript will handle timezone conversion
-            model.addAttribute("pendingDateTime", pendingDateTime.format(isoFormatter));
+            model.addAttribute("pendingDateTime", pendingDateTime.atOffset(ZoneOffset.UTC).format(isoFormatter));
             model.addAttribute("completeDateTime",
-                    reservation.getReservationCompletetime() != null ? completeDateTime.format(isoFormatter) : "");
+                    reservation.getReservationCompletetime() != null ? completeDateTime.atOffset(ZoneOffset.UTC).format(isoFormatter) : "");
             model.addAttribute("cancelledDateTime",
-                    reservation.getReservationCancelledtime() != null ? cancelledDateTime.format(isoFormatter) : "");
+                    reservation.getReservationCancelledtime() != null ? cancelledDateTime.atOffset(ZoneOffset.UTC).format(isoFormatter) : "");
             model.addAttribute("noShowDateTime",
-                    reservation.getReservationNoshowtime() != null ? NoShowDateTime.format(isoFormatter) : "");
+                    reservation.getReservationNoshowtime() != null ? NoShowDateTime.atOffset(ZoneOffset.UTC).format(isoFormatter) : "");
 
             // Send the created time in simple format - JS will convert to local timezone
             model.addAttribute("created", createdDisplay);
@@ -239,7 +240,7 @@ public class QueueController {
         if (reservation != null) {
             // Update the customer name
             reservation.setStatus("Cancelled");
-            reservation.setReservationCancelledtime(LocalTime.now());
+            reservation.setReservationCancelledtime(LocalTime.now(ZoneOffset.UTC));
             reservationRepository.save(reservation);
 
             WebUpdateDTO dto = new WebUpdateDTO();
@@ -282,7 +283,7 @@ public class QueueController {
         if (reservation != null) {
             // Update the customer name
             reservation.setStatus("Confirm");
-            reservation.setReservationConfirmtime(LocalTime.now());
+            reservation.setReservationConfirmtime(LocalTime.now(ZoneOffset.UTC));
             reservationRepository.save(reservation);
 
             List<Notification> pending = notificationRepository.findByAccountAndSentFalse(reference);

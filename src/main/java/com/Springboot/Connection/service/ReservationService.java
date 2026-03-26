@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class ReservationService {
         long autoCancelMinutes = settingsService.getAutoCancelMinutes();
         System.out.println("Auto-cancel minutes: " + autoCancelMinutes);
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
         // Pending reservations → Cancelled
         List<Reservation> pendingReservations = reservationRepository.findAllByStatus("Pending");
@@ -64,7 +65,7 @@ public class ReservationService {
     @Async
     public void handlePendingCancellationAsync(Reservation reservation) {
         reservation.setStatus("Cancelled");
-        reservation.setReservationCancelledtime(LocalDateTime.now().toLocalTime());
+        reservation.setReservationCancelledtime(LocalDateTime.now(ZoneOffset.UTC).toLocalTime());
         reservation.setRevenue(BigDecimal.ZERO);
         reservationRepository.save(reservation);
 
@@ -74,7 +75,7 @@ public class ReservationService {
     @Async
     public void handleNoShowAsync(Reservation reservation) {
         reservation.setStatus("No Show");
-        reservation.setReservationNoshowtime(LocalDateTime.now().toLocalTime());
+        reservation.setReservationNoshowtime(LocalDateTime.now(ZoneOffset.UTC).toLocalTime());
         reservation.setRevenue(BigDecimal.ZERO);
         reservationRepository.save(reservation);
 
@@ -97,7 +98,7 @@ public class ReservationService {
     @Scheduled(cron = "0 0 2 * * ?") // 2 AM daily
     public void deleteOldReservations() {
         int months = settingsService.getAutoDeleteMonths();
-        reservationRepository.deleteByDateBefore(java.time.LocalDate.now().minusMonths(months));
+        reservationRepository.deleteByDateBefore(java.time.LocalDate.now(ZoneOffset.UTC).minusMonths(months));
         System.out.println("Deleted old reservations older than " + months + " months");
     }
 }
