@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.control.Hyperlink?>
+<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.mfxcore.controls.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox maxWidth="1024.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1024.0" styleClass="redpane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.LoginController">
+   <children>
+      <VBox prefHeight="600.0" prefWidth="427.0" style="-fx-background-color: black;" HBox.hgrow="ALWAYS">
+         <children>
+            <Pane minWidth="-Infinity" prefHeight="200.0" prefWidth="512.0">
+               <padding>
+                  <Insets left="20.0" />
+               </padding>
+               <children>
+                  <ImageView fitHeight="170.0" fitWidth="200.0" layoutX="14.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Images/LogoRound.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <VBox maxHeight="1.7976931348623157E308" prefWidth="100.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Hello," wrappingWidth="348.968017578125" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font size="90.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="20.0" />
+                     </VBox.margin>
+                  </Text>
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: Bold;" text=" Welcome!" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font size="90.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="20.0" />
+                     </VBox.margin>
+                  </Text>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="512.0">
+         <bottom>
+            <Region prefHeight="50.0" prefWidth="578.0" BorderPane.alignment="CENTER" />
+         </bottom>
+         <left>
+            <Region prefHeight="50.0" prefWidth="50.0" BorderPane.alignment="CENTER" />
+         </left>
+         <right>
+            <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="50.0" BorderPane.alignment="CENTER" />
+         </right>
+         <center>
+            <VBox prefHeight="499.0" prefWidth="411.0" styleClass="login-container" BorderPane.alignment="CENTER">
+               <children>
+                  <StackPane prefHeight="100.0" prefWidth="382.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0" />
+                        <VBox alignment="CENTER" prefHeight="80.0" prefWidth="265.0">
+                           <children>
+                              <Label alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="259.0" styleClass="BoldText" text="RESERVATION SYSTEM">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="TOP_CENTER" maxWidth="-Infinity" prefHeight="25.0" styleClass="BoldText" text="LOGIN">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <Line endX="231.5" startX="-100.0" stroke="WHITE" strokeWidth="2.0" StackPane.alignment="BOTTOM_CENTER" />
+                     </children>
+                  </StackPane>
+                  <VBox alignment="TOP_CENTER" prefHeight="239.0" prefWidth="381.0" spacing="25.0">
+                     <children>
+                        <Label fx:id="messageLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="380.0" styleClass="login-message-hidden" text="Insert Username Password" wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <MFXTextField fx:id="usernamefield" floatMode="BORDER" floatingText="USERNAME" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="55.0" prefWidth="380.0" styleClass="username">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </MFXTextField>
+                        <MFXPasswordField fx:id="passwordfield" floatMode="BORDER" floatingText="PASSWORD" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="55.0" prefWidth="380.0" styleClass="username">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </MFXPasswordField>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" right="30.0" top="10.0" />
+                     </padding>
+                   </VBox>
+                   <StackPane prefHeight="120.0" prefWidth="380.0">
+                      <children>
+                         <Button id="Submit" fx:id="Submit" defaultButton="true" mnemonicParsing="false" onAction="#SubmitButton" prefHeight="55.0" prefWidth="280.0" styleClass="login-submit-button" text="LOGIN">
+                            <font>
+                               <Font size="18.0" />
+                            </font>
+                         </Button>
+                         <Hyperlink fx:id="serverConfigBtn" onAction="#openServerConfig" text="Server Configuration" StackPane.alignment="BOTTOM_CENTER">
+                            <StackPane.margin>
+                               <Insets bottom="5.0" />
+                            </StackPane.margin>
+                         </Hyperlink>
+                      </children>
+                   </StackPane>
+               </children>
+               <effect>
+                  <DropShadow />
+               </effect>
+               <padding>
+                  <Insets bottom="20.0" left="15.0" right="15.0" top="10.0" />
+               </padding>
+            </VBox>
+         </center>
+         <top>
+            <StackPane fx:id="dragArea" prefHeight="50.0" prefWidth="512.0" BorderPane.alignment="CENTER">
+               <children>
+                  <MFXButton fx:id="closebtn" onAction="#closeApp" prefHeight="30.0" prefWidth="30.0" styleClass="close-button" text="X" StackPane.alignment="TOP_RIGHT" />
+               </children>
+            </StackPane>
+         </top>
+      </BorderPane>
+   </children>
+</HBox>

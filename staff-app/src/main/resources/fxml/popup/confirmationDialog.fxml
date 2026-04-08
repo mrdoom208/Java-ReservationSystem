@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.ConfirmationDialogController">
+   <children>
+      <VBox prefHeight="220.0" spacing="0" style="-fx-background-color: transparent; -fx-background-radius: 15;" stylesheets="@../../css/style.css">
+          <children>
+              <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="380.0" spacing="10" style="-fx-background-color: #1976D2;" styleClass="message-dialog-header">
+                  <children>
+                      <Label style="-fx-font-size: 2.5em; -fx-text-fill: white;" text="✉" />
+                      <Label style="-fx-font-size: 1.60em; -fx-font-weight: bold; -fx-text-fill: white;" text="Confirmation" />
+                  </children>
+              </HBox>
+              <VBox alignment="CENTER" prefHeight="164.0" prefWidth="380.0" spacing="15" styleClass="message-dialog-body" VBox.vgrow="ALWAYS">
+                  <children>
+                      <Label fx:id="messagelabel" prefHeight="82.0" prefWidth="340.0" styleClass="message-dialog-label" text="Are you sure you want to send this message  to 1 customer(s)?" wrapText="true">
+                          <font>
+                              <Font size="24.0" />
+                          </font>
+                      </Label>
+                      <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="65.0" prefWidth="340.0" spacing="15" VBox.vgrow="ALWAYS">
+                          <children>
+                              <Button fx:id="cancelBtn" maxHeight="1.7976931348623157E308" onAction="#onCancel" prefWidth="80.0" styleClass="button-cancel" text="Cancel" />
+                              <Button fx:id="sendBtn" defaultButton="true" maxHeight="1.7976931348623157E308" onAction="#onConfirm" prefWidth="80.0" styleClass="button-confirm" text="Confirm" />
+                          </children>
+                      </HBox>
+                  </children>
+              </VBox>
+          </children>
+      </VBox>
+   </children>
+</StackPane>

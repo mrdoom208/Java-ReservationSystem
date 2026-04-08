@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.mfxcore.controls.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="350.0" spacing="10.0" styleClass="plain-pane-third" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.setAmountPaidController">
+   <children>
+      <Label styleClass="BoldText" text="Final Bill Amount" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" styleClass="popup-message-hidden" text="Enter Amount Paid" />
+      <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+         <children>
+            <MFXTextField fx:id="reference" disable="true" floatingText="Reservation Reference" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="307.0" styleClass="filter-search" VBox.vgrow="ALWAYS" />
+            <MFXTextField fx:id="AmountPaid" floatingText="Amount Paid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="307.0" styleClass="filter-search" textLimit="11" VBox.vgrow="ALWAYS" />
+            <HBox alignment="CENTER_RIGHT" prefHeight="39.0" prefWidth="308.0" spacing="15.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <MFXButton fx:id="cancelButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="77.0" styleClass="basic-btn" text="Cancel" HBox.hgrow="ALWAYS" />
+                  <MFXButton fx:id="setAmount" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="filter-btn" text="Set Amount" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <effect>
+      <DropShadow />
+   </effect>
+</VBox>

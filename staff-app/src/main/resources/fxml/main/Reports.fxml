@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fx:id="ReportsPane" fitToHeight="true" fitToWidth="true" prefHeight="800.0" prefWidth="1131.0" style="-fx-background-color: black;;" styleClass="Scrollpane" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.ReportsController">
+    <content>
+        <VBox prefHeight="200.0" prefWidth="100.0" styleClass="DashboardPane">
+            <children>
+                <HBox alignment="CENTER" prefHeight="57.0" prefWidth="1054.0" spacing="20.0" styleClass="category-background">
+                    <children>
+                        <Label prefHeight="36.0" prefWidth="225.0" styleClass="category" text="Report Categories :">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                        <MFXButton fx:id="Reservationrpts" alignment="BOTTOM_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigateReports" styleClass="navigation-report-btns" text="Reservation Reports" HBox.hgrow="ALWAYS" />
+                        <MFXButton fx:id="Customerrpts" alignment="BOTTOM_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigateReports" styleClass="navigation-report-btns" text="Customer Reports" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                        <MFXButton fx:id="Salesrpts" alignment="BOTTOM_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigateReports" styleClass="navigation-report-btns" text="Sales Reports" HBox.hgrow="ALWAYS" />
+                        <MFXButton fx:id="TableUsagerpts" alignment="BOTTOM_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigateReports" styleClass="navigation-report-btns" text="Table Usage Reports" HBox.hgrow="ALWAYS" />
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </padding>
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </HBox>
+                <StackPane prefHeight="606.0" prefWidth="1108.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <HBox fx:id="ReservationReport" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false">
+                            <children>
+                                <VBox prefHeight="614.0" prefWidth="655.0" spacing="10.0" styleClass="Statistics-cell" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <GridPane prefHeight="48.0" prefWidth="595.0">
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="134.0" minWidth="10.0" percentWidth="12.0" prefWidth="98.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="66.0" minWidth="9.0" prefWidth="30.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <Label styleClass="boldreportfilter" text="Filters: " textAlignment="CENTER" />
+                                                <MFXDatePicker fx:id="dateFromResrep" editable="false" floatMode="BORDER" floatingText="Date From" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="105.0" styleClass="filter-date" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                                <MFXDatePicker fx:id="dateToResrep" editable="false" floatMode="BORDER" floatingText="Date To" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="118.0" styleClass="filter-date" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                                <Label styleClass="reportfilter" GridPane.columnIndex="4" />
+                                                <MFXComboBox fx:id="StatusfilterResrep" alignment="CENTER" floatMode="BORDER" floatingText="Status" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" styleClass="filter-date" text="Show All" GridPane.columnIndex="5" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                                <MFXButton fx:id="ApplyResrep" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="filter-btn" text="Refresh/Apply" GridPane.columnIndex="7" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                            </children>
+                                        </GridPane>
+                                        <StackPane fx:id="ResRepContainer" VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <TableView fx:id="ResRepTable" prefHeight="517.0" prefWidth="595.0" styleClass="DefaultTable">
+                                                    <columns>
+                                                        <TableColumn fx:id="referenceResrep" prefWidth="75.0" text="Reference" />
+                                                        <TableColumn fx:id="paxResrep" prefWidth="75.0" text="Pax" />
+                                                        <TableColumn fx:id="statusResrep" prefWidth="75.0" text="Status" />
+                                                        <TableColumn fx:id="timeResrep" prefWidth="75.0" text="Time" />
+                                                        <TableColumn fx:id="dateResrep" prefWidth="75.0" text="Date" />
+                                                    </columns>
+                                                </TableView>
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                    </padding>
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                </VBox>
+                                <VBox prefHeight="594.0" prefWidth="447.0" styleClass="Statistics-cell" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <PieChart fx:id="reservationPieChart" labelLineLength="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="598.0" prefWidth="413.0" styleClass="pie-chart" title="Status Pie Chart" VBox.vgrow="ALWAYS">
+                                            <effect>
+                                                <Blend mode="SRC_ATOP" />
+                                            </effect>
+                                        </PieChart>
+                                    </children>
+                                </VBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                        </HBox>
+                        <HBox fx:id="CustomerReport" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false">
+                            <children>
+                                <VBox prefHeight="1071.0" prefWidth="742.0" spacing="10.0" styleClass="Statistics-cell" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <GridPane>
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="103.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <Label styleClass="boldreportfilter" text="Filters: " textAlignment="CENTER" />
+                                                <MFXDatePicker fx:id="dateFromCusrep" editable="false" floatMode="BORDER" floatingText="Date From" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="105.0" styleClass="filter-date" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                                <MFXDatePicker fx:id="dateToCusrep" editable="false" floatMode="BORDER" floatingText="Date To" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="118.0" styleClass="filter-date" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                                <MFXButton fx:id="ApplyCusrep" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" mnemonicParsing="false" styleClass="filter-btn" text="Refresh/Apply" GridPane.columnIndex="5" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                            </children>
+                                        </GridPane>
+                                        <StackPane fx:id="CusRepContainer" VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <TableView fx:id="CusRepTable" prefHeight="467.0" prefWidth="589.0" styleClass="DefaultTable">
+                                                    <columns>
+                                                        <TableColumn fx:id="phoneCusrep" prefWidth="75.0" text="Phone No." />
+                                                        <TableColumn fx:id="totalreservationCusrep" prefWidth="75.0" text="Total Reservation" />
+                                                        <TableColumn fx:id="totalsalesCusrep" prefWidth="75.0" text="Total Sales" />
+                                                        <TableColumn fx:id="averageCusrep" prefWidth="75.0" text="Average Spend" />
+                                                    </columns>
+                                                </TableView>
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                    </padding>
+                                </VBox>
+                                <VBox alignment="CENTER" prefHeight="1071.0" prefWidth="546.0" styleClass="Statistics-cell" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label alignment="CENTER" styleClass="BoldText" text="Customer Reservation's History" />
+                                        <TableView fx:id="ResInCusRep" prefHeight="1007.0" prefWidth="537.0" styleClass="HorizontalTable" VBox.vgrow="ALWAYS">
+                                            <columns>
+                                                <TableColumn fx:id="referenceResInCusRep" prefWidth="75.0" text="Reference" />
+                                                <TableColumn fx:id="nameResInCusRep" prefWidth="75.0" text="Name" />
+                                                <TableColumn fx:id="phoneResInCusRep" prefWidth="75.0" text="Phone" />
+                                                <TableColumn fx:id="statusResInCusRep" prefWidth="75.0" text="Status" />
+                                                <TableColumn fx:id="salesResInCusRep" prefWidth="75.0" text="Sales" />
+                                                <TableColumn fx:id="timeResInCusRep" prefWidth="75.0" text="Time" />
+                                                <TableColumn fx:id="dateResInCusRep" prefWidth="75.0" text="Date" />
+                                            </columns>
+                                        </TableView>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                    </padding>
+                                </VBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                        </HBox>
+                        <HBox fx:id="SalesReport" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false">
+                            <children>
+                                <VBox prefHeight="614.0" prefWidth="655.0" spacing="10.0" styleClass="Statistics-cell" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <GridPane>
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <Label styleClass="boldreportfilter" text="Filters: " textAlignment="CENTER" />
+                                                <MFXDatePicker fx:id="dateFromRevrep" editable="false" floatMode="BORDER" floatingText="Date From" maxWidth="-Infinity" prefHeight="27.0" prefWidth="100.0" styleClass="filter-date" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                                <MFXDatePicker fx:id="dateToRevrep" editable="false" floatMode="BORDER" floatingText="Date To" maxWidth="-Infinity" prefHeight="27.0" prefWidth="100.0" styleClass="filter-date" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                                <MFXButton fx:id="ApplyRevrep" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="filter-btn" text="Refresh/Apply" GridPane.columnIndex="5" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                            </children>
+                                        </GridPane>
+                                        <StackPane fx:id="RevRepContainer" VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <TableView fx:id="RevRepTable" prefHeight="510.0" prefWidth="595.0" styleClass="DefaultTable">
+                                                    <columns>
+                                                        <TableColumn fx:id="dateRevrep" prefWidth="75.0" text="Date " />
+                                                        <TableColumn fx:id="totalreservationRevrep" prefWidth="75.0" styleClass="D" text="Total Reservation " />
+                                                        <TableColumn fx:id="totalcustomerRevrep" prefWidth="75.0" text="Total Customer" />
+                                                        <TableColumn fx:id="totalsalesRevrep" prefWidth="75.0" text="Total Sales" />
+                                                    </columns>
+                                                </TableView>
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                    </padding>
+                                </VBox>
+                                <VBox fx:id="rootVBox" prefHeight="594.0" prefWidth="447.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <StackPane>
+                                            <children>
+                                                <BarChart fx:id="totalReservationChart" styleClass="BarGraph" title="Total Reservation" pickOnBounds="false">
+                                                    <xAxis>
+                                                        <CategoryAxis side="BOTTOM" />
+                                                    </xAxis>
+                                                    <yAxis>
+                                                        <NumberAxis side="LEFT" />
+                                                    </yAxis>
+                                                </BarChart>
+                                                <Label fx:id="reservationHighLowLabel" styleClass="chart-info-label" StackPane.alignment="TOP_LEFT" />
+                                                <Label fx:id="reservationAvgLabel" styleClass="chart-info-label" StackPane.alignment="TOP_RIGHT" />
+                                            </children>
+                                        </StackPane>
+                                        <StackPane>
+                                            <children>
+                                                <BarChart fx:id="totalCustomerChart" styleClass="BarGraph" title="Total Customer" pickOnBounds="false">
+                                                    <xAxis>
+                                                        <CategoryAxis side="BOTTOM" />
+                                                    </xAxis>
+                                                    <yAxis>
+                                                        <NumberAxis side="LEFT" />
+                                                    </yAxis>
+                                                </BarChart>
+                                                <Label fx:id="customerHighLowLabel" styleClass="chart-info-label" StackPane.alignment="TOP_LEFT" />
+                                                <Label fx:id="customerAvgLabel" styleClass="chart-info-label" StackPane.alignment="TOP_RIGHT" />
+                                            </children>
+                                        </StackPane>
+                                        <StackPane>
+                                            <children>
+                                                <BarChart fx:id="totalSalesChart" styleClass="BarGraph" title="Total Sales" pickOnBounds="false">
+                                                    <xAxis>
+                                                        <CategoryAxis side="BOTTOM" />
+                                                    </xAxis>
+                                                    <yAxis>
+                                                        <NumberAxis side="LEFT" />
+                                                    </yAxis>
+                                                </BarChart>
+                                                <Label fx:id="salesHighLowLabel" styleClass="chart-info-label" StackPane.alignment="TOP_LEFT" />
+                                                <Label fx:id="salesAvgLabel" styleClass="chart-info-label" StackPane.alignment="TOP_RIGHT" />
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                </VBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                        </HBox>
+                        <GridPane fx:id="TableUsageReport" hgap="10.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="55.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <VBox fx:id="rootVBoxTableUsage" prefHeight="1071.0" prefWidth="516.0" spacing="10.0" GridPane.columnIndex="1">
+                                    <children>
+                                        <StackPane>
+                                            <children>
+                                                <BarChart fx:id="totalReservationChartTableUsage" styleClass="BarGraph" title="Total Reservation" pickOnBounds="false">
+                                                    <xAxis>
+                                                        <CategoryAxis side="BOTTOM" />
+                                                    </xAxis>
+                                                    <yAxis>
+                                                        <NumberAxis side="LEFT" />
+                                                    </yAxis>
+                                                </BarChart>
+                                                <Label fx:id="tuReservationHighLowLabel" styleClass="chart-info-label" StackPane.alignment="TOP_LEFT" />
+                                                <Label fx:id="tuReservationAvgLabel" styleClass="chart-info-label" StackPane.alignment="TOP_RIGHT" />
+                                            </children>
+                                        </StackPane>
+                                        <StackPane>
+                                            <children>
+                                                <BarChart fx:id="totalCustomerChartTableUsage" styleClass="BarGraph" title="Total Customer" pickOnBounds="false">
+                                                    <xAxis>
+                                                        <CategoryAxis side="BOTTOM" />
+                                                    </xAxis>
+                                                    <yAxis>
+                                                        <NumberAxis side="LEFT" />
+                                                    </yAxis>
+                                                </BarChart>
+                                                <Label fx:id="tuCustomerHighLowLabel" styleClass="chart-info-label" StackPane.alignment="TOP_LEFT" />
+                                                <Label fx:id="tuCustomerAvgLabel" styleClass="chart-info-label" StackPane.alignment="TOP_RIGHT" />
+                                            </children>
+                                        </StackPane>
+                                        <StackPane>
+                                            <children>
+                                                <BarChart fx:id="totalSalesChartTableUsage" styleClass="BarGraph" title="Total Sales" pickOnBounds="false">
+                                                    <xAxis>
+                                                        <CategoryAxis side="BOTTOM" />
+                                                    </xAxis>
+                                                    <yAxis>
+                                                        <NumberAxis side="LEFT" />
+                                                    </yAxis>
+                                                </BarChart>
+                                                <Label fx:id="tuSalesHighLowLabel" styleClass="chart-info-label" StackPane.alignment="TOP_LEFT" />
+                                                <Label fx:id="tuSalesAvgLabel" styleClass="chart-info-label" StackPane.alignment="TOP_RIGHT" />
+                                            </children>
+                                        </StackPane>
+                                    </children>
+                                </VBox>
+                                <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="Scrollpane" GridPane.hgrow="ALWAYS">
+                                    <content>
+                                        <VBox spacing="10.0">
+                                            <children>
+                                                <VBox maxHeight="1.7976931348623157E308" prefHeight="690.0" prefWidth="361.0" spacing="5.0" styleClass="Statistics-cell" VBox.vgrow="ALWAYS">
+                                                    <children>
+                                                        <GridPane>
+                                                            <columnConstraints>
+                                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" />
+                                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" />
+                                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" />
+                                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
+                                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" />
+                                                            </columnConstraints>
+                                                            <rowConstraints>
+                                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                            </rowConstraints>
+                                                            <children>
+                                                                <Label styleClass="boldreportfilter" text="Filters: " textAlignment="CENTER" />
+                                                                <MFXDatePicker fx:id="dateFromTUrep" editable="false" floatMode="BORDER" floatingText="Date From" maxWidth="-Infinity" prefHeight="38.0" prefWidth="100.0" styleClass="filter-date" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                                                <MFXDatePicker fx:id="dateToTUrep" editable="false" floatMode="BORDER" floatingText="Date To" maxWidth="-Infinity" prefHeight="38.0" prefWidth="100.0" styleClass="filter-date" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                                                <MFXButton fx:id="ApplyTUrep" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="filter-btn" text="Refresh/Apply" GridPane.columnIndex="5" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                                                <Label text="Label" GridPane.columnIndex="4" />
+                                                            </children>
+                                                        </GridPane>
+                                                        <StackPane fx:id="TableUseContainer" VBox.vgrow="ALWAYS">
+                                                            <children>
+                                                                <TableView fx:id="TableUseRep" prefHeight="581.0" prefWidth="655.0" styleClass="DefaultTable">
+                                                                    <columns>
+                                                                        <TableColumn fx:id="tablenoTableUseRep" prefWidth="75.0" text="Table No." />
+                                                                        <TableColumn fx:id="totalreservationTableUseRep" prefWidth="126.0" text="Total Reservation" />
+                                                                        <TableColumn fx:id="totalcusotmerTableUseRep" prefWidth="97.0" text="Total Customer" />
+                                                                        <TableColumn fx:id="totalsalesTableUseRep" prefWidth="83.0" text="Total Sales" />
+                                                                    </columns>
+                                                                </TableView>
+                                                            </children>
+                                                        </StackPane>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                                    </padding>
+                                                </VBox>
+                                                <VBox fx:id="tableInfopane" prefHeight="645.0" prefWidth="625.0" spacing="10.0" styleClass="Statistics-cell" VBox.vgrow="ALWAYS">
+                                                    <children>
+                                                        <TableView fx:id="TableinfoTUrep" prefHeight="200.0" prefWidth="200.0" styleClass="DefaultTable" VBox.vgrow="ALWAYS">
+                                                            <columns>
+                                                                <TableColumn fx:id="tablenoTableinfo" prefWidth="103.0" text="Table No" />
+                                                                <TableColumn fx:id="referenceTableinfo" prefWidth="122.0" text="Reference" />
+                                                                <TableColumn fx:id="paxTableinfo" prefWidth="104.0" text="Pax" />
+                                                                <TableColumn fx:id="salesTableinfo" prefWidth="115.0" text="Sales" />
+                                                                <TableColumn fx:id="timeTableinfo" prefWidth="109.0" text="Time" />
+                                                                <TableColumn fx:id="dateTableinfo" prefWidth="78.0" text="Date" />
+                                                            </columns>
+                                                        </TableView>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                                    </padding>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                        </GridPane>
+                    </children>
+                </StackPane>
+            </children>
+            <padding>
+                <Insets left="34.0" right="20.0" />
+            </padding>
+        </VBox>
+    </content>
+</ScrollPane>

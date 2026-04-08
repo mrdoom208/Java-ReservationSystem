@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: #1a1a1a; -fx-background-radius: 15;" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.ConnectionFailedController">
+   <effect>
+      <DropShadow blurType="GAUSSIAN" height="25.0" radius="12.0" width="25.0" />
+   </effect>
+   <children>
+      <VBox alignment="CENTER" spacing="15.0">
+         <padding>
+            <Insets bottom="25.0" left="35.0" right="35.0" top="25.0" />
+         </padding>
+         <children>
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="connection-failed-title" text="Connection Failed" textAlignment="CENTER" wrapText="true" />
+            <Label alignment="CENTER" maxHeight="60.0" maxWidth="1.7976931348623157E308" styleClass="connection-failed-message" text="Unable to connect to the server after multiple attempts. Please check your internet connection and try again." textAlignment="CENTER" wrapText="true" />
+            <VBox alignment="CENTER" spacing="12.0">
+               <children>
+                  <MFXButton fx:id="reconnectBtn" onAction="#reconnect" prefHeight="45.0" prefWidth="280.0" styleClass="connection-reconnect-button" text="Try Again" />
+                  <MFXButton fx:id="logoutBtn" onAction="#logout" prefHeight="40.0" prefWidth="280.0" styleClass="connection-logout-button" text="Cancel Login" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</StackPane>

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fx:id="ReservationPane" fitToHeight="true" fitToWidth="true" prefHeight="2000.0" prefWidth="1200.0" styleClass="Scrollpane" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.ReservationController">
+    <content>
+        <BorderPane fx:id="reservpane" prefHeight="1694.0" prefWidth="1154.0" styleClass="DashboardPane">
+            <left>
+                <Region prefHeight="200.0" prefWidth="34.0" BorderPane.alignment="CENTER" />
+            </left>
+            <right>
+                <Region prefHeight="200.0" prefWidth="20.0" BorderPane.alignment="CENTER" />
+            </right>
+            <center>
+                <GridPane minHeight="1629.0" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" percentHeight="2.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="2.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="2.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Region minHeight="11.0" prefHeight="71.0" prefWidth="1046.0" />
+                        <HBox fx:id="hboxCRT" prefHeight="501.0" prefWidth="1046.0" spacing="10.0" GridPane.rowIndex="1">
+                            <children>
+                                <VBox alignment="CENTER" minHeight="500.0" prefHeight="0.0" prefWidth="1066.0" spacing="10.0" styleClass="Statistics-cell" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <HBox alignment="CENTER" prefHeight="57.0" prefWidth="714.0">
+                                            <children>
+                                                <Label styleClass="BoldText" text="RESERVATION LIST">
+                                                    <font>
+                                                        <Font size="30.0" />
+                                                    </font>
+                                                </Label>
+                                                <Region prefHeight="48.0" prefWidth="322.0" HBox.hgrow="ALWAYS" />
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="676.0" spacing="10.0">
+                                            <children>
+                                                <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="31.0" styleClass="static-label" text="Filter" textAlignment="CENTER">
+                                                    <font>
+                                                        <Font size="18.0" />
+                                                    </font>
+                                                </Label>
+                                                <MFXTextField fx:id="SearchCL" floatMode="BORDER" floatingText="Search" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="38.0" prefWidth="129.0" styleClass="filter-search" HBox.hgrow="ALWAYS" />
+                                                <MFXComboBox fx:id="reservationfilter" alignment="CENTER" floatMode="BORDER" floatingText="Status" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="39.0" styleClass="filter-date" text="Show All">
+                                                    <font>
+                                                        <Font size="18.0" />
+                                                    </font>
+                                                </MFXComboBox>
+                                                <MFXButton fx:id="reservationrefresh" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" onAction="#loadCustomerReservationTable" styleClass="filter-btn" text="Refresh" />
+                                                <Region prefHeight="38.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                                                <MFXButton fx:id="newcustomer" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addCustomerReservation" prefHeight="39.0" styleClass="custom-btn" text="New Reservation" />
+                                            </children>
+                                        </HBox>
+                                        <TableView fx:id="CustomerReservationTable" prefHeight="364.0" prefWidth="656.0" styleClass="DefaultTable" VBox.vgrow="ALWAYS">
+                                            <columns>
+                                                <TableColumn fx:id="ReferenceCRT" prefWidth="75.0" text="Reference" />
+                                                <TableColumn fx:id="NameCRT" prefWidth="75.0" text="Name" />
+                                                <TableColumn fx:id="PaxCRT" prefWidth="75.0" text="Pax" />
+                                                <TableColumn fx:id="StatusCRT" prefWidth="75.0" text="Status" />
+                                                <TableColumn fx:id="PreferCRT" prefWidth="75.0" text="Prefer" />
+                                                <TableColumn fx:id="PhoneCRT" prefWidth="75.0" text="Phone" />
+                                                <TableColumn fx:id="EmailCRT" prefWidth="75.0" text="Email" />
+                                                <TableColumn fx:id="TimeCRT" prefWidth="75.0" text="Time Registered" />
+                                                <TableColumn fx:id="TableNoCRT" prefWidth="75.0" text="Table No." />
+                                            </columns>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                        </TableView>
+                                        <HBox alignment="CENTER_LEFT" prefWidth="714.0" spacing="15.0">
+                                            <children>
+                                    <MFXButton fx:id="sendsms" maxHeight="1.7976931348623157E308" minWidth="-Infinity" onAction="#sendMessage" prefHeight="50.0" styleClass="sent-text-button" text="Notify Customer " textAlignment="CENTER" wrapText="true" />
+                                    <MFXButton fx:id="editreservation" maxHeight="1.7976931348623157E308" minWidth="-Infinity" onAction="#editCustomerReservation" prefHeight="50.0" styleClass="edit" text="Edit Reservation" textAlignment="CENTER" />
+                                    <MFXButton fx:id="cancelreservation" maxHeight="1.7976931348623157E308" minWidth="-Infinity" onAction="#cancelCustomerReservation" prefHeight="50.0" styleClass="cancel-btn" text="Cancel Reservation" textAlignment="CENTER" />
+                                    <Label fx:id="response" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" HBox.hgrow="SOMETIMES" />
+                                    <HBox alignment="CENTER">
+                                       <children>
+                                                      <Label styleClass="static-label" text="Pending: ">
+                                                          <font>
+                                                              <Font size="18.0" />
+                                                          </font>
+                                                      </Label>
+                                                      <Label fx:id="pending" styleClass="static-label" text="0">
+                                                          <font>
+                                                              <Font size="18.0" />
+                                                          </font>
+                                                      </Label>
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER">
+                                       <children>
+                                                      <Label styleClass="static-label" text="Confirm: ">
+                                                          <font>
+                                                              <Font size="18.0" />
+                                                          </font>
+                                                      </Label>
+                                                      <Label fx:id="confirm" styleClass="static-label" text="0">
+                                                          <font>
+                                                              <Font size="18.0" />
+                                                          </font>
+                                                      </Label>
+                                       </children>
+                                    </HBox>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                        </HBox>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+                                    </padding>
+                                </VBox>
+                                <VBox fx:id="hiddenTable" prefHeight="462.0" prefWidth="709.0" styleClass="Statistics-cell" HBox.hgrow="SOMETIMES">
+                                    <children>
+                                        <GridPane VBox.vgrow="ALWAYS">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" percentHeight="75.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <StackPane prefHeight="39.0" prefWidth="337.0" />
+                                                <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="72.0" prefWidth="345.0" styleClass="BoldText" text="AVAILABLE TABLES" textAlignment="CENTER">
+                                                    <font>
+                                                        <Font size="30.0" />
+                                                    </font>
+                                                </Label>
+                                                <TableView fx:id="AvailableTable" prefHeight="306.0" prefWidth="337.0" styleClass="DefaultTable" GridPane.rowIndex="1">
+                                                    <columns>
+                                                        <TableColumn fx:id="TableNoAT" prefWidth="75.0" text="Table No." />
+                                                        <TableColumn fx:id="CapacityAT" prefWidth="75.0" text="Capacity" />
+                                                        <TableColumn fx:id="StatusAT" prefWidth="75.0" text="Status" />
+                                                        <TableColumn fx:id="LocationAT" prefWidth="75.0" text="Location" />
+                                                    </columns>
+                                                </TableView>
+                                                <BorderPane prefHeight="0.0" prefWidth="337.0" GridPane.rowIndex="2">
+                                                    <left>
+                                                        <StackPane prefHeight="150.0" BorderPane.alignment="CENTER">
+                                                            <children>
+                                                                <Label fx:id="CusToTable" prefHeight="29.0" styleClass="PlainText" text="SRV">
+                                                                    <font>
+                                                                        <Font size="15.0" />
+                                                                    </font>
+                                                                </Label>
+                                                            </children>
+                                                        </StackPane>
+                                                    </left>
+                                                    <right>
+                                                        <StackPane prefHeight="43.0" prefWidth="106.0" BorderPane.alignment="CENTER">
+                                                            <children>
+                                                                <MFXButton fx:id="Mergebtn" minHeight="30.0" mnemonicParsing="false" onAction="#merge" prefWidth="111.0" styleClass="filter-btn" text="Confirm">
+                                                   <padding>
+                                                      <Insets bottom="5.0" top="5.0" />
+                                                   </padding></MFXButton>
+                                                            </children>
+                                                        </StackPane>
+                                                    </right>
+                                                </BorderPane>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+                                    </padding>
+                                </VBox>
+                            </children>
+                            <padding>
+                                <Insets top="10.0" />
+                            </padding>
+                        </HBox>
+                        <VBox minHeight="500.0" prefWidth="1100.0" spacing="10.0" styleClass="Statistics-cell" GridPane.rowIndex="3">
+                            <children>
+                                <HBox alignment="CENTER" prefHeight="60.0" prefWidth="1100.0">
+                                    <children>
+                                        <Label styleClass="BoldText" text="SEATED, CANCELLED, NO SHOW RESERVATIONS" textAlignment="CENTER" />
+                                    </children>
+                                </HBox>
+                                <TableView fx:id="SCNReservations" prefWidth="1050.0" styleClass="DefaultTable" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="refSCNR" prefWidth="75.0" text="Reference" />
+                                        <TableColumn fx:id="customerSCNR" prefWidth="75.0" text="Customer" />
+                                        <TableColumn fx:id="paxSCNR" prefWidth="75.0" text="Pax" />
+                                        <TableColumn fx:id="phoneSCNR" prefWidth="75.0" text="Phone no" />
+                                        <TableColumn fx:id="statusSCNR" prefWidth="75.0" text="Status" />
+                                        <TableColumn fx:id="regSCNR" prefWidth="122.0" text="Registered Time" />
+                                        <TableColumn fx:id="seatedSCNR" prefWidth="94.0" text="Seated Time" />
+                                        <TableColumn fx:id="cancelSCNR" prefWidth="124.0" text="Cancelled Time" />
+                                        <TableColumn fx:id="noshowSCNR" prefWidth="110.0" text="No show Time" />
+                                        <TableColumn fx:id="dateSCNR" prefWidth="75.0" text="Date" />
+                                    </columns>
+                                </TableView>
+                                <HBox alignment="CENTER_RIGHT" prefWidth="1015.0">
+                                    <children>
+                                        <Label styleClass="static-label" text="Seated: " HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="seated" styleClass="static-label" text="0" HBox.hgrow="ALWAYS" />
+                                        <Region prefWidth="25.0" />
+                                        <Label styleClass="static-label" text="Cancelled: " HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="cancelled" styleClass="static-label" text="0" HBox.hgrow="ALWAYS" />
+                                        <Region prefWidth="25.0" />
+                                        <Label styleClass="static-label" text="No Show: " />
+                                        <Label fx:id="noshow" styleClass="static-label" text="0" />
+                                    </children>
+                                </HBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+                            </padding>
+                        </VBox>
+                        <Region prefHeight="88.0" prefWidth="1066.0" GridPane.rowIndex="4" />
+                        <VBox alignment="CENTER" minHeight="550.0" prefHeight="550.0" prefWidth="1066.0" spacing="10.0" styleClass="Statistics-cell" GridPane.rowIndex="5">
+                            <children>
+                                <Label styleClass="BoldText" text="COMPLETE RESERVATIONS">
+                                    <font>
+                                        <Font size="30.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets bottom="15.0" top="15.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <TableView id="d" fx:id="ReservationLogs" prefHeight="299.0" prefWidth="1036.0" styleClass="DefaultTable" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="customerRL" prefWidth="92.0" text="Customer" />
+                                        <TableColumn fx:id="paxRL" prefWidth="68.0" text="Pax" />
+                                        <TableColumn fx:id="phoneRL" prefWidth="75.0" text="Phone no." />
+                                        <TableColumn fx:id="preferRL" prefWidth="75.0" text="Prefer" />
+                                        <TableColumn fx:id="statusRL" prefWidth="75.0" text="Status" />
+                                        <TableColumn fx:id="pendingRL" prefWidth="75.0">
+                                            <graphic>
+                                                <Label text="Pending Time" textAlignment="CENTER" wrapText="true" />
+                                            </graphic>
+                                        </TableColumn>
+                                        <TableColumn fx:id="confirmRL" prefWidth="90.0">
+                                            <graphic>
+                                                <Label prefHeight="46.0" prefWidth="82.0" text="Confirm Time" textAlignment="CENTER" wrapText="true" />
+                                            </graphic>
+                                        </TableColumn>
+                                        <TableColumn fx:id="seatedRL" prefWidth="84.0">
+                                            <graphic>
+                                                <Label text="Seated Time" textAlignment="CENTER" wrapText="true" />
+                                            </graphic>
+                                        </TableColumn>
+                                        <TableColumn fx:id="completeRL" prefWidth="106.0">
+                                            <graphic>
+                                                <Label text="Complete Time" textAlignment="CENTER" wrapText="true" />
+                                            </graphic>
+                                        </TableColumn>
+                                        <TableColumn fx:id="tablenoRL" prefWidth="92.0">
+                                            <graphic>
+                                                <Label prefHeight="40.0" prefWidth="90.0" text="Table no" textAlignment="CENTER" wrapText="true" />
+                                            </graphic>
+                                        </TableColumn>
+                                        <TableColumn fx:id="refRL" prefWidth="91.0" text="Reference" />
+                                        <TableColumn fx:id="dateRL" prefWidth="75.0" text="Date" />
+                                    </columns>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </TableView>
+                        <HBox alignment="CENTER_RIGHT" prefWidth="200.0">
+                           <children>
+                              <Label alignment="CENTER_RIGHT" styleClass="static-label" text="Complete: " />
+                              <Label fx:id="complete" alignment="CENTER_RIGHT" styleClass="static-label" text="0" />
+                           </children>
+                        </HBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />
+                            </padding>
+                        </VBox>
+                    </children>
+                </GridPane>
+            </center>
+         <padding>
+            <Insets bottom="20.0" />
+         </padding>
+        </BorderPane>
+    </content>
+</ScrollPane>

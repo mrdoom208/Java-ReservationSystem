@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.mfxcore.controls.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.editReservationController">
+   <children>
+      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="350.0" spacing="10.0" styleClass="plain-pane-third" stylesheets="@../../css/style.css">
+         <children>
+            <Label styleClass="BoldText" text="Edit Reservation" />
+            <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" styleClass="popup-message-hidden" text="Insert Customer Information" />
+            <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <MFXTextField fx:id="CustomerName" floatingText="Customer Name" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="307.0" styleClass="filter-search" VBox.vgrow="ALWAYS" />
+                  <MFXTextField fx:id="Pax" floatingText="Pax" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="90.0" styleClass="filter-search" VBox.vgrow="ALWAYS" />
+                  <TextField fx:id="Phone" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="307.0" styleClass="Phonefield" VBox.vgrow="ALWAYS" />
+                  <MFXTextField fx:id="Email" floatingText="Email" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="90.0" styleClass="filter-search" VBox.vgrow="ALWAYS" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="50.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <MFXComboBox fx:id="statusComboBox" alignment="CENTER" borderGap="5.0" disable="true" floatMode="DISABLED" floatingText="Status" graphicTextGap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="filter-date" text="Pending" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #3A3A3A; -fx-background-radius: 10;" styleClass="plain-pane-third" HBox.hgrow="SOMETIMES">
+                           <children>
+                              <MFXComboBox fx:id="tableNoSelect" floatingText="Table No." maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="73.0" styleClass="filter-date" HBox.hgrow="ALWAYS" />
+                              <MFXButton fx:id="removeBtn" prefHeight="40.0" prefWidth="22.0" styleClass="custom-btn" text="X" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="310.0" spacing="15.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <MFXButton fx:id="cancelButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="basic-btn" text="Cancel" HBox.hgrow="ALWAYS" />
+                        <MFXButton fx:id="Submit" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="filter-btn" text="Submit" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</StackPane>

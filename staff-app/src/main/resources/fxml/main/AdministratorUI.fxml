@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXProgressBar?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<GridPane prefHeight="1000.0" prefWidth="1300.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.AdministratorUIController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="678.0" minWidth="10.0" percentWidth="13.0" prefWidth="165.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="1196.0" minWidth="10.0" percentWidth="87.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <GridPane alignment="CENTER" minHeight="720.0" prefHeight="720.0" prefWidth="185.0" styleClass="mainpane">
+         <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="547.0" minHeight="10.0" percentHeight="25.0" prefHeight="176.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints maxHeight="573.0" minHeight="10.0" percentHeight="55.0" prefHeight="573.0" />
+            <RowConstraints maxHeight="547.0" minHeight="10.0" prefHeight="177.0" vgrow="ALWAYS" />
+         </rowConstraints>
+         <children>
+            <VBox alignment="TOP_CENTER" maxHeight="-Infinity" prefWidth="169.0" spacing="10.0" GridPane.rowIndex="1">
+               <children>
+                  <MFXButton fx:id="Dashboardbtn" alignment="TOP_CENTER" graphicTextGap="5.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigate" prefHeight="100.0" styleClass="navigation-btns" text="Dashboard" textOverrun="CLIP" wrapText="true">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../Images/dashboard.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </MFXButton>
+                  <StackPane maxWidth="1.7976931348623157E308">
+                     <children>
+                        <MFXButton fx:id="ReservationManagementbtn" alignment="CENTER" graphicTextGap="5.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigate" prefHeight="100.0" styleClass="navigation-btns" text="Reservations" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+                           <graphic>
+                              <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../Images/reservation.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </MFXButton>
+                        <Label fx:id="reservationNotificationBadge" managed="false" styleClass="reservation-notification-badge" text="0" visible="false" StackPane.alignment="TOP_RIGHT" />
+                     </children>
+                  </StackPane>
+                  <MFXButton fx:id="TableManagementbtn" graphicTextGap="5.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigate" prefHeight="100.0" styleClass="navigation-btns" text="Tables" textOverrun="CLIP" wrapText="true">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../Images/table.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="Messagingbtn" graphicTextGap="5.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" onAction="#navigate" prefHeight="100.0" styleClass="navigation-btns" text="Messaging" VBox.vgrow="ALWAYS">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../Images/messages.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MFXButton>
+                  <MFXButton fx:id="Reportsbtn" graphicTextGap="5.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigate" prefHeight="100.0" styleClass="navigation-btns" text="Reports" textOverrun="CLIP" wrapText="true" VBox.vgrow="ALWAYS">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../Images/reports.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton fx:id="ManageStaffAndAccountsbtn" graphicTextGap="5.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigate" prefHeight="100.0" styleClass="navigation-btns" text="Accounts" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../Images/accounts.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </MFXButton>
+                   <MFXButton fx:id="ActivityLogbtn" graphicTextGap="5.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigate" prefHeight="100.0" styleClass="navigation-btns" text="Activity Logs" textOverrun="CLIP" VBox.vgrow="ALWAYS">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../Images/activity.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MFXButton>
+               </children>
+            </VBox>
+               <MFXButton fx:id="generateQrBtn" alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openQrCode" prefHeight="40.0" styleClass="navigation-bottom-btns" text="Website Registration QR Code" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+               <ImageView fitHeight="118.0" fitWidth="112.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+               <image>
+                  <Image url="@../../Images/LogoRound.png" />
+               </image>
+            </ImageView>
+         </children>
+      </GridPane>
+      <VBox prefHeight="200.0" prefWidth="1112.0" styleClass="DashboardPane" GridPane.columnIndex="1">
+         <children>
+             <StackPane prefHeight="55.0" prefWidth="1131.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+                 <children>
+                       <Label fx:id="header" alignment="CENTER" styleClass="BoldText" text="Dashboard" StackPane.alignment="CENTER_LEFT">
+                           <font>
+                        <Font size="36.0" />
+                     </font>
+                           <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                       </Label>
+                      <HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" prefHeight="50.0" spacing="15.0" StackPane.alignment="CENTER_RIGHT">
+                       <children>
+                         <StackPane minHeight="-Infinity" prefHeight="46.0" prefWidth="58.0" HBox.hgrow="NEVER">
+                            <children>
+                               <Button fx:id="notificationBellBtn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" mnemonicParsing="false" onAction="#showNotificationMenu" prefHeight="31.0" prefWidth="35.0" styleClass="notification-bell-btn" text="">
+                                  <graphic>
+                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                           <Image url="@../../Images/bell-solid.png" />
+                                        </image>
+                                     </ImageView>
+                                  </graphic>
+                               </Button>
+                              <Label fx:id="notificationBadge" alignment="CENTER" managed="false" styleClass="notification-badge" text="1" textAlignment="CENTER" visible="false" StackPane.alignment="CENTER" />
+                            </children>
+                         </StackPane>
+                          <HBox alignment="CENTER" spacing="5.0">
+                            <children>
+                                <Label fx:id="connectionStatusDot" alignment="BOTTOM_RIGHT" prefHeight="10.0" prefWidth="10.0" styleClass="connected" />
+                                <Label fx:id="accountname" alignment="BOTTOM_RIGHT" prefHeight="21.0" styleClass="static-label" text="Administrator" />
+                                <MenuButton fx:id="profile" alignment="CENTER_RIGHT" styleClass="profilemenu" textAlignment="JUSTIFY">
+                                  <graphic>
+                                       <ImageView cache="true" fitHeight="44.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" smooth="true">
+                                           <image>
+                                               <Image preserveRatio="true" requestedHeight="57" requestedWidth="50" smooth="true" url="@../../Images/Profile.png" />
+                                           </image>
+                                       </ImageView>
+                                  </graphic>
+                                  <items>
+                                     <MenuItem mnemonicParsing="false" onAction="#Profile" text="Profile" />
+                                     <MenuItem mnemonicParsing="false" onAction="#Settings" text="Settings" />
+                                     <MenuItem fx:id="logoutBtn" mnemonicParsing="false" onAction="#logout" text="Logout" />
+                                  </items>
+                               </MenuButton>
+                           </children>
+                        </HBox>
+                      </children>
+                     <StackPane.margin>
+                        <Insets right="10.0" />
+                     </StackPane.margin>
+                   </HBox>
+
+                 </children>
+             </StackPane>
+            <StackPane fx:id="content" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox fx:id="connectionWarningPane" alignment="CENTER" managed="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="12.0" styleClass="connection-warning-overlay" visible="false" StackPane.alignment="CENTER">
+                     <children>
+                        <ProgressIndicator fx:id="connectionWarningIndicator" prefHeight="54.0" prefWidth="54.0" progress="-1.0" />
+                        <Label fx:id="connectionWarningLabel" managed="false" styleClass="connection-warning-label" text="Please check your internet connection." visible="false" />
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+            <HBox fx:id="HboxProgress" alignment="CENTER_RIGHT" prefWidth="200.0" spacing="10.0" styleClass="mainpane" visible="false">
+               <children>
+                  <Label fx:id="LabelProgress" styleClass="secondary-label" text="details" />
+                  <MFXProgressBar fx:id="BarProgress" minHeight="10.0" progress="0.78" />
+                  <MFXButton fx:id="reconnectCloseBtn" managed="false" onAction="#handleReconnectClose" prefWidth="80.0" styleClass="reconnect-close-btn" text="Close" visible="false" />
+               </children>
+               <VBox.margin>
+                  <Insets left="1.0" right="1.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets right="34.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</GridPane>

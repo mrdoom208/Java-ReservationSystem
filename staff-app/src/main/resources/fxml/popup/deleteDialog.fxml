@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="220.0" prefWidth="380" spacing="0" style="-fx-background-radius: 15; -fx-background-color: transparent;" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.DeleteDialogController">
+
+    <!-- Red Warning Header -->
+    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #C62828;" styleClass="message-dialog-header">
+        <Label style="-fx-font-size: 2.5em; -fx-text-fill: white;" text="⚠" />
+        <Label style="-fx-font-size: 1.60em; -fx-font-weight: bold; -fx-text-fill: white;" text="Warning" />
+    </HBox>
+
+    <VBox alignment="CENTER" spacing="15" styleClass="message-dialog-body" VBox.vgrow="ALWAYS">
+        <Label fx:id="messagelabel" alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="271.0" styleClass="message-dialog-label" text="Are you sure you want to delete this?" wrapText="true" VBox.vgrow="ALWAYS">
+         <font>
+            <Font size="24.0" />
+         </font></Label>
+
+        <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" prefWidth="340.0" spacing="15" VBox.vgrow="ALWAYS">
+            <Button fx:id="cancelBtn" maxHeight="1.7976931348623157E308" prefWidth="80.0" styleClass="button-cancel" text="Cancel" />
+
+            <Button fx:id="deleteBtn" defaultButton="true" maxHeight="1.7976931348623157E308" prefWidth="80.0" styleClass="button-delete" text="Yes" />
+        </HBox>
+    </VBox>
+
+</VBox>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.mfxcore.controls.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="450.0" minHeight="-Infinity" minWidth="450.0" prefWidth="450.0" styleClass="redpane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.ServerConfigController">
+   <children>
+      <VBox prefHeight="482.0" prefWidth="450.0" styleClass="login-container">
+         <children>
+            <StackPane prefHeight="80.0" prefWidth="382.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="60.0" prefWidth="265.0">
+                     <children>
+                        <Label alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="259.0" styleClass="BoldText" text="SERVER CONFIGURATION">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_CENTER" maxWidth="-Infinity" prefHeight="25.0" styleClass="BoldText" text="Set Server Details">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <Line endX="231.5" startX="-100.0" stroke="WHITE" strokeWidth="2.0" StackPane.alignment="BOTTOM_CENTER" />
+               </children>
+            </StackPane>
+            <VBox alignment="TOP_CENTER" prefHeight="220.0" prefWidth="381.0" spacing="20.0">
+               <children>
+                  <Label fx:id="messageLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="380.0" styleClass="login-message-hidden" text="Enter the server URL and WebSocket URL" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <MFXTextField fx:id="serverUrlField" floatMode="BORDER" floatingText="SERVER URL (e.g., http://localhost:8080)" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="55.0" prefWidth="380.0" styleClass="username">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </MFXTextField>
+                  <MFXTextField fx:id="websocketUrlField" floatMode="BORDER" floatingText="WEBSOCKET URL (e.g., ws://localhost:8080)" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="55.0" prefWidth="380.0" styleClass="username">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </MFXTextField>
+               </children>
+               <padding>
+                  <Insets left="30.0" right="30.0" top="10.0" />
+               </padding>
+            </VBox>
+            <VBox alignment="CENTER" spacing="10.0">
+               <children>
+                  <MFXButton id="Save" fx:id="saveBtn" defaultButton="true" mnemonicParsing="false" onAction="#saveConfig" prefHeight="55.0" prefWidth="280.0" styleClass="login-submit-button" text="SAVE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </MFXButton>
+                   <MFXButton fx:id="testConnectionBtn" mnemonicParsing="false" onAction="#testConnection" prefHeight="35.0" prefWidth="150.0" styleClass="login-submit-button-small" text="TEST CONNECTION" />
+               </children>
+            </VBox>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+         <padding>
+            <Insets bottom="20.0" left="15.0" right="15.0" top="10.0" />
+         </padding>
+         <StackPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </StackPane.margin>
+      </VBox>
+      <MFXButton fx:id="closebtn" onAction="#closeApp" prefHeight="30.0" prefWidth="30.0" styleClass="close-button" text="X" StackPane.alignment="TOP_RIGHT">
+         <StackPane.margin>
+            <Insets />
+         </StackPane.margin>
+      </MFXButton>
+   </children>
+</StackPane>

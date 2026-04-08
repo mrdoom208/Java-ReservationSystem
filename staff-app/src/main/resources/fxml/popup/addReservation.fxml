@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.mfxcore.controls.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import com.mycompany.reservationsystem.util.PhoneFormatter?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ProgressIndicator?>
+<StackPane fx:id="rootPane" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.addReservationController">
+   <children>
+      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="350.0" spacing="10.0" styleClass="plain-pane-third" stylesheets="@../../css/style.css">
+          <children>
+              <Label styleClass="BoldText" text="New Reservation" />
+            <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" styleClass="popup-message-hidden" text="Insert Customer Information" />
+            <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                      <MFXTextField fx:id="CustomerName" floatingText="Customer Name" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="307.0" styleClass="filter-search" VBox.vgrow="ALWAYS" />
+                      <MFXTextField fx:id="Pax" floatingText="Pax" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="90.0" styleClass="filter-search" VBox.vgrow="ALWAYS" />
+                      <TextField fx:id="Phone" promptText="PhoneNumber" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="307.0" styleClass="Phonefield" VBox.vgrow="ALWAYS" />
+                  <MFXTextField fx:id="Email" floatingText="Email" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="90.0" styleClass="filter-search" VBox.vgrow="ALWAYS" />
+                      <HBox alignment="CENTER_LEFT" prefHeight="50.0" spacing="20.0" VBox.vgrow="ALWAYS">
+                          <children>
+                              <MFXComboBox fx:id="statusComboBox" alignment="CENTER" disable="true" floatMode="DISABLED" floatingText="Status" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="242.0" styleClass="filter-date" text="Pending" HBox.hgrow="ALWAYS" />
+                          </children>
+                      </HBox>
+                      <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="310.0" spacing="15.0" VBox.vgrow="ALWAYS">
+                          <children>
+                              <MFXButton fx:id="cancelButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="49.0" prefWidth="150.0" styleClass="basic-btn" text="Cancel" HBox.hgrow="ALWAYS" />
+                              <MFXButton fx:id="addButton" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" styleClass="filter-btn" text="Add Reservation" HBox.hgrow="ALWAYS" />
+                          </children>
+                      </HBox>
+               </children>
+            </VBox>
+          </children>
+          <padding>
+              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+          </padding>
+      </VBox>
+       <VBox fx:id="loadingOverlay"
+             visible="false"
+             managed="false"
+             alignment="CENTER"
+             style="-fx-background-color: rgba(0,0,0,0.35);">
+
+           <ProgressIndicator fx:id="progressIndicator" />
+           <Label fx:id="loadingLabel"
+                  text="Please wait..."
+                  style="-fx-text-fill: white; -fx-font-size: 14;" />
+       </VBox>
+   </children>
+</StackPane>

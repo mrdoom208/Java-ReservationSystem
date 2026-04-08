@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fx:id="ActivityLogPane" fitToHeight="true" fitToWidth="true" prefHeight="800.0" prefWidth="1131.0" styleClass="Scrollpane" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.ActivityLogsController">
+    <content>
+        <BorderPane prefWidth="200.0" styleClass="DashboardPane">
+            <left>
+                <Region prefHeight="200.0" prefWidth="34.0" BorderPane.alignment="CENTER" />
+            </left>
+            <right>
+                <Region prefHeight="200.0" prefWidth="20.0" BorderPane.alignment="CENTER" />
+            </right>
+            <center>
+                <VBox maxHeight="1.7976931348623157E308" prefWidth="100.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Region prefHeight="48.0" prefWidth="1021.0" />
+                        <VBox alignment="CENTER_LEFT" minHeight="100.0" prefHeight="100.0" prefWidth="1021.0" styleClass="Statistics-cell" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label styleClass="BoldText" text="Activity Log">
+                                    <font>
+                                        <Font size="30.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets bottom="15.0" top="15.0" />
+                                    </VBox.margin>
+                                </Label>
+                                <HBox alignment="CENTER_LEFT" spacing="15.0">
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" />
+                                    </VBox.margin>
+                                    <children>
+                                        <Label styleClass="static-label" text="Filters" textAlignment="CENTER" />
+                                        <MFXTextField fx:id="searchAL" floatMode="BORDER" floatingText="SEARCH" floatingTextGap="3.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="6.0" prefWidth="200.0" styleClass="filter-search" />
+                                        <MFXDatePicker fx:id="fromAL" editable="false" floatMode="BORDER" floatingText="Date From" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" styleClass="filter-date" />
+                                        <MFXDatePicker fx:id="toAL" editable="false" floatMode="BORDER" floatingText="Date To" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" styleClass="filter-date" />
+                                        <MFXButton fx:id="applyAL" buttonType="RAISED" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="45.0" styleClass="filter-btn" text="Apply / Refresh" />
+                                    </children>
+                                </HBox>
+                        <StackPane VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <children>
+                                      <TableView fx:id="ActivityLogsTable" prefHeight="399.0" prefWidth="1025.0" styleClass="DefaultTable">
+                                          <columns>
+                                              <TableColumn fx:id="userAL" prefWidth="75.0" text="Username" />
+                                              <TableColumn fx:id="positionAL" prefWidth="160.0" text="Position" />
+                                              <TableColumn fx:id="moduleAL" prefWidth="132.0" text="Module" />
+                                              <TableColumn fx:id="actionAL" prefWidth="206.0" text="Action" />
+                                              <TableColumn fx:id="descriptionAL" prefWidth="236.0" text="Description" />
+                                              <TableColumn fx:id="timestampsAL" prefWidth="120.0" text="Timestamp" />
+                                          </columns>
+                                      </TableView>
+                              <ProgressIndicator fx:id="progressAL" visible="false" />
+                           </children>
+                        </StackPane>
+                            </children>
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                            <padding>
+                                <Insets bottom="25.0" left="25.0" right="25.0" />
+                            </padding>
+                        </VBox>
+                        <Region prefHeight="44.0" prefWidth="1048.0" />
+                    </children>
+                    <BorderPane.margin>
+                        <Insets right="25.0" />
+                    </BorderPane.margin>
+                </VBox>
+            </center>
+        </BorderPane>
+    </content>
+</ScrollPane>

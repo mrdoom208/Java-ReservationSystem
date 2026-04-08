@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Romantic Baboy Korean Grill</title>
+    <link rel="icon" type="image/png" sizes="100x100" href="/img/LogoRound.png">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .hero-section {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #dc2626;
+            overflow: hidden;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(220, 38, 38, 0.25);
+        }
+
+        .hero-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-title {
+            font-size: clamp(28px, 8vw, 56px);
+            font-weight: 700;
+            color: #FFF8F0;
+            margin: 0 0 8px;
+            letter-spacing: 3px;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(12px, 3vw, 18px);
+            color: #dc2626;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin: 0 0 20px;
+        }
+
+        .hero-tagline {
+            font-size: clamp(14px, 3vw, 16px);
+            color: #d4c4b0;
+            margin: 0 0 28px;
+            max-width: 480px;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-hero {
+            padding: 14px 32px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #dc2626;
+            color: white;
+            border: 2px solid #dc2626;
+        }
+
+        .btn-primary:hover {
+            background: #b91c1c;
+            border-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #FFF8F0;
+            border: 2px solid #FFF8F0;
+        }
+
+        .btn-secondary:hover {
+            background: #FFF8F0;
+            color: #1a1a1a;
+            transform: translateY(-2px);
+        }
+
+        .features-section {
+            display: flex;
+            gap: 32px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .feature-item {
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .feature-title {
+            font-size: 12px;
+            color: #FFF8F0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body class="home-page">
+
+<div class="hero-section">
+    <div class="hero-logo">
+        <img src="/img/LogoRound.png" alt="Romantic Baboy Logo">
+    </div>
+    
+    <h1 class="hero-title">ROMANTIC BABOY</h1>
+    <p class="hero-subtitle">Korean Grill</p>
+    
+    <p class="hero-tagline">
+        Experience authentic Korean barbecue in a cozy atmosphere. 
+        Reserve your table today and enjoy premium grilled meats.
+    </p>
+    
+    <div class="hero-buttons">
+        <a href="/register" class="btn-hero btn-primary">Reserve a Table</a>
+        <a href="/loginpage" class="btn-hero btn-secondary">Check Reservation</a>
+    </div>
+
+    <div class="features-section">
+        <div class="feature-item">
+            <div class="feature-icon">&#128293;</div>
+            <div class="feature-title">Premium BBQ</div>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">&#128241;</div>
+            <div class="feature-title">Easy Booking</div>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">&#9200;</div>
+            <div class="feature-title">Quick Service</div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+/target
+/.vscode
+/.idea
+*.exe
+ReservationSystemBackend.iml
+target

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/png" sizes="100x100" href="/img/LogoRound.png">
+    <title>Login Reservation</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body data-page="login">
+<!-- Navigation Bar -->
+<nav class="navbar">
+    <div class="navbar-left">
+        <a href="/" class="navbar-logo">
+            <img src="/img/LogoRound.png" alt="Romantic Baboy Logo">
+        </a>
+        <a href="/" class="navbar-brand">Romantic Baboy</a>
+    </div>
+
+    <div class="navbar-center">
+        ROMANTIC BABOY KOREAN GRILL
+    </div>
+
+    <div class="navbar-right">
+        <a href="/register" class="navbar-btn">Walk-In Reservation</a>
+        <a href="/loginpage" class="navbar-btn-active">Login Reservation</a>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="navbar-toggle" onclick="toggleMobileMenu()">&#9776;</button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="navbar-mobile-menu" id="mobileMenu">
+    <a href="/register" class="navbar-btn">Walk-In Reservation</a>
+    <a href="/loginpage" class="navbar-btn-active">Login Reservation</a>
+</div>
+
+<div class="login-box">
+    <form id="login" action="/login" method="post">
+        <h1>Customer Login</h1>
+        <div class="brand-line"></div>
+        <div class="subtitle">ROMANTIC BABOY KOREAN GRILL</div>
+        <p th:if="${errorMessage != null}" th:text="${errorMessage}" th:class="${status}" style="padding: 12px; border-radius: 6px; margin-bottom: 20px; text-align: center;"></p>
+
+        <label for="Phone">Phone Number <span>*</span></label>
+        <input type="tel" id="Phone" name="phone" placeholder="Enter Registered Phone Number" pattern="\+63 9\d.{10}" required/>
+
+        <label for="Reference">Reservation Reference <span>*</span></label>
+        <input type="text" id="Reference" name="reference" placeholder="RSV-00000" required/>
+
+        <button type="submit" id="open">Login</button>
+    </form>
+</div>
+
+<script src="/js/script.js"></script>
+</body>
+</html>

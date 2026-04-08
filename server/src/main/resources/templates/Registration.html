@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Restaurant Reservation</title>
+    <link rel="icon" type="image/png" sizes="100x100" href="/img/LogoRound.png">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body data-page="registration">
+<!-- Navigation Bar -->
+<nav class="navbar">
+    <div class="navbar-left">
+        <a href="/" class="navbar-logo">
+            <img src="/img/LogoRound.png" alt="Romantic Baboy Logo">
+        </a>
+        <a href="/" class="navbar-brand">Romantic Baboy</a>
+    </div>
+
+    <div class="navbar-center">
+        ROMANTIC BABOY KOREAN GRILL
+    </div>
+
+    <div class="navbar-right">
+        <a href="/register" class="navbar-btn-active">Walk-In Reservation</a>
+        <a href="/loginpage" class="navbar-btn">Login Reservation</a>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="navbar-toggle" onclick="toggleMobileMenu()">&#9776;</button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="navbar-mobile-menu" id="mobileMenu">
+    <a href="/register" class="navbar-btn-active">Walk-In Reservation</a>
+    <a href="/loginpage" class="navbar-btn">Login Reservation</a>
+</div>
+
+<div class="reservation-container">
+    <div class="form-box">
+        <h1>Walk-In Reservation</h1>
+        <div class="brand-line"></div>
+        <div class="subtitle">ROMANTIC BABOY KOREAN GRILL</div>
+
+        <form id="infoForm" action="/reserve" method="post">
+            <label for="Name">Customer's Name <span>*</span></label>
+            <input type="text" id="Name" name="Name" placeholder="Enter your name" required>
+
+            <label for="Phone">Phone Number <span>*</span></label>
+            <input type="tel" id="Phone" name="Phone" placeholder="+63 9XX XXX XXXX" pattern="\+63 9\d.{10}" required>
+
+            <label for="seatingCapacity">Seating Capacity <span>*</span></label>
+            <select id="seatingCapacity" name="pax" class="capacity-select" required>
+                <option value="">Select number of guests...</option>
+                <option value="1">1 Person</option>
+                <option value="2">2 Persons</option>
+                <option value="3">3 Persons</option>
+                <option value="4">4 Persons</option>
+                <option value="5">5 Persons</option>
+                <option value="6">6 Persons</option>
+                <option value="7">7 Persons</option>
+                <option value="8">8 Persons</option>
+                <option value="9">9 Persons</option>
+                <option value="10">10 Persons</option>
+            </select>
+
+            <label>Preferred Space (optional)</label>
+            <div class="radio-group">
+                <label><input type="radio" name="Prefer" value="Indoor"> Indoor</label>
+                <label><input type="radio" name="Prefer" value="Outdoor"> Outdoor</label>
+            </div>
+
+            <label for="Email">Email (optional)</label>
+            <input type="email" id="Email" name="Email" placeholder="you@example.com">
+
+            <label style="margin-top:24px;">
+                <input type="checkbox" id="agree" name="agree"> I agree to the 
+                <span class="terms-link" onclick="showTermsModal()">Terms and Conditions</span>
+            </label>
+
+            <button id="submit" type="submit" disabled>Proceed</button>
+        </form>
+    </div>
+</div>
+
+<!-- Terms and Conditions Modal -->
+<div id="termsModal" class="modal">
+    <div class="modal-content terms-modal">
+        <span class="modal-close" onclick="closeTermsModal()">&times;</span>
+        <h2>Terms and Conditions</h2>
+        <div class="modal-divider"></div>
+        <div class="terms-content">
+            <h4>1. Reservation Policy</h4>
+            <p>By making a reservation at Romantic Baboy Korean Grill, you agree to arrive on time for your scheduled appointment. Please note that your table will be held for 15 minutes past your reserved time.</p>
+            
+            <h4>2. Cancellation Policy</h4>
+            <p>Reservations can be cancelled for free as long as your table status is still "Waiting/Pending". Once your table is ready and the status changes to "Ready" or "Seated", cancellations will no longer be allowed. Please arrive on time to avoid missing your reservation.</p>
+            
+            <h4>3. No-Show Policy</h4>
+            <p>Failure to arrive for your reservation without prior cancellation will be marked as a no-show. Repeated no-shows may result in restricted booking privileges.</p>
+            
+            <h4>4. Guest Count</h4>
+            <p>The number of guests indicated in your reservation should be accurate. Significant changes (more than 2 persons) may affect table availability.</p>
+            
+            <h4>5. Walk-In Policy</h4>
+            <p>Walk-in customers are welcome, but reservations are prioritized. Waiting times may vary during peak hours.</p>
+            
+            <h4>6. Privacy</h4>
+            <p>Your personal information will only be used for reservation purposes and will not be shared with third parties without your consent.</p>
+            
+            <h4>7. Dietary Restrictions</h4>
+            <p>Please inform our staff of any allergies or dietary restrictions upon arrival. While we accommodate various dietary needs, cross-contamination cannot be guaranteed.</p>
+            
+            <h4>8. Payment</h4>
+            <p>Payment is to be settled directly at the restaurant. We accept cash and select credit cards.</p>
+        </div>
+        <div class="terms-footer">
+            <button class="btn-modal" onclick="acceptTerms()">I Accept</button>
+            <button class="btn-modal btn-modal-secondary" onclick="closeTermsModal()">Decline</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/script.js"></script>
+<script>
+function showTermsModal() {
+    document.getElementById('termsModal').style.display = 'flex';
+}
+
+function closeTermsModal() {
+    document.getElementById('termsModal').style.display = 'none';
+}
+
+function acceptTerms() {
+    document.getElementById('agree').checked = true;
+    document.getElementById('submit').disabled = false;
+    closeTermsModal();
+}
+
+window.onclick = function(event) {
+    var modal = document.getElementById('termsModal');
+    if (event.target == modal) {
+        closeTermsModal();
+    }
+}
+</script>
+        </form>
+    </div>
+</div>
+
+<script src="/js/script.js"></script>
+</body>
+</html>
