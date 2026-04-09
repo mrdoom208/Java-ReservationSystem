@@ -1,14 +1,18 @@
 package com.mycompany.reservationsystem.rest;
 
+import com.mycompany.reservationsystem.config.AppSettings;
 import com.mycompany.reservationsystem.dto.*;
 import com.mycompany.reservationsystem.model.ManageTables;
 import com.mycompany.reservationsystem.model.Reservation;
 import com.mycompany.reservationsystem.model.ReservationTableLogs;
+import com.mycompany.reservationsystem.model.Customer;
 import com.mycompany.reservationsystem.repository.CustomerRepository;
 import com.mycompany.reservationsystem.repository.ManageTablesRepository;
+import com.mycompany.reservationsystem.repository.MessageRepository;
 import com.mycompany.reservationsystem.repository.ReservationRepository;
 import com.mycompany.reservationsystem.repository.ReservationTableLogsRepository;
 import com.mycompany.reservationsystem.service.ReservationService;
+import com.mycompany.reservationsystem.service.SmsService;
 import com.mycompany.reservationsystem.service.WebSocketBroadcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,6 +50,12 @@ public class ReservationController {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private MessageRepository messageRepository;
+
+    @Autowired
+    private SmsService smsService;
+
     @PostMapping
     public Reservation createReservation(@RequestBody ReservationRequest request) {
         Reservation reservation = new Reservation();
@@ -74,7 +84,55 @@ public class ReservationController {
         dto.setType("reservation");
         webSocketBroadcastService.broadcastToFrontend(dto);
         
+        sendNewReservationSms(saved);
+        
         return saved;
+    }
+
+    private void sendNewReservationSms(Reservation reservation) {
+        try {
+            boolean apiEnabled = AppSettings.loadMessageEnabled("api.toggle");
+            if (!apiEnabled) {
+                return;
+            }
+            
+            String messageEnabledKey = "message.enabled.message.new";
+            boolean isEnabled = AppSettings.loadMessageEnabled(messageEnabledKey);
+            if (!isEnabled) {
+                return;
+            }
+            
+            String messageLabelKey = "message.label.message.new";
+            String messageLabel = AppSettings.loadMessageLabel(messageLabelKey);
+            
+            String messageText = null;
+            if (messageLabel != null && !messageLabel.isEmpty()) {
+                messageText = loadMessageText(messageLabel);
+            }
+            
+            if (messageText == null || messageText.isEmpty()) {
+                messageText = buildDefaultNewReservationMessage(reservation);
+            }
+            
+            if (reservation.getCustomer() != null && reservation.getCustomer().getPhone() != null) {
+                smsService.sendSms(reservation.getCustomer().getPhone(), messageText);
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to send new reservation SMS: " + e.getMessage());
+        }
+    }
+
+    private String loadMessageText(String label) {
+        return messageRepository.findByMessageLabelIgnoreCase(label)
+                .map(m -> m.getMessageDetails())
+                .orElse(null);
+    }
+
+    private String buildDefaultNewReservationMessage(Reservation reservation) {
+        String name = reservation.getCustomer() != null ? reservation.getCustomer().getName() : "";
+        String ref = reservation.getReference() != null ? reservation.getReference() : "";
+        return "Hello " + name + "! Your reservation (Ref: " + ref + ") has been confirmed for " 
+                + reservation.getDate() + ". We look forward to serving you!";
     }
 
     @PostMapping("/all")

@@ -5,6 +5,8 @@ import javafx.animation.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -25,6 +27,8 @@ public class BackgroundViewLoader {
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
     private volatile Task<ViewLoadResult> activeTask;
     private AdministratorUIController adminUIController;
+    private Button loadingButton;
+    private ProgressIndicator loadingSpinner;
 
     public BackgroundViewLoader() {
         controllerCache = Collections.synchronizedMap(new LinkedHashMap<>(16, 0.75f, true) {
@@ -45,6 +49,35 @@ public class BackgroundViewLoader {
         this.adminUIController = adminUIController;
     }
 
+    public void setLoadingButton(Button button) {
+        this.loadingButton = button;
+    }
+
+    private void showButtonLoading(Button button) {
+        if (button == null) return;
+        
+        if (loadingSpinner == null) {
+            loadingSpinner = new ProgressIndicator();
+            loadingSpinner.setMaxSize(18, 18);
+            loadingSpinner.setStyle("-fx-progress-color: white;");
+        }
+        
+        button.getProperties().put("original-text", button.getText());
+        button.setText("");
+        button.setGraphic(loadingSpinner);
+        button.setDisable(true);
+    }
+
+    private void hideButtonLoading(Button button) {
+        if (button == null) return;
+        
+        button.setDisable(false);
+        button.setGraphic(null);
+        String originalText = (String) button.getProperties().get("original-text");
+        button.setText(originalText != null ? originalText : "");
+        button.getProperties().remove("original-text");
+    }
+
     public void loadViewAsync(String fxmlFile, StackPane content, Runnable onComplete) {
 
         if (activeTask != null && activeTask.isRunning()) {
@@ -56,11 +89,18 @@ public class BackgroundViewLoader {
             adminUIController.disableNavButtons(true);
         }
 
+        if (loadingButton != null) {
+            showButtonLoading(loadingButton);
+        }
+
         Node cachedView = viewCache.get(fxmlFile);
         if (cachedView != null) {
             if (adminUIController != null) {
                 adminUIController.setNavigationLoading(false);
                 adminUIController.disableNavButtons(false);
+            }
+            if (loadingButton != null) {
+                hideButtonLoading(loadingButton);
             }
             animateViewSwitch(content, cachedView, onComplete);
             return;
@@ -85,6 +125,9 @@ public class BackgroundViewLoader {
                 adminUIController.setNavigationLoading(false);
                 adminUIController.disableNavButtons(false);
             }
+            if (loadingButton != null) {
+                hideButtonLoading(loadingButton);
+            }
             // Use PauseTransition to defer animation slightly (non-blocking)
             PauseTransition delay = new PauseTransition(Duration.millis(30));
             delay.setOnFinished(ev -> animateViewSwitch(content, result.view, onComplete));
@@ -95,6 +138,9 @@ public class BackgroundViewLoader {
             if (adminUIController != null) {
                 adminUIController.setNavigationLoading(false);
                 adminUIController.disableNavButtons(false);
+            }
+            if (loadingButton != null) {
+                hideButtonLoading(loadingButton);
             }
             activeTask.getException().printStackTrace();
             content.getChildren().clear();

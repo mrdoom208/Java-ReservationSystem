@@ -205,20 +205,25 @@ public class SettingsController {
     }
     /*=============================== GENERAL =========================================*/
     private void setupGeneral(){
-        List<String> options = List.of("2 minutes", "5 minutes", "10 minutes", "15 minutes", "20 minutes");
+        List<String> options = List.of("Never", "2 minutes", "5 minutes", "10 minutes", "15 minutes", "20 minutes");
         AutoCancelTime.getItems().addAll(options);
         String savedTime = AppSettings.loadCancelTime();
         if (savedTime != null && options.contains(savedTime)) {
+            AutoCancelTime.selectItem(savedTime);
+        } else if (savedTime != null && !savedTime.isBlank() && !savedTime.equals("Until Table is Available")) {
             AutoCancelTime.selectItem(savedTime);
         }
     }
 
     public int getSelectedMinutes() {
-        String value = AutoCancelTime.getValue(); // e.g., "10 minutes"
-        if (value != null && value.matches("\\d+.*")) {
-            return Integer.parseInt(value.replaceAll("\\D+", "")); // extracts the number
+        String value = AutoCancelTime.getValue();
+        if (value == null || value.equals("Never")) {
+            return -1; // Never auto-cancel
         }
-        return 0; // default if nothing selected
+        if (value != null && value.matches("\\d+.*")) {
+            return Integer.parseInt(value.replaceAll("\\D+", ""));
+        }
+        return 0;
     }
 
     /* ================= SERIAL PORTS ================= */
@@ -659,34 +664,42 @@ public class SettingsController {
                 }
                 if (origNewToggle != newNewToggle) {
                     AppSettings.saveMessageEnabled(MESSAGE_NEW_KEY, newNewToggle);
+                    WebsiteSyncService.syncMessageSettings(MESSAGE_NEW_KEY, newNewToggle, newNewMsg);
                     somethingChanged = true;
                 }
                 if (origCancelToggle != newCancelToggle) {
                     AppSettings.saveMessageEnabled(MESSAGE_CANCELLED_KEY, newCancelToggle);
+                    WebsiteSyncService.syncMessageSettings(MESSAGE_CANCELLED_KEY, newCancelToggle, newCancelMsg);
                     somethingChanged = true;
                 }
                 if (origConfirmToggle != newConfirmToggle) {
                     AppSettings.saveMessageEnabled(MESSAGE_CONFIRM_KEY, newConfirmToggle);
+                    WebsiteSyncService.syncMessageSettings(MESSAGE_CONFIRM_KEY, newConfirmToggle, newConfirmMsg);
                     somethingChanged = true;
                 }
                 if (origCompleteToggle != newCompleteToggle) {
                     AppSettings.saveMessageEnabled(MESSAGE_COMPLETE_KEY, newCompleteToggle);
+                    WebsiteSyncService.syncMessageSettings(MESSAGE_COMPLETE_KEY, newCompleteToggle, newCompleteMsg);
                     somethingChanged = true;
                 }
                 if (!stringsEqual(origNewMsg, newNewMsg)) {
                     AppSettings.saveMessageLabel(MESSAGE_NEW_KEY, newNewMsg);
+                    WebsiteSyncService.syncMessageSettings(MESSAGE_NEW_KEY, newNewToggle, newNewMsg);
                     somethingChanged = true;
                 }
                 if (!stringsEqual(origCancelMsg, newCancelMsg)) {
                     AppSettings.saveMessageLabel(MESSAGE_CANCELLED_KEY, newCancelMsg);
+                    WebsiteSyncService.syncMessageSettings(MESSAGE_CANCELLED_KEY, newCancelToggle, newCancelMsg);
                     somethingChanged = true;
                 }
                 if (!stringsEqual(origConfirmMsg, newConfirmMsg)) {
                     AppSettings.saveMessageLabel(MESSAGE_CONFIRM_KEY, newConfirmMsg);
+                    WebsiteSyncService.syncMessageSettings(MESSAGE_CONFIRM_KEY, newConfirmToggle, newConfirmMsg);
                     somethingChanged = true;
                 }
                 if (!stringsEqual(origCompleteMsg, newCompleteMsg)) {
                     AppSettings.saveMessageLabel(MESSAGE_COMPLETE_KEY, newCompleteMsg);
+                    WebsiteSyncService.syncMessageSettings(MESSAGE_COMPLETE_KEY, newCompleteToggle, newCompleteMsg);
                     somethingChanged = true;
                 }
 

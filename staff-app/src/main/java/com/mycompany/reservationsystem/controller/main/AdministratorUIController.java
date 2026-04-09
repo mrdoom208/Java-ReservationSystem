@@ -418,6 +418,9 @@ public class AdministratorUIController implements Initializable {
             return;
         }
 
+        // Set loading button for spinner
+        viewLoader.setLoadingButton(clicked);
+
         // Load view asynchronously using BackgroundViewLoader
         viewLoader.loadViewAsync(fxmlFile, content, () -> {
             // On completion (UI thread)
@@ -515,6 +518,12 @@ public class AdministratorUIController implements Initializable {
 
     public void setNavigationLoading(boolean loading) {
         this.navigationLoading = loading;
+        if (loading) {
+            showBottomMessage("Loading view...", true, Color.web("#7CC7FF"));
+            BarProgress.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+        } else {
+            hideBottomMessage();
+        }
     }
 
     private void showLoading(String message, boolean show) {

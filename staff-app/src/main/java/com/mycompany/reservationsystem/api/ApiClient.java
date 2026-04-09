@@ -28,7 +28,7 @@ public class ApiClient {
         return mapper;
     }
     
-    private static String getBaseUrl() {
+    public static String getBaseUrl() {
         String savedUrl = AppSettings.loadServerUrl();
         if (savedUrl != null && !savedUrl.isEmpty()) {
             if (savedUrl.startsWith("http://") || savedUrl.startsWith("https://")) {
