@@ -1,7 +1,7 @@
 # -----------------------------
 # Stage 1: Build the app
 # -----------------------------
-FROM maven:3.9.3-eclipse-temurin-21 AS build
+FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Copy only pom.xml first to leverage Docker cache
