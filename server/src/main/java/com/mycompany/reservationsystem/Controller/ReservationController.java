@@ -148,7 +148,7 @@ public class ReservationController {
             }
             String name = reservation.getCustomer().getName() != null ? reservation.getCustomer().getName() : "Guest";
             String ref = reservation.getReference() != null ? reservation.getReference() : "";
-            String pax = reservation.getPax() != null ? reservation.getPax().toString() : "0";
+            String pax = reservation.getPax() > 0 ? String.valueOf(reservation.getPax()) : "0";
             String message = String.format(
                 "Hello %s, your reservation has been successfully made.\nReference: %s\nParty Size: %s\nWe are looking forward to welcoming you!",
                 name, ref, pax
