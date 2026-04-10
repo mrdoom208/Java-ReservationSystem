@@ -151,6 +151,12 @@ public class AppSettings {
     }
 
     public static void saveServerUrl(String url) {
+        if (url != null && url.endsWith("/api")) {
+            url = url.substring(0, url.length() - 4);
+        }
+        if (url != null && url.endsWith("/")) {
+            url = url.substring(0, url.length() - 1);
+        }
         properties.setProperty("server.url", url);
         saveSettings();
     }

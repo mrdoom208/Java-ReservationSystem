@@ -104,35 +104,24 @@ public class TablesService {
     @Transactional
     public void clearTableFromReservation(String reference) {
         if (reference != null && !reference.isEmpty()) {
-            System.out.println("[clearTableFromReservation] Looking for reservation with reference: " + reference);
             Optional<Reservation> optional = reservationRepository.findByReference(reference);
             if (optional.isPresent()) {
-                System.out.println("[clearTableFromReservation] Found reservation, clearing table reference");
                 Reservation reservation = optional.get();
-                System.out.println("[clearTableFromReservation] Current status: " + reservation.getStatus());
                 reservation.setTable(null);
                 reservation.setStatus("Pending");
-                Reservation saved = reservationRepository.save(reservation);
-                System.out.println("[clearTableFromReservation] Saved, new status: " + saved.getStatus());
-            } else {
-                System.out.println("[clearTableFromReservation] Reservation not found by reference");
+                reservationRepository.save(reservation);
             }
         }
     }
 
     @Transactional
     public void clearReservationsForTableById(Long tableId) {
-        System.out.println("[clearReservationsForTableById] Looking for reservations with table id: " + tableId);
         List<Reservation> reservations = reservationRepository.findByTable_Id(tableId);
-        System.out.println("[clearReservationsForTableById] Found " + reservations.size() + " reservations");
         for (Reservation reservation : reservations) {
-            System.out.println("[clearReservationsForTableById] Processing reservation: " + reservation.getReference() + ", current status: " + reservation.getStatus());
             reservation.setTable(null);
             reservation.setStatus("Pending");
-            Reservation saved = reservationRepository.save(reservation);
-            System.out.println("[clearReservationsForTableById] Saved reservation: " + saved.getReference() + ", new status: " + saved.getStatus());
+            reservationRepository.save(reservation);
         }
-        System.out.println("[clearReservationsForTableById] All reservations cleared");
     }
 
     public void clearReservationsForTable(Long tableId) {

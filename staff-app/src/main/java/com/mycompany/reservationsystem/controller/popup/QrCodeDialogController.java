@@ -5,6 +5,8 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.mycompany.reservationsystem.api.ApiClient;
+import com.mycompany.reservationsystem.config.AppSettings;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -29,12 +31,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 @Component
 public class QrCodeDialogController {
@@ -55,26 +53,9 @@ public class QrCodeDialogController {
 
     @FXML
     public void initialize() {
-        String websiteUrl = loadWebsiteUrl();
-        targetUrl = (websiteUrl != null ? websiteUrl : "") + "/register";
+        targetUrl = ApiClient.getRawServerUrl() + "/register";
         urlLabel.setText(targetUrl);
         generateQrCode(targetUrl);
-    }
-
-    private String loadWebsiteUrl() {
-        try {
-            Path appConfigPath = Paths.get("config", "application.properties");
-            if (Files.exists(appConfigPath)) {
-                Properties props = new Properties();
-                try (java.io.FileInputStream fis = new java.io.FileInputStream(appConfigPath.toFile())) {
-                    props.load(fis);
-                }
-                return props.getProperty("website.url", "");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     private void generateQrCode(String content) {

@@ -29,26 +29,43 @@ public class ApiClient {
     }
     
     public static String getBaseUrl() {
+        String baseUrl = getRawServerUrl();
+        if (baseUrl.endsWith("/api")) {
+            return baseUrl;
+        }
+        if (baseUrl.endsWith("/")) {
+            return baseUrl + "api";
+        }
+        return baseUrl + "/api";
+    }
+    
+    public static String getRawServerUrl() {
         String savedUrl = AppSettings.loadServerUrl();
         if (savedUrl != null && !savedUrl.isEmpty()) {
+            if (savedUrl.endsWith("/api")) {
+                return savedUrl.substring(0, savedUrl.length() - 4);
+            }
             if (savedUrl.startsWith("http://") || savedUrl.startsWith("https://")) {
                 return savedUrl;
             }
             if (savedUrl.startsWith("ws://") || savedUrl.startsWith("wss://")) {
-                return savedUrl.replaceFirst("wss?://", "http://");
+                return savedUrl.replaceFirst("wss?://", "https://");
             }
         }
         
         String envUrl = System.getenv("SERVER_URL");
         if (envUrl != null && !envUrl.isEmpty()) {
+            if (envUrl.endsWith("/api")) {
+                return envUrl.substring(0, envUrl.length() - 4);
+            }
             if (envUrl.startsWith("http://") || envUrl.startsWith("https://")) {
                 return envUrl;
             }
             if (envUrl.startsWith("ws://") || envUrl.startsWith("wss://")) {
-                return envUrl.replaceFirst("wss?://", "http://");
+                return envUrl.replaceFirst("wss?://", "https://");
             }
         }
-        return "http://localhost:13472/api";
+        return "http://localhost:13472";
     }
     
     private static final String BASE_URL;
@@ -74,8 +91,8 @@ public class ApiClient {
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setRequestProperty("Accept", "application/json");
         conn.setRequestProperty("X-Client-Identifier", AppSettings.loadAppIdentifier());
-        conn.setConnectTimeout(10000);
-        conn.setReadTimeout(10000);
+        conn.setConnectTimeout(30000);
+        conn.setReadTimeout(30000);
         conn.setInstanceFollowRedirects(true);
         
         if (body != null && !body.isEmpty()) {

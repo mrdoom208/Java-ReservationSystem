@@ -132,15 +132,12 @@ public class addReservationController {
                         if (customerResult.containsKey("id")) {
                             customerId = ((Number) customerResult.get("id")).longValue();
                         }
-
-                        long count = ApiClient.countReservations();
                         
                         Map<String, Object> reservationData = new java.util.HashMap<>();
                         reservationData.put("customerId", customerId);
                         reservationData.put("status", statusComboBox.getValue());
                         reservationData.put("date", LocalDate.now().toString());
                         reservationData.put("pax", Integer.parseInt(Pax.getText()));
-                        reservationData.put("reference", String.format("RSV-%05d", count + 1));
                         reservationData.put("reservationPendingtime", LocalTime.now().toString());
 
                         ApiClient.createReservation(reservationData);

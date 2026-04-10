@@ -19,16 +19,11 @@ public class PageController {
             @RequestParam(value = "logout", required = false) String logout,
             Model model
     ) {
-        System.out.println("=== loginpage called ===");
-        System.out.println("error: " + error);
-        System.out.println("logout: " + logout);
         if (error != null && !error.isEmpty()) {
-            System.out.println("Adding error message: " + error);
             model.addAttribute("errorMessage", error);
             model.addAttribute("status", "error");
         }
         if (logout != null && !logout.isEmpty()) {
-            System.out.println("Adding logout message: " + logout);
             model.addAttribute("errorMessage", logout);
             model.addAttribute("status", "success");
         }

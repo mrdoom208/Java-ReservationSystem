@@ -4,7 +4,6 @@
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import io.github.palexdev.mfxcore.controls.Label?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -34,13 +33,13 @@
                   <Line endX="231.5" startX="-100.0" stroke="WHITE" strokeWidth="2.0" StackPane.alignment="BOTTOM_CENTER" />
                </children>
             </StackPane>
-            <VBox alignment="TOP_CENTER" prefHeight="220.0" prefWidth="381.0" spacing="20.0">
-               <children>
-                  <Label fx:id="messageLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="380.0" styleClass="login-message-hidden" text="Enter the server URL and WebSocket URL" wrapText="true">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
+             <VBox alignment="TOP_CENTER" prefHeight="220.0" prefWidth="381.0" spacing="20.0">
+                <children>
+                   <Label fx:id="messageLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="380.0" styleClass="login-message-hidden" text="Enter the server URL and WebSocket URL" wrapText="true">
+                      <font>
+                         <Font size="14.0" />
+                      </font>
+                   </Label>
                   <MFXTextField fx:id="serverUrlField" floatMode="BORDER" floatingText="SERVER URL (e.g., http://localhost:8080)" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="55.0" prefWidth="380.0" styleClass="username">
                      <font>
                         <Font size="15.0" />
@@ -63,16 +62,7 @@
                          <Font size="18.0" />
                       </font>
                    </MFXButton>
-                   <StackPane alignment="CENTER" prefHeight="40.0" prefWidth="280.0">
-                      <children>
-                         <MFXButton fx:id="testConnectionBtn" disable="false" mnemonicParsing="false" onAction="#testConnection" prefHeight="35.0" prefWidth="150.0" styleClass="login-submit-button-small" text="TEST CONNECTION" />
-                         <ProgressIndicator fx:id="connectionProgress" prefHeight="30.0" prefWidth="30.0" styleClass="login-submit-button-small" visible="false" StackPane.alignment="CENTER_RIGHT">
-                            <StackPane.margin>
-                               <Insets right="10.0" />
-                            </StackPane.margin>
-                         </ProgressIndicator>
-                      </children>
-                   </StackPane>
+                   <MFXButton fx:id="testConnectionBtn" disable="false" mnemonicParsing="false" onAction="#testConnection" prefHeight="35.0" prefWidth="150.0" styleClass="login-submit-button-small" text="TEST CONNECTION" />
                 </children>
              </VBox>
          </children>

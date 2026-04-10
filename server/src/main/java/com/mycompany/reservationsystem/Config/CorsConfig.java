@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -54,26 +55,48 @@ public class CorsConfig {
             String clientId = request.getHeader("X-Client-Identifier");
             String clientDisplay = (clientId != null && !clientId.isEmpty()) ? clientId : "UNKNOWN";
 
-            System.out.println("=== REQUEST [" + UUID.randomUUID().toString().substring(0, 8) + "] ===");
-            System.out.println("Client-ID: " + clientDisplay);
-            System.out.println("URL: " + request.getRequestURL());
-            System.out.println("Method: " + request.getMethod());
-            System.out.println("Headers:");
-            java.util.Enumeration<String> headerNames = request.getHeaderNames();
-            while (headerNames.hasMoreElements()) {
-                String header = headerNames.nextElement();
-                System.out.println("  " + header + ": " + request.getHeader(header));
-            }
-            System.out.println("Body: " + cachedRequest.getCachedBody());
-            System.out.println("==========================================");
-
             response.setHeader("X-Client-Identifier", clientDisplay);
 
-            chain.doFilter(cachedRequest, response);
+            StatusCapturingResponseWrapper responseWrapper = new StatusCapturingResponseWrapper(response);
 
-            System.out.println("=== RESPONSE ===");
-            System.out.println("Status: " + response.getStatus());
-            System.out.println("===============");
+            chain.doFilter(cachedRequest, responseWrapper);
+
+            if (request.getRequestURI().contains("/api/health")) {
+                System.out.println("=== REQUEST [" + UUID.randomUUID().toString().substring(0, 8) + "] ===");
+                System.out.println("Client-ID: " + clientDisplay);
+                System.out.println("URL: " + request.getRequestURL());
+                System.out.println("Method: " + request.getMethod());
+                System.out.println("Headers:");
+                java.util.Enumeration<String> headerNames = request.getHeaderNames();
+                while (headerNames.hasMoreElements()) {
+                    String header = headerNames.nextElement();
+                    System.out.println("  " + header + ": " + request.getHeader(header));
+                }
+                System.out.println("Body: " + cachedRequest.getCachedBody());
+                System.out.println("==========================================");
+                System.out.println("=== RESPONSE ===");
+                System.out.println("Status: " + responseWrapper.getStatus());
+                System.out.println("===============");
+            }
+        }
+    }
+
+    public static class StatusCapturingResponseWrapper extends HttpServletResponseWrapper {
+        private int status = 200;
+
+        public StatusCapturingResponseWrapper(HttpServletResponse response) {
+            super(response);
+        }
+
+        @Override
+        public void setStatus(int status) {
+            this.status = status;
+            super.setStatus(status);
+        }
+
+        @Override
+        public int getStatus() {
+            return status;
         }
     }
 

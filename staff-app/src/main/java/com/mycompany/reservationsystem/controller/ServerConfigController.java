@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -31,8 +30,6 @@ public class ServerConfigController implements Initializable {
     private MFXButton saveBtn;
     @FXML
     private MFXButton testConnectionBtn;
-    @FXML
-    private ProgressIndicator connectionProgress;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -109,7 +106,6 @@ public class ServerConfigController implements Initializable {
         }
 
         testConnectionBtn.setDisable(true);
-        connectionProgress.setVisible(true);
         messageLabel.setText("Testing connection...");
         messageLabel.setStyle("-fx-text-fill: #3498DB;");
 
@@ -118,11 +114,22 @@ public class ServerConfigController implements Initializable {
             int statusCode = -1;
 
             try {
-                URI uri = new URI(serverUrl);
+                String testUrl = serverUrl.trim();
+                if (testUrl.endsWith("/api")) {
+                    testUrl = testUrl + "/health";
+                } else if (!testUrl.endsWith("/api/health") && !testUrl.endsWith("/health")) {
+                    if (testUrl.endsWith("/")) {
+                        testUrl = testUrl + "api/health";
+                    } else {
+                        testUrl = testUrl + "/api/health";
+                    }
+                }
+                URI uri = new URI(testUrl);
                 java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
                 java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
                         .uri(uri)
-                        .timeout(java.time.Duration.ofSeconds(10))
+                        .timeout(java.time.Duration.ofSeconds(15))
+                        .header("Content-Type", "application/json")
                         .GET()
                         .build();
 
@@ -147,7 +154,6 @@ public class ServerConfigController implements Initializable {
 
             javafx.application.Platform.runLater(() -> {
                 testConnectionBtn.setDisable(false);
-                connectionProgress.setVisible(false);
 
                 if (finalResult.equals("success")) {
                     messageLabel.setText("Connection successful!");

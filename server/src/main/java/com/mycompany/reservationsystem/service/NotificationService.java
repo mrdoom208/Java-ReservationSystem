@@ -42,12 +42,9 @@ public class NotificationService {
                     "Party Size: " + reservation.getPax() + "\n" +
                     "We look forward to welcoming you!";
 
-            String smsResponse = smsService.sendSms(customer.getPhone(), smsDetails);
-            System.out.println("SMS Response: " + smsResponse);
+            smsService.sendSms(customer.getPhone(), smsDetails);
 
             // 2️⃣ Gmail
-            System.out.println(reservation.getCustomer().getEmail());
-            System.out.println(!customer.getEmail().isBlank()&&!customer.getEmail().isEmpty());
             if(!customer.getEmail().isBlank()&&!customer.getEmail().isEmpty()) {
 
                 String subject = "Reservation Confirmation | Ref: " + reservation.getReference();
@@ -64,7 +61,6 @@ public class NotificationService {
                 message.setText(emailBody);
 
                 mailSender.send(message);
-                System.out.println("Email sent to: " + customer.getEmail());
 
             }
             // 3️⃣ WebSocket

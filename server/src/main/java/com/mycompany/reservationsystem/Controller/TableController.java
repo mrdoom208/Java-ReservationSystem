@@ -68,18 +68,13 @@ public class TableController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTable(@PathVariable Long id) {
-        System.out.println("[DELETE] Attempting to delete table with id: " + id);
         return manageTablesRepository.findById(id)
                 .<ResponseEntity<Void>>map(table -> {
-                    System.out.println("[DELETE] Found table: " + table.getTableNo() + " with status: " + table.getStatus());
                     if (!"Available".equals(table.getStatus())) {
-                        System.out.println("[DELETE] Table not available, returning 403");
                         return ResponseEntity.status(403).<Void>build();
                     }
-                    // Clear table references from reservations
                     tablesService.clearReservationsForTable(id);
                     manageTablesRepository.deleteById(id);
-                    System.out.println("[DELETE] Table deleted successfully");
                     return ResponseEntity.noContent().build();
                 })
                 .orElse(ResponseEntity.notFound().build());
@@ -137,20 +132,14 @@ public class TableController {
 
     @PostMapping("/{id}/remove-customer")
     public ResponseEntity<ManageTables> removeCustomer(@PathVariable Long id) {
-        System.out.println("[removeCustomer] Removing customer from table id: " + id);
         return manageTablesRepository.findById(id)
                 .map(table -> {
                     String reference = table.getReference();
-                    System.out.println("[removeCustomer] Table reference: " + reference);
                     
-                    // Clear reservation by reference if available
                     if (reference != null && !reference.isEmpty()) {
-                        System.out.println("[removeCustomer] Clearing by reference...");
                         tablesService.clearTableFromReservation(reference);
                     }
                     
-                    // Also clear any reservations that reference this table by table ID
-                    System.out.println("[removeCustomer] Clearing by table ID...");
                     tablesService.clearReservationsForTableById(id);
                     
                     table.setCustomer(null);
@@ -162,7 +151,6 @@ public class TableController {
                     table.setTableendtime(java.time.LocalTime.now());
                     table.setStatus("Available");
                     ManageTables updated = manageTablesRepository.save(table);
-                    System.out.println("[removeCustomer] Table updated and saved");
                     return ResponseEntity.ok(updated);
                 })
                 .orElse(ResponseEntity.notFound().build());

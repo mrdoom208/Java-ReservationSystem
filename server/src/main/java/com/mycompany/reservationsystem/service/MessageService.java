@@ -71,7 +71,6 @@ public class MessageService {
                     msg.setCreatedAt(LocalDateTime.now());
                     msg.setUpdatedAt(LocalDateTime.now());
 
-                    System.out.println("Created default message: " + messageLabel);
                     return messageRepository.save(msg);
                 });
     }

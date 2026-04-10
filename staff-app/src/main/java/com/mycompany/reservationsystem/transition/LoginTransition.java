@@ -5,9 +5,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -117,7 +117,7 @@ public class LoginTransition {
         private String originalText;
         private Region originalGraphic;
         private HBox loadingContainer;
-        private Circle spinner;
+        private ProgressIndicator spinner;
         private boolean isAnimating = false;
 
         public LoginButtonAnimator(Button button) {
@@ -138,8 +138,9 @@ public class LoginTransition {
         }
 
         private void createLoadingAnimation() {
-            spinner = new Circle(6);
-            spinner.setFill(Color.WHITE);
+            spinner = new ProgressIndicator();
+            spinner.setMaxSize(16, 16);
+            spinner.setStyle("-fx-progress-color: white;");
             
             loadingContainer = new HBox();
             loadingContainer.setAlignment(Pos.CENTER);
@@ -147,13 +148,7 @@ public class LoginTransition {
 
             Text loadingText = new Text("Signing in");
             loadingText.setFill(Color.WHITE);
-            loadingText.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
-
-            RotateTransition rotate = new RotateTransition(Duration.millis(600), spinner);
-            rotate.setFromAngle(0);
-            rotate.setToAngle(360);
-            rotate.setCycleCount(Animation.INDEFINITE);
-            rotate.play();
+            loadingText.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
             loadingContainer.getChildren().addAll(loadingText, spinner);
         }

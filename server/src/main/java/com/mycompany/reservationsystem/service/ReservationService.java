@@ -32,13 +32,10 @@ public class ReservationService {
 
     @Transactional
     public void updateStatus(String Ref, String newStatus) {
-        System.out.println("[updateStatus] START - Ref=" + Ref + ", newStatus=" + newStatus);
         Optional<Reservation> optional = reservationRepository.findByReference(Ref);
         if (optional.isPresent()) {
             Reservation entity = optional.get();
-            System.out.println("[updateStatus] Current status before: " + entity.getStatus());
             entity.setStatus(newStatus);
-            System.out.println("[updateStatus] Set status to: " + newStatus);
             
             if ("Cancelled".equals(newStatus) && entity.getTable() != null) {
                 ManageTables table = entity.getTable();
@@ -46,11 +43,9 @@ public class ReservationService {
                 table.setStatus("Available");
                 table.setTablestarttime(null);
                 manageTablesRepository.save(table);
-                System.out.println("[updateStatus] Cleared table, set to Available");
             }
             
             reservationRepository.save(entity);
-            System.out.println("[updateStatus] Saved to database");
         } else {
             throw new RuntimeException("Reservation not found with id: " + Ref);
         }
@@ -83,13 +78,11 @@ public class ReservationService {
 
     @Transactional
     public void updateSeatedtime(String Ref, LocalTime newtime) {
-        System.out.println(">>> ReservationService.updateSeatedtime: Ref=" + Ref + ", newtime=" + newtime);
         Optional<Reservation> optional = reservationRepository.findByReference(Ref);
         if (optional.isPresent()) {
             Reservation entity = optional.get();
             entity.setReservationSeatedtime(newtime);
             reservationRepository.save(entity);
-            System.out.println(">>> Saved seatedtime: " + newtime);
         } else {
             throw new RuntimeException("Reservation not found" + Ref);
         }

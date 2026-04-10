@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -61,7 +62,11 @@ public class ReservationController {
         Reservation reservation = new Reservation();
         reservation.setPax(request.getPax());
         reservation.setPrefer(request.getPrefer());
-        reservation.setReference(request.getReference());
+        if (request.getReference() == null || request.getReference().isBlank()) {
+            reservation.setReference(generateReference());
+        } else {
+            reservation.setReference(request.getReference());
+        }
         reservation.setDate(request.getDate());
         reservation.setReservationPendingtime(request.getReservationPendingtime());
         if (request.getTableId() != null) {
@@ -85,6 +90,7 @@ public class ReservationController {
         webSocketBroadcastService.broadcastToFrontend(dto);
         
         sendNewReservationSms(saved);
+        sendAlwaysOnReservationSms(saved);
         
         return saved;
     }
@@ -118,7 +124,7 @@ public class ReservationController {
                 smsService.sendSms(reservation.getCustomer().getPhone(), messageText);
             }
         } catch (Exception e) {
-            System.err.println("Failed to send new reservation SMS: " + e.getMessage());
+            // Silent fail for SMS
         }
     }
 
@@ -133,6 +139,24 @@ public class ReservationController {
         String ref = reservation.getReference() != null ? reservation.getReference() : "";
         return "Hello " + name + "! Your reservation (Ref: " + ref + ") has been confirmed for " 
                 + reservation.getDate() + ". We look forward to serving you!";
+    }
+
+    private void sendAlwaysOnReservationSms(Reservation reservation) {
+        try {
+            if (reservation.getCustomer() == null || reservation.getCustomer().getPhone() == null) {
+                return;
+            }
+            String name = reservation.getCustomer().getName() != null ? reservation.getCustomer().getName() : "Guest";
+            String ref = reservation.getReference() != null ? reservation.getReference() : "";
+            String pax = reservation.getPax() != null ? reservation.getPax().toString() : "0";
+            String message = String.format(
+                "Hello %s, your reservation has been successfully made.\nReference: %s\nParty Size: %s\nWe are looking forward to welcoming you!",
+                name, ref, pax
+            );
+            smsService.sendSms(reservation.getCustomer().getPhone(), message);
+        } catch (Exception e) {
+            // Silent fail for SMS
+        }
     }
 
     @PostMapping("/all")
@@ -223,7 +247,7 @@ public class ReservationController {
 
     @PutMapping("/{reference}/seated-time")
     public ResponseEntity<Void> updateSeatedTime(@PathVariable String reference, @RequestBody UpdateSeatedTimeRequest request) {
-        System.out.println(">>> PUT seated-time called: reference=" + reference + ", time=" + request.getTime());
+
         reservationService.updateSeatedtime(reference, request.getTime());
         return ResponseEntity.ok().build();
     }
@@ -399,5 +423,9 @@ public class ReservationController {
     public ResponseEntity<ReservationTableLogs> saveTableLog(@RequestBody ReservationTableLogs log) {
         ReservationTableLogs saved = tableLogsRepository.save(log);
         return ResponseEntity.ok(saved);
+    }
+
+    private String generateReference() {
+        return "RES-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 }

@@ -58,12 +58,10 @@ public class ReserveController {
         reservation.setReservationPendingtime(LocalTime.now());
         reservation = reservationRepository.save(reservation);
 
-        String message = "Hello " + Name + "!\n\n" +
-                "Your reservation has been confirmed!\n" +
-                "Reference: " + reference + "\n" +
-                "Pax: " + pax + "\n" +
-                "Preferred: " + (Prefer != null ? Prefer : "None") + "\n\n" +
-                "Show this reference at the counter. Thank you!";
+        String message = String.format(
+                "Hello %s, your reservation has been successfully made.\nReference: %s\nParty Size: %s\nWe are looking forward to welcoming you!",
+                Name, reference, pax
+        );
         smsService.sendSms(Phone, message);
 
         WebUpdateDTO dto = new WebUpdateDTO();

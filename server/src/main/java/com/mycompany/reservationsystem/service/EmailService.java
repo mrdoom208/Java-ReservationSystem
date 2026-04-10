@@ -16,16 +16,10 @@ public class EmailService {
 
     @PostConstruct
     public void init() {
-        if (mailSender != null) {
-            System.out.println("EmailService initialized with mail support");
-        } else {
-            System.out.println("EmailService initialized WITHOUT mail support (mail not configured)");
-        }
     }
 
     public void sendEmail(String to, String subject, String text) {
         if (mailSender == null) {
-            System.out.println("Email not sent - mail not configured. To: " + to);
             return;
         }
         
@@ -36,6 +30,5 @@ public class EmailService {
         message.setText(text);
 
         mailSender.send(message);
-        System.out.println("Email sent to " + to);
     }
 }

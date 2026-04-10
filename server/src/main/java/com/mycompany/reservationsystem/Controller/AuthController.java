@@ -33,18 +33,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
-        System.out.println("=== LOGIN DEBUG ===");
-        System.out.println("Received request: " + request);
-        System.out.println("Username: " + request.getUsername());
-        System.out.println("Password: " + request.getPassword());
-        
         User user = userRepository.findByUsername(request.getUsername()).orElse(null);
-        
-        System.out.println("User found in DB: " + (user != null));
-        if (user != null) {
-            System.out.println("DB Password hash: " + user.getPassword());
-            System.out.println("Password matches: " + passwordEncoder.matches(request.getPassword(), user.getPassword()));
-        }
         
         if (user == null) {
             return ResponseEntity.ok(new LoginResponse(false, "User not found"));

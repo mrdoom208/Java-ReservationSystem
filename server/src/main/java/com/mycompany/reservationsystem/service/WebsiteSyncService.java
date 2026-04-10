@@ -23,25 +23,22 @@ public class WebsiteSyncService {
     @Autowired
     public WebsiteSyncService(RestTemplate restTemplate) {
          this.restTemplate = restTemplate;
-        System.out.println("RestTemplate bean injected: " + restTemplate);
     }
 
     public void sendCancellationPolicy(String policy) {
         String url = WebsiteUrl + "/settings/cancellation-policy?policy=" + URLEncoder.encode(policy, StandardCharsets.UTF_8);
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(url, null, String.class);
-            System.out.println("Website response: " + response.getBody());
+            restTemplate.postForEntity(url, null, String.class);
         } catch (Exception e) {
-            System.err.println("Failed to send cancellation policy: " + e.getMessage());
+            // Silent fail
         }
     }
     public void sendAutoDeleteMonths(int months) {
         String url = WebsiteUrl + "/settings/auto-delete?months=" + months;
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(url, null, String.class);
-            System.out.println("Website response: {}" + response.getBody());
+            restTemplate.postForEntity(url, null, String.class);
         } catch (Exception e) {
-            System.out.println("Failed to send auto-delete months");
+            // Silent fail
         }
     }
     public String generateLoginLink(Reservation reservation) {

@@ -40,14 +40,12 @@ public class SmsService {
             headers.setBearerAuth(apiToken);
 
             String recipientphone = PhoneFormatter.normalizePHNumber(recipient);
-            System.out.println(recipientphone);
 
 
             String body = String.format(
                     "{\"recipient\":\"%s\",\"sender_id\":\"%s\",\"type\":\"plain\",\"message\":\"%s\"}",
                     recipientphone, senderId, message.replace("\"", "\\\"").replace("\n", "\\n")
             );
-            System.out.println(body);
 
             HttpEntity<String> request = new HttpEntity<>(body, headers);
 

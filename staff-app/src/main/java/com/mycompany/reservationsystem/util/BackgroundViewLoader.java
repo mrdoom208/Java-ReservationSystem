@@ -63,6 +63,7 @@ public class BackgroundViewLoader {
         }
         
         button.getProperties().put("original-text", button.getText());
+        button.getProperties().put("original-graphic", button.getGraphic());
         button.setText("");
         button.setGraphic(loadingSpinner);
         button.setDisable(true);
@@ -72,10 +73,15 @@ public class BackgroundViewLoader {
         if (button == null) return;
         
         button.setDisable(false);
-        button.setGraphic(null);
+        Node originalGraphic = (Node) button.getProperties().get("original-graphic");
         String originalText = (String) button.getProperties().get("original-text");
+        
+        if (originalGraphic != null) {
+            button.setGraphic(originalGraphic);
+        }
         button.setText(originalText != null ? originalText : "");
         button.getProperties().remove("original-text");
+        button.getProperties().remove("original-graphic");
     }
 
     public void loadViewAsync(String fxmlFile, StackPane content, Runnable onComplete) {

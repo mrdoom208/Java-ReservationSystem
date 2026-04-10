@@ -61,7 +61,6 @@ public class PermissionService {
     public void updatePermission(User.Position position, Long permissionId, boolean enabled) {
         Permission permission = permissionRepo.findById(permissionId).orElse(null);
         if (permission == null) return;
-        System.out.println("Update Permission : "+position + enabled + permission.getCode());
 
         if (enabled) {
             grant(position, permission);   // use your existing grant() method
@@ -129,7 +128,6 @@ public class PermissionService {
     // ---------------- WRITE ----------------
 
     public void grant(User.Position position, Permission permission) {
-        System.out.println("GRANT"+position + permission.getCode());
         if (!hasPermission(position, permission)) {
             positionPermissionRepo.save(
                     new PositionPermission(position, permission)
@@ -138,7 +136,6 @@ public class PermissionService {
     }
 
     public void revoke(User.Position position, Permission permission) {
-        System.out.println("REVOKE "+position + permission.getCode());
         positionPermissionRepo
                 .findByPositionAndPermission(position, permission)
                 .ifPresent(positionPermissionRepo::delete);
