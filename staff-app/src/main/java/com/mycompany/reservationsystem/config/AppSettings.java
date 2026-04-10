@@ -172,4 +172,13 @@ public class AppSettings {
         properties.setProperty("websocket.url", url);
         saveSettings();
     }
+
+    public static String loadAppIdentifier() {
+        return properties.getProperty("app.identifier", "staff-app-default");
+    }
+
+    public static void saveAppIdentifier(String identifier) {
+        properties.setProperty("app.identifier", identifier);
+        saveSettings();
+    }
 }

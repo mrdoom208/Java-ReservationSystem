@@ -73,6 +73,7 @@ public class ApiClient {
         conn.setRequestMethod(method);
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setRequestProperty("Accept", "application/json");
+        conn.setRequestProperty("X-Client-Identifier", AppSettings.loadAppIdentifier());
         conn.setConnectTimeout(10000);
         conn.setReadTimeout(10000);
         conn.setInstanceFollowRedirects(true);

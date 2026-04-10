@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -30,6 +31,8 @@ public class ServerConfigController implements Initializable {
     private MFXButton saveBtn;
     @FXML
     private MFXButton testConnectionBtn;
+    @FXML
+    private ProgressIndicator connectionProgress;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -105,26 +108,62 @@ public class ServerConfigController implements Initializable {
             return;
         }
 
-        try {
-            URI uri = new URI(serverUrl);
-            java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
-            java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
-                    .uri(uri)
-                    .timeout(java.time.Duration.ofSeconds(5))
-                    .GET()
-                    .build();
+        testConnectionBtn.setDisable(true);
+        connectionProgress.setVisible(true);
+        messageLabel.setText("Testing connection...");
+        messageLabel.setStyle("-fx-text-fill: #3498DB;");
 
-            java.net.http.HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+        new Thread(() -> {
+            String result;
+            int statusCode = -1;
 
-            if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                messageLabel.setText("Connection successful!");
-                messageLabel.setStyle("-fx-text-fill: #2ECC71;");
-            } else {
-                showError("Connection failed: HTTP " + response.statusCode());
+            try {
+                URI uri = new URI(serverUrl);
+                java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
+                java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
+                        .uri(uri)
+                        .timeout(java.time.Duration.ofSeconds(10))
+                        .GET()
+                        .build();
+
+                java.net.http.HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+                statusCode = response.statusCode();
+
+                if (statusCode >= 200 && statusCode < 300) {
+                    result = "success";
+                } else if (statusCode == 401 || statusCode == 403) {
+                    result = "unauthorized";
+                } else {
+                    result = "failed:" + statusCode;
+                }
+            } catch (java.net.http.HttpConnectTimeoutException e) {
+                result = "timeout";
+            } catch (Exception e) {
+                result = "error:" + e.getMessage();
             }
-        } catch (Exception e) {
-            showError("Connection failed: " + e.getMessage());
-        }
+
+            final String finalResult = result;
+            final int finalStatusCode = statusCode;
+
+            javafx.application.Platform.runLater(() -> {
+                testConnectionBtn.setDisable(false);
+                connectionProgress.setVisible(false);
+
+                if (finalResult.equals("success")) {
+                    messageLabel.setText("Connection successful!");
+                    messageLabel.setStyle("-fx-text-fill: #2ECC71;");
+                } else if (finalResult.equals("unauthorized")) {
+                    messageLabel.setText("Server reachable (auth required)");
+                    messageLabel.setStyle("-fx-text-fill: #F39C12;");
+                } else if (finalResult.equals("timeout")) {
+                    showError("Connection timed out");
+                } else if (finalResult.startsWith("failed:")) {
+                    showError("Connection failed: HTTP " + finalStatusCode);
+                } else if (finalResult.startsWith("error:")) {
+                    showError("Connection failed: " + finalResult.substring(6));
+                }
+            });
+        }).start();
     }
 
     private void showError(String message) {

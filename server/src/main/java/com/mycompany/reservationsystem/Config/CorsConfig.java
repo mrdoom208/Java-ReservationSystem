@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,9 @@ import java.util.UUID;
 
 @Configuration
 public class CorsConfig {
+
+    @Value("${app.client.identifier:staff-app-01}")
+    private String clientIdentifier;
 
     @Bean
     public FilterRegistrationBean<RequestLoggingFilter> loggingFilter() {
@@ -30,9 +34,10 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("*")
+                        .allowedOrigins("https://reservation-system-frontend.onrender.com", "http://localhost:3000", "http://localhost:8080")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*");
+                        .allowedHeaders("Content-Type", "Accept", "Authorization", "X-Client-Identifier")
+                        .exposedHeaders("X-Client-Identifier");
             }
         };
     }
@@ -46,7 +51,11 @@ public class CorsConfig {
 
             CachedBodyHttpServletRequest cachedRequest = new CachedBodyHttpServletRequest(request);
 
+            String clientId = request.getHeader("X-Client-Identifier");
+            String clientDisplay = (clientId != null && !clientId.isEmpty()) ? clientId : "UNKNOWN";
+
             System.out.println("=== REQUEST [" + UUID.randomUUID().toString().substring(0, 8) + "] ===");
+            System.out.println("Client-ID: " + clientDisplay);
             System.out.println("URL: " + request.getRequestURL());
             System.out.println("Method: " + request.getMethod());
             System.out.println("Headers:");
@@ -57,6 +66,8 @@ public class CorsConfig {
             }
             System.out.println("Body: " + cachedRequest.getCachedBody());
             System.out.println("==========================================");
+
+            response.setHeader("X-Client-Identifier", clientDisplay);
 
             chain.doFilter(cachedRequest, response);
 
