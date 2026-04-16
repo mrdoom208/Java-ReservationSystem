@@ -56,6 +56,15 @@ public class AppSettings {
         saveSettings();
     }
 
+    public static String loadNoshowTime() {
+        return properties.getProperty("app.noshowTime", "Never");
+    }
+
+    public static void saveNoshowTime(String noshowTime) {
+        properties.setProperty("app.noshowTime", noshowTime);
+        saveSettings();
+    }
+
     public static String loadSerialPort() {
         return properties.getProperty("serial.port", "");
     }

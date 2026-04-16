@@ -85,6 +85,9 @@ public class SettingsController {
     @FXML
     private MFXComboBox<String> AutoCancelTime;
 
+    @FXML
+    private MFXComboBox<String> AutoNoshowTime;
+
     /* ---------------- MESSAGING ---------------- */
     @FXML private MFXComboBox<SerialPort> messageDevicePortCombo;
     @FXML private MFXToggleButton apiToggle;
@@ -112,7 +115,7 @@ public class SettingsController {
     private PermissionService.PermissionSnapshot originalSnapshot;
 
     /* ---------------- ORIGINAL VALUES FOR CHANGE TRACKING ---------------- */
-    private String origAppTitle, origCancelTime;
+    private String origAppTitle, origCancelTime, origNoshowTime;
     private String origController, origModule, origPhone;
     private boolean origApiToggle, origNewToggle, origCancelToggle, origConfirmToggle, origCompleteToggle;
     private boolean restartRequired = false;
@@ -205,7 +208,7 @@ public class SettingsController {
     }
     /*=============================== GENERAL =========================================*/
     private void setupGeneral(){
-        List<String> options = List.of("Never", "2 minutes", "5 minutes", "10 minutes", "15 minutes", "20 minutes");
+        List<String> options = List.of("Never", "10 minutes", "30 minutes", "60 minutes", "90 minutes", "120 minutes", "150 minutes", "180 minutes");
         AutoCancelTime.getItems().addAll(options);
         String savedTime = AppSettings.loadCancelTime();
         if (savedTime != null && options.contains(savedTime)) {
@@ -213,6 +216,25 @@ public class SettingsController {
         } else if (savedTime != null && !savedTime.isBlank() && !savedTime.equals("Until Table is Available")) {
             AutoCancelTime.selectItem(savedTime);
         }
+
+        AutoNoshowTime.getItems().addAll(options);
+        String savedNoshowTime = AppSettings.loadNoshowTime();
+        if (savedNoshowTime != null && options.contains(savedNoshowTime)) {
+            AutoNoshowTime.selectItem(savedNoshowTime);
+        } else if (savedNoshowTime != null && !savedNoshowTime.isBlank()) {
+            AutoNoshowTime.selectItem(savedNoshowTime);
+        }
+    }
+
+    public int getSelectedNoshowMinutes() {
+        String value = AutoNoshowTime.getValue();
+        if (value == null || value.equals("Never")) {
+            return -1;
+        }
+        if (value != null && value.matches("\\d+.*")) {
+            return Integer.parseInt(value.replaceAll("\\D+", ""));
+        }
+        return 0;
     }
 
     public int getSelectedMinutes() {
@@ -631,6 +653,12 @@ public class SettingsController {
                     WebsiteSyncService.sendAutoCancelTime(getSelectedMinutes());
                     somethingChanged = true;
                 }
+                String newNoshowTime = AutoNoshowTime.getValue();
+                if (!stringsEqual(origNoshowTime, newNoshowTime)) {
+                    AppSettings.saveNoshowTime(newNoshowTime);
+                    WebsiteSyncService.sendNoshowTime(getSelectedNoshowMinutes());
+                    somethingChanged = true;
+                }
 
                 /*----------------- Messaging --------------------------*/
                 String newController = ControllerName.getText();
@@ -957,9 +985,11 @@ public class SettingsController {
         //GENERAL
         origAppTitle = AppSettings.loadApplicationTitle();
         origCancelTime = AppSettings.loadCancelTime();
+        origNoshowTime = AppSettings.loadNoshowTime();
         
         ApplicationTitle.setText(origAppTitle);
         AutoCancelTime.selectItem(origCancelTime);
+        AutoNoshowTime.selectItem(origNoshowTime);
 
         //MESSAGING
         String saved = AppSettings.loadSerialPort();

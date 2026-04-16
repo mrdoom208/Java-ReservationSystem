@@ -60,6 +60,10 @@
 <div class="container">
     <div class="clock-icon"></div>
 
+    <div th:if="${successMessage != null}" class="success-banner" style="padding: 12px 20px; background-color: #28a745; color: white; border-radius: 6px; margin-bottom: 20px; text-align: center; font-weight: bold;">
+        <span th:text="${successMessage}">Reservation Created Successfully</span>
+    </div>
+
     <div class="main-card">
         <div class="brand-header">
             <div class="brand-title">ROMANTIC BABOY KOREAN GRILL</div>

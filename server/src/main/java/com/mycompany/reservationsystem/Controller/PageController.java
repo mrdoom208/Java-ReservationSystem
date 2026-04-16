@@ -16,12 +16,17 @@ public class PageController {
     @GetMapping("/loginpage")
     public String loginPage(
             @RequestParam(value = "error", required = false) String error,
+            @RequestParam(value = "success", required = false) String success,
             @RequestParam(value = "logout", required = false) String logout,
             Model model
     ) {
         if (error != null && !error.isEmpty()) {
             model.addAttribute("errorMessage", error);
             model.addAttribute("status", "error");
+        }
+        if (success != null && !success.isEmpty()) {
+            model.addAttribute("errorMessage", success);
+            model.addAttribute("status", "success");
         }
         if (logout != null && !logout.isEmpty()) {
             model.addAttribute("errorMessage", logout);

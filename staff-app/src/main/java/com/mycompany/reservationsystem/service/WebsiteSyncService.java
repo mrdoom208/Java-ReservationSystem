@@ -30,6 +30,23 @@ public class WebsiteSyncService {
         }
     }
 
+    public static void sendNoshowTime(int minutes) {
+        try {
+            String url = ApiClient.getBaseUrl() + "/api/settings";
+            String noshowValue;
+            if (minutes < 0) {
+                noshowValue = "Never";
+            } else {
+                noshowValue = minutes + " minutes";
+            }
+            String payload = "{\"noshowTime\":\"" + noshowValue + "\"}";
+            ApiClient.post(url, payload);
+            System.out.println("Synced no-show time to server: " + noshowValue);
+        } catch (Exception e) {
+            System.err.println("Failed to sync no-show time: " + e.getMessage());
+        }
+    }
+
     public static void sendAutoDeleteMonths(int months) {
         try {
             String url = ApiClient.getBaseUrl() + "/api/settings";

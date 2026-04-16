@@ -19,6 +19,9 @@ public class SettingsController {
         if (settings.containsKey("cancelTime")) {
             AppSettings.saveCancelTime((String) settings.get("cancelTime"));
         }
+        if (settings.containsKey("noshowTime")) {
+            AppSettings.saveNoshowTime((String) settings.get("noshowTime"));
+        }
         if (settings.containsKey("resolution")) {
             AppSettings.saveResolution((String) settings.get("resolution"));
         }
@@ -67,6 +70,7 @@ public class SettingsController {
         settings.put("applicationTitle", AppSettings.loadApplicationTitle());
         settings.put("cancelTime", AppSettings.loadCancelTime());
         settings.put("cancellationPolicy", AppSettings.loadCancelTime());
+        settings.put("noshowTime", AppSettings.loadNoshowTime());
         settings.put("resolution", AppSettings.loadResolution());
         settings.put("applicationUrl", AppSettings.loadApplicationUrl());
         settings.put("serialPort", AppSettings.loadSerialPort());

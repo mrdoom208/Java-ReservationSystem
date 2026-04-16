@@ -74,7 +74,7 @@ public class ReserveController {
         dto.setCustomerName(Name);
         webSocketBroadcastService.broadcastToFrontend(dto);
 
-        return "redirect:/login?phone=" + Phone + "&reference=" + reference;
+        return "redirect:/login?phone=" + Phone + "&reference=" + reference + "&success=Reservation Created Successfully";
     }
 
     private String generateReference() {

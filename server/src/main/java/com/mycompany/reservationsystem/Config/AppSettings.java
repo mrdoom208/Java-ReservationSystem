@@ -7,6 +7,7 @@ public final class AppSettings {
     private static final String DEFAULT_APP_TITLE = "Romantic Baboy Reservation System";
     private static final String DEFAULT_APP_TITLE_DISPLAY = "ROMANTIC BABOY RESERVATION SYSTEM";
     private static final String DEFAULT_CANCEL_TIME = "Until Table is Available";
+    private static final String DEFAULT_NOSHOW_TIME = "Never";
     private static final String DEFAULT_RESOLUTION = "Fullscreen";
     private static final String DEFAULT_APP_URL = "http://localhost:8080";
 
@@ -38,6 +39,27 @@ public final class AppSettings {
     }
     public static void saveCancelTime(String minute) {
         PREFS.put("cancelTime", valueOrEmpty(minute));
+    }
+
+    public static void saveNoshowTime(String minute) {
+        PREFS.put("noshowTime", valueOrEmpty(minute));
+    }
+
+    public static String loadNoshowTime() {
+        return PREFS.get("noshowTime", DEFAULT_NOSHOW_TIME);
+    }
+
+    public static int loadNoshowTimeMinutes() {
+        String value = loadNoshowTime();
+        if (value == null || value.isBlank() || value.equals("Never")) {
+            return -1;
+        }
+        try {
+            String numberOnly = value.replaceAll("\\D+", "");
+            return Integer.parseInt(numberOnly);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 
     public static void saveModule(String value) {

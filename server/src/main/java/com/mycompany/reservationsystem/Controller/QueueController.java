@@ -65,13 +65,19 @@ public class QueueController {
     WebSocketBroadcastService webSocketBroadcastService;
 
     @PostMapping("/login")
-    public String login(@RequestParam String phone,@RequestParam String reference, HttpSession session) {
+    public String login(
+            @RequestParam String phone,
+            @RequestParam String reference,
+            @RequestParam(value = "success", required = false) String success,
+            HttpSession session
+    ) {
         Reservation reservation = reservationRepository.findByCustomerPhoneAndReference(phone, reference).orElse(null);
 
         if (reservation != null) {
             session.setAttribute("phone", reservation.getCustomer().getPhone());
             session.setAttribute("reference", reservation.getReference());
-            return "redirect:/queue";
+            String successMsg = success != null ? "&success=" + success.replace(" ", "+") : "";
+            return "redirect:/queue" + (success != null ? "?success=" + success.replace(" ", "+") : "");
         } else {
             return "redirect:/loginpage?error=No Reservation Found";
         }
@@ -81,6 +87,7 @@ public class QueueController {
     public String loginViaLink(
             @RequestParam(value = "phone", required = false) String phone,
             @RequestParam(value = "reference", required = false) String reference,
+            @RequestParam(value = "success", required = false) String success,
             @RequestParam(value = "logout", required = false) String logout,
             HttpSession session
     ) {
@@ -91,7 +98,7 @@ public class QueueController {
                 session.setAttribute("phone", reservation.getCustomer().getPhone());
                 session.setAttribute("reference", reservation.getReference());
                 session.setAttribute("reservationId", reservation.getId());
-                return "redirect:/queue";
+                return "redirect:/queue" + (success != null ? "?success=" + success.replace(" ", "+") : "");
             } else {
                 return "redirect:/loginpage?error=No+Reservation+Found";
             }
@@ -100,7 +107,9 @@ public class QueueController {
     }
 
     @GetMapping("/queue")
-    public String queuePage(HttpSession session, Model model) {
+    public String queuePage(
+            @RequestParam(value = "success", required = false) String success,
+            HttpSession session, Model model) {
         String account = (String) session.getAttribute("reference"); // Spring Security username
 
         // Send all pending notifications
@@ -155,6 +164,10 @@ public class QueueController {
             model.addAttribute("seatingCapacity", reservation.getPax());
             model.addAttribute("preferredSpace", reservation.getPrefer() != null ? reservation.getPrefer() : "");
             model.addAttribute("status", reservation.getStatus());
+            
+            if (success != null && !success.isBlank()) {
+                model.addAttribute("successMessage", success.replace("+", " "));
+            }
 
             // Send as ISO format strings - JavaScript will handle timezone conversion
             model.addAttribute("pendingDateTime", pendingDateTime.atOffset(ZoneOffset.UTC).format(isoFormatter));
