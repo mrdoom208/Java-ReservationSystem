@@ -137,7 +137,7 @@ public class editReservationController {
 
     @FXML
     private void initialize(){
-        statusComboBox.getItems().addAll("Pending", "Confirmed");
+        statusComboBox.getItems().addAll("Pending", "Confirm");
         statusComboBox.setDisable(true);
         applyEmailRestriction(Email);
         applyNumbersOnly(Pax);

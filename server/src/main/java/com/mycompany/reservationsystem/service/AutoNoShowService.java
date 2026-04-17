@@ -34,11 +34,11 @@ public class AutoNoShowService {
             return;
         }
 
-        List<Reservation> confirmedReservations = reservationRepository.findByStatus("Confirmed");
+        List<Reservation> confirmReservations = reservationRepository.findByStatus("Confirm");
         LocalTime now = LocalTime.now();
         int noshowCount = 0;
 
-        for (Reservation reservation : confirmedReservations) {
+        for (Reservation reservation : confirmReservations) {
             if (reservation.getReservationConfirmtime() == null) {
                 continue;
             }

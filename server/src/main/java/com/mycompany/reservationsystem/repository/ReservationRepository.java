@@ -29,7 +29,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findAllByStatus(String status);
 
     default List<Reservation> findActiveReservations() {
-        return findByStatusIn(List.of("Pending", "Confirmed", "Seated"));
+        return findByStatusIn(List.of("Pending", "Confirm", "Seated"));
     }
 
     boolean existsByTable_Id(Long tableId);
@@ -245,9 +245,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             + "FROM Reservation r JOIN r.table t WHERE r.date >= :from AND r.date <= :to GROUP BY t.tableNo")
     List<TableUsageReportDTO> getTableUsageReportBetween(@Param("from") LocalDate from, @Param("to") LocalDate to);
 
-    @Query("SELECT r FROM Reservation r WHERE r.status = 'Confirmed' AND r.reservationNotifiedtime IS NOT NULL "
+    @Query("SELECT r FROM Reservation r WHERE r.status = 'Confirm' AND r.reservationNotifiedtime IS NOT NULL "
             + "AND r.reservationConfirmtime IS NULL")
-    List<Reservation> findConfirmedAwaitingArrival();
+    List<Reservation> findConfirmAwaitingArrival();
 
     @Modifying
     @Transactional

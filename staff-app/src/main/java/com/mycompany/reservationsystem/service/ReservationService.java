@@ -353,7 +353,7 @@ public class ReservationService {
         List<Map<String, Object>> list = ApiClient.getAllReservationsList();
         for (Map<String, Object> map : list) {
             String status = (String) map.get("status");
-            if ("Pending".equals(status) || "Confirmed".equals(status) || "Seated".equals(status)) {
+            if ("Pending".equals(status) || "Confirm".equals(status) || "Seated".equals(status)) {
                 Object tableObj = map.get("table");
                 if (tableObj instanceof Map) {
                     Map<String, Object> tableMap = (Map<String, Object>) tableObj;

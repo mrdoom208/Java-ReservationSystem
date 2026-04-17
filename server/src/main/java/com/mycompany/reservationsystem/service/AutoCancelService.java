@@ -42,7 +42,7 @@ public class AutoCancelService {
             return;
         }
 
-        List<Reservation> awaitingReservations = reservationRepository.findConfirmedAwaitingArrival();
+        List<Reservation> awaitingReservations = reservationRepository.findConfirmAwaitingArrival();
 
         LocalTime now = LocalTime.now();
         int cancelledCount = 0;

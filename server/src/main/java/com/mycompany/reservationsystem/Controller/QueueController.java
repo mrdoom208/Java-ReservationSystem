@@ -183,7 +183,7 @@ public class QueueController {
 
             int activeSegments = switch (reservation.getStatus()) {
                 case "Pending"  -> 6;
-                case "Confirmed"  -> 12;
+                case "Confirm"  -> 12;
                 case "Seated"   -> 18;
                 case "Complete" -> 24;
                 case "Cancelled" -> 24;
@@ -320,7 +320,7 @@ public class QueueController {
         Reservation reservation = reservationRepository.findByCustomerPhoneAndReference(phone, reference).orElse(null);
         if (reservation != null) {
             // Update the customer name
-            reservation.setStatus("Confirmed");
+            reservation.setStatus("Confirm");
             reservation.setReservationConfirmtime(LocalTime.now(ZoneOffset.UTC));
             reservationRepository.save(reservation);
 

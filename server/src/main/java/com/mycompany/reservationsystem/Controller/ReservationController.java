@@ -72,7 +72,7 @@ public class ReservationController {
         if (request.getTableId() != null) {
             manageTablesRepository.findById(request.getTableId()).ifPresent(table -> {
                 reservation.setTable(table);
-                reservation.setStatus("Confirmed");
+                reservation.setStatus("Confirm");
                 reservation.setReservationConfirmtime(java.time.LocalTime.now());
             });
         } else {

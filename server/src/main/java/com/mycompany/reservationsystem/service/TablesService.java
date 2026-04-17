@@ -58,7 +58,7 @@ public class TablesService {
 
     public List<ManageTablesDTO> getAllTables() {
         List<ManageTables> tables = manageTablesRepository.findAll();
-        List<Reservation> activeReservations = reservationRepository.findByStatusIn(List.of("Pending", "Confirmed", "Seated", "Completed"));
+        List<Reservation> activeReservations = reservationRepository.findByStatusIn(List.of("Pending", "Confirm", "Seated", "Completed"));
         
         Map<Long, Reservation> tableToReservation = activeReservations.stream()
             .filter(r -> r.getTable() != null)

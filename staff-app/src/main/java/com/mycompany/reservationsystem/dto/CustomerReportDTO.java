@@ -13,7 +13,7 @@ public class CustomerReportDTO {
     private double totalSpent;
     private double averageSpend;
     private String lastVisit;
-    private boolean selected;
+    private SimpleBooleanProperty selected = new SimpleBooleanProperty(false);
     private Long id;
     private String reference;
     private String status;
@@ -72,10 +72,10 @@ public class CustomerReportDTO {
     public String getLastVisit() { return lastVisit; }
     public void setLastVisit(String lastVisit) { this.lastVisit = lastVisit; }
 
-    public boolean isSelected() { return selected; }
-    public void setSelected(Boolean selected) { this.selected = selected != null && selected; }
+    public boolean isSelected() { return selected.get(); }
+    public void setSelected(Boolean selected) { this.selected.set(selected != null && selected); }
 
     public SimpleBooleanProperty selectedProperty() {
-        return new SimpleBooleanProperty(selected);
+        return selected;
     }
 }

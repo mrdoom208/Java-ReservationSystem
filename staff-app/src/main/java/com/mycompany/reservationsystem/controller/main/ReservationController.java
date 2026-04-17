@@ -167,6 +167,7 @@ public class ReservationController {
     /* ===================== STATE ===================== */
 
     private Reservation selectedReservation;
+    private Long selectedReservationId;
     private Message selectedMessage;
 
 
@@ -247,6 +248,7 @@ public class ReservationController {
 
         CustomerReservationTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             selectedReservation = newSelection;
+            selectedReservationId = (newSelection != null) ? newSelection.getId() : null;
             editreservation.setDisable(newSelection == null);
             boolean canCancel = permissionService.hasPermission(currentuser, "VIEW_CANCEL_RESERVATION");
             cancelreservation.setDisable(!canCancel || newSelection == null);
@@ -344,6 +346,7 @@ public class ReservationController {
                     Reservation row = getTableView().getItems().get(index);
                     if (row != null) {
                         selectedReservation = row;
+                        selectedReservationId = row.getId();
 
                         // Select the row in the table (highlights it)
                         getTableView().getSelectionModel().clearAndSelect(index);
@@ -413,7 +416,7 @@ public class ReservationController {
     }
 
     public void loadCustomerReservationTable() {
-        List<String> statuses = List.of("Pending", "Confirmed");
+        List<String> statuses = List.of("Pending", "Confirm");
         filteredReservationList.setPredicate(reservation -> {
             if (reservation == null || reservation.getStatus() == null) {
                 return false;
@@ -796,16 +799,24 @@ public class ReservationController {
         Task<Void> sendSmsTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
+                if (selectedReservationId == null) {
+                    throw new RuntimeException("No reservation selected");
+                }
                 try {
+                    Reservation freshReservation = ReservationService.findById(selectedReservationId);
+                    if (freshReservation == null) {
+                        throw new RuntimeException("Reservation not found");
+                    }
+                    
                     webSocketClient.sendDTO(dto);
 
-                    String phoneNo = selectedReservation.getCustomer().getPhone();
-                    String details = resolveNotifyCustomerMessage();
+                    String phoneNo = freshReservation.getCustomer().getPhone();
+                    String details = resolveNotifyCustomerMessage(freshReservation);
 
                     messageDispatchService.send(phoneNo, details);
 
-                    selectedReservation.setReservationNotifiedtime(java.time.LocalTime.now());
-                    ReservationService.saveReservation(selectedReservation);
+                    freshReservation.setReservationNotifiedtime(java.time.LocalTime.now());
+                    ReservationService.saveReservation(freshReservation);
 
                 } catch (Exception e) {
                     throw new RuntimeException("Message send failed", e);
@@ -817,10 +828,11 @@ public class ReservationController {
         sendSmsTask.setOnSucceeded(evt -> {
             response.setGraphic(null);
             sendResponse(true, "Message sent successfully!");
-            startButtonCountdown(selectedReservation);
-            NotificationUtil.markNotified(selectedReservation);
-
-
+            Reservation freshReservation = ReservationService.findById(selectedReservationId);
+            if (freshReservation != null) {
+                startButtonCountdown(freshReservation);
+                NotificationUtil.markNotified(freshReservation);
+            }
         });
 
         sendSmsTask.setOnFailed(evt -> {
@@ -834,19 +846,19 @@ public class ReservationController {
         new Thread(sendSmsTask).start();
     }
 
-    private String resolveNotifyCustomerMessage() {
+    private String resolveNotifyCustomerMessage(Reservation reservation) {
         String configuredLabel = AppSettings.loadMessageLabel(MESSAGE_NOTIFY_CUSTOMER_KEY);
         if (configuredLabel != null && !configuredLabel.isBlank()) {
             return messageService.findByLabel(configuredLabel)
                     .map(Message::getMessageDetails)
                     .filter(text -> text != null && !text.isBlank())
-                    .orElseGet(this::buildDefaultNotifyCustomerMessage);
+                    .orElseGet(() -> buildDefaultNotifyCustomerMessage(reservation));
         }
-        return buildDefaultNotifyCustomerMessage();
+        return buildDefaultNotifyCustomerMessage(reservation);
     }
 
-    private String buildDefaultNotifyCustomerMessage() {
-        return "Hello " + selectedReservation.getCustomer().getName() + ", your table is ready.\n"
+    private String buildDefaultNotifyCustomerMessage(Reservation reservation) {
+        return "Hello " + reservation.getCustomer().getName() + ", your table is ready.\n"
                 + "Please proceed to the reception for seating. Thank you.\n";
     }
 
@@ -921,10 +933,12 @@ public class ReservationController {
             controller.setMessage("Are you sure you want to cancel this reservation?");
 
             controller.setOnDelete(() -> {
+                Long reservationId = selectedReservationId;
+                String reference = selectedReservation != null ? selectedReservation.getReference() : null;
                 Task<Void> task = new Task<>() {
                     @Override
                     protected Void call() {
-                        ReservationService.updateStatus(selectedReservation.getReference(), "Cancelled");
+                        ReservationService.updateStatus(reference, "Cancelled");
                         return null;
                     }
                 };
@@ -937,7 +951,7 @@ public class ReservationController {
                                 currentuser.getPosition().toString(),
                                 "Reservation",
                                 "Cancel Reservation",
-                                "Cancelled reservation: " + selectedReservation.getReference()
+                                "Cancelled reservation: " + reference
                         );
                     }
                     sendResponse(true, "Reservation cancelled successfully");

@@ -2,11 +2,16 @@ package com.mycompany.reservationsystem.rest;
 
 import com.mycompany.reservationsystem.dto.ManageTablesDTO;
 import com.mycompany.reservationsystem.dto.TableStatsDTO;
+import com.mycompany.reservationsystem.dto.WebUpdateDTO;
 import com.mycompany.reservationsystem.model.ManageTables;
+import com.mycompany.reservationsystem.model.Notification;
 import com.mycompany.reservationsystem.repository.ManageTablesRepository;
+import com.mycompany.reservationsystem.repository.NotificationRepository;
 import com.mycompany.reservationsystem.service.TablesService;
+import com.mycompany.reservationsystem.service.WebSocketBroadcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +25,15 @@ public class TableController {
 
     @Autowired
     private ManageTablesRepository manageTablesRepository;
+    
+    @Autowired
+    private WebSocketBroadcastService webSocketBroadcastService;
+    
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+    
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @PostMapping
     public ManageTables createTable(@RequestBody ManageTables table) {
@@ -138,6 +152,7 @@ public class TableController {
     public ResponseEntity<ManageTables> removeCustomer(@PathVariable Long id) {
         return manageTablesRepository.findById(id)
                 .map(table -> {
+                    String reference = table.getReference();
                     tablesService.clearReservationByTableId(id);
                     
                     table.setCustomer(null);
@@ -149,6 +164,19 @@ public class TableController {
                     table.setTableendtime(java.time.LocalTime.now());
                     table.setStatus("Available");
                     ManageTables updated = manageTablesRepository.save(table);
+                    
+                    if (reference != null && !reference.isEmpty()) {
+                        Notification notification = new Notification();
+                        notification.setAccount(reference);
+                        notification.setCode("RESERVATION_PENDING");
+                        notification.setMessage("Your reservation status has been set to Pending. Please wait for table assignment.");
+                        notification.setTimestamp(System.currentTimeMillis());
+                        notification.setSent(false);
+                        notificationRepository.save(notification);
+                        
+                        messagingTemplate.convertAndSend("/topic/account." + reference, notification);
+                    }
+                    
                     return ResponseEntity.ok(updated);
                 })
                 .orElse(ResponseEntity.notFound().build());

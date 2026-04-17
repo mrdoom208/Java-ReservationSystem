@@ -57,7 +57,7 @@ public class ReservationService {
         if (optional.isPresent()) {
             Reservation entity = optional.get();
             entity.setTable(table);
-            entity.setStatus("Confirmed");
+            entity.setStatus("Confirm");
             entity.setReservationConfirmtime(LocalTime.now());
             reservationRepository.save(entity);
             
@@ -172,7 +172,7 @@ public class ReservationService {
     }
 
     public List<Reservation> findActiveReservations() {
-        return reservationRepository.findByStatusIn(List.of("Pending", "Confirmed", "Seated"));
+        return reservationRepository.findByStatusIn(List.of("Pending", "Confirm", "Seated"));
     }
 
     public List<CustomerReportDTO> getCustomerReport(LocalDate startDate, LocalDate endDate) {
@@ -190,7 +190,7 @@ public class ReservationService {
         long totalReservations = reservationRepository.count();
         long todayReservations = reservationRepository.findByDate(today).size();
         long pendingCount = reservationRepository.countByStatus("Pending");
-        long confirmedCount = reservationRepository.countByStatus("Confirmed");
+        long confirmCount = reservationRepository.countByStatus("Confirm");
         long seatedCount = reservationRepository.countByStatus("Seated");
         long finishedCount = reservationRepository.countByStatus("Complete");
         long cancelledCount = reservationRepository.countByStatus("Cancelled");
@@ -199,7 +199,7 @@ public class ReservationService {
         counts.put("totalReservations", totalReservations);
         counts.put("todayReservations", todayReservations);
         counts.put("pendingCount", pendingCount);
-        counts.put("confirmedCount", confirmedCount);
+        counts.put("confirmCount", confirmCount);
         counts.put("seatedCount", seatedCount);
         counts.put("finishedCount", finishedCount);
         counts.put("cancelledCount", cancelledCount);

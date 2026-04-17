@@ -56,12 +56,23 @@ public class WebUpdateHandlerImpl implements WebSocketListener {
                     );
                     break;
                 }
+                case "REMOVE_CUSTOMER": {
+                    adminController.addNotification(
+                            "Customer Removed",
+                            message,
+                            AdministratorUIController.NotificationType.WARNING,
+                            dto.getReference()
+                    );
+                    break;
+                }
             }
 
             dashboard.loadRecentReservations();
             dashboard.updateLabels();
             reservation.loadReservationsData();
+            reservation.loadAvailableTable();
             table.loadTableManager();
+            table.loadTableHistory();
         });
 
         /* ================= MESSAGE THREAD ================= */
