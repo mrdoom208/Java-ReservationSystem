@@ -7,6 +7,7 @@ import com.mycompany.reservationsystem.repository.CustomerRepository;
 import com.mycompany.reservationsystem.repository.ReservationRepository;
 import com.mycompany.reservationsystem.service.SmsService;
 import com.mycompany.reservationsystem.service.WebSocketBroadcastService;
+import com.mycompany.reservationsystem.util.PhoneFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,9 +40,11 @@ public class ReserveController {
             @RequestParam(required = false) String Prefer,
             @RequestParam(required = false) String Email
     ) {
+        String normalizedPhone = PhoneFormatter.normalizePHNumber(Phone);
+        
         Customer customer = new Customer();
         customer.setName(Name);
-        customer.setPhone(Phone);
+        customer.setPhone(normalizedPhone);
         if (Email != null && !Email.isBlank()) {
             customer.setEmail(Email);
         }
@@ -62,19 +65,23 @@ public class ReserveController {
                 "Hello %s, your reservation has been successfully made.\nReference: %s\nParty Size: %s\nWe are looking forward to welcoming you!",
                 Name, reference, pax
         );
-        smsService.sendSms(Phone, message);
+        smsService.sendSms(normalizedPhone, message);
 
         WebUpdateDTO dto = new WebUpdateDTO();
         dto.setCode("reservation");
         dto.setMessage("New reservation created: " + reference);
         dto.setType("reservation");
-        dto.setPhone(Phone);
+        dto.setPhone(normalizedPhone);
         dto.setReference(reference);
         dto.setPax(Integer.parseInt(pax));
         dto.setCustomerName(Name);
-        webSocketBroadcastService.broadcastToFrontend(dto);
+        try {
+            webSocketBroadcastService.broadcastToFrontend(dto);
+        } catch (Exception e) {
+            // Log but don't fail reservation creation
+        }
 
-        return "redirect:/login?phone=" + Phone + "&reference=" + reference + "&success=Reservation Created Successfully";
+        return "redirect:/login?phone=" + normalizedPhone + "&reference=" + reference + "&success=Reservation+Created+Successfully";
     }
 
     private String generateReference() {

@@ -60,6 +60,9 @@ public class TableController {
                     if (tableDetails.getTableendtime() != null) {
                         table.setTableendtime(tableDetails.getTableendtime());
                     }
+                    if (tableDetails.getReference() != null) {
+                        table.setReference(tableDetails.getReference());
+                    }
                     ManageTables updated = manageTablesRepository.save(table);
                     return ResponseEntity.ok(updated);
                 })
@@ -124,6 +127,7 @@ public class TableController {
                     table.setTablestarttime(null);
                     table.setTableendtime(java.time.LocalTime.now());
                     table.setStatus("Available");
+                    table.setReference(null);
                     ManageTables updated = manageTablesRepository.save(table);
                     return ResponseEntity.ok(updated);
                 })
@@ -134,13 +138,7 @@ public class TableController {
     public ResponseEntity<ManageTables> removeCustomer(@PathVariable Long id) {
         return manageTablesRepository.findById(id)
                 .map(table -> {
-                    String reference = table.getReference();
-                    
-                    if (reference != null && !reference.isEmpty()) {
-                        tablesService.clearTableFromReservation(reference);
-                    }
-                    
-                    tablesService.clearReservationsForTableById(id);
+                    tablesService.clearReservationByTableId(id);
                     
                     table.setCustomer(null);
                     table.setCustomerPhone(null);

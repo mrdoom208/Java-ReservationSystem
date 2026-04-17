@@ -123,6 +123,18 @@ public class TablesService {
             reservationRepository.save(reservation);
         }
     }
+    
+    @Transactional
+    public void clearReservationByTableId(Long tableId) {
+        List<Reservation> reservations = reservationRepository.findByTable_Id(tableId);
+        for (Reservation reservation : reservations) {
+            if (!"Complete".equals(reservation.getStatus()) && !"Cancelled".equals(reservation.getStatus())) {
+                reservation.setTable(null);
+                reservation.setStatus("Pending");
+                reservationRepository.save(reservation);
+            }
+        }
+    }
 
     public void clearReservationsForTable(Long tableId) {
         clearReservationsForTableById(tableId);

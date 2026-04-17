@@ -240,7 +240,11 @@ public class QueueController {
             dto.setCode("CHANGED_RESERVATION");
             dto.setReference(reservation.getReference());
             dto.setMessage("Customer "+dto.getCustomerName()+" has modified their reservation "+dto.getReference()+" details.");
-            webSocketBroadcastService.broadcastToFrontend(dto);
+            try {
+                webSocketBroadcastService.broadcastToFrontend(dto);
+            } catch (Exception e) {
+                // Log but don't fail reservation update
+            }
 
 
         }
@@ -294,7 +298,11 @@ public class QueueController {
             smsService.sendSms(recipient,details);
 
 
-            webSocketBroadcastService.broadcastToFrontend(dto);
+            try {
+                webSocketBroadcastService.broadcastToFrontend(dto);
+            } catch (Exception e) {
+                // Log but don't fail cancellation
+            }
 
         }
         return "redirect:/queue"; // Redirect after successful update
@@ -337,7 +345,11 @@ public class QueueController {
             dto.setPax(reservation.getPax());
             dto.setCustomerName(reservation.getCustomer().getName());
 
-            webSocketBroadcastService.broadcastToFrontend(dto);
+            try {
+                webSocketBroadcastService.broadcastToFrontend(dto);
+            } catch (Exception e) {
+                // Log but don't fail confirmation
+            }
 
         }
         return "redirect:/queue"; // Redirect after successful update

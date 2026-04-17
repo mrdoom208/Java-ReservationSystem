@@ -181,6 +181,7 @@ public class ReservationController {
 
     public void setAdminUIController(AdministratorUIController adminUIController) {
         this.adminUIController = adminUIController;
+        this.currentuser = adminUIController.getCurrentUser();
     }
 
 
@@ -721,6 +722,7 @@ public class ReservationController {
                     // Keep the original reservation status (Pending/Confirmed)
                     selectedTable.setStatus("Reserved");
                     selectedTable.setTablestarttime(LocalTime.now());
+                    selectedTable.setReference(cr.getReference());
 
                     System.out.println("[merge] Saving table...");
                     TablesService.saveTable(selectedTable);

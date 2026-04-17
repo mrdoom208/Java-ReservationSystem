@@ -87,7 +87,11 @@ public class ReservationController {
         dto.setCode("reservation");
         dto.setMessage("New reservation created: " + saved.getReference());
         dto.setType("reservation");
-        webSocketBroadcastService.broadcastToFrontend(dto);
+        try {
+            webSocketBroadcastService.broadcastToFrontend(dto);
+        } catch (Exception e) {
+            // Log but don't fail reservation creation
+        }
         
         sendNewReservationSms(saved);
         sendAlwaysOnReservationSms(saved);
@@ -191,7 +195,11 @@ public class ReservationController {
         dto.setCode("status");
         dto.setMessage("Reservation " + reference + " status updated to " + status);
         dto.setType("update");
-        webSocketBroadcastService.broadcastToFrontend(dto);
+        try {
+            webSocketBroadcastService.broadcastToFrontend(dto);
+        } catch (Exception e) {
+            // Log but don't fail status update
+        }
         
         return ResponseEntity.ok().build();
     }
@@ -208,7 +216,11 @@ public class ReservationController {
         dto.setCode("table");
         dto.setMessage("Reservation " + reference + " table updated");
         dto.setType("update");
-        webSocketBroadcastService.broadcastToFrontend(dto);
+        try {
+            webSocketBroadcastService.broadcastToFrontend(dto);
+        } catch (Exception e) {
+            // Log but don't fail table update
+        }
         
         return ResponseEntity.ok().<Void>build();
     }
@@ -224,7 +236,11 @@ public class ReservationController {
             dto.setCode("table");
             dto.setMessage("Reservation " + reference + " table cleared");
             dto.setType("update");
-            webSocketBroadcastService.broadcastToFrontend(dto);
+            try {
+                webSocketBroadcastService.broadcastToFrontend(dto);
+            } catch (Exception e) {
+                // Log but don't fail table clear
+            }
             return ResponseEntity.ok().<Void>build();
         }
         
@@ -239,7 +255,11 @@ public class ReservationController {
             dto.setCode("table");
             dto.setMessage("Reservation " + reference + " table updated");
             dto.setType("update");
-            webSocketBroadcastService.broadcastToFrontend(dto);
+            try {
+                webSocketBroadcastService.broadcastToFrontend(dto);
+            } catch (Exception e) {
+                // Log but don't fail table update
+            }
         }
         
         return ResponseEntity.ok().<Void>build();
@@ -255,6 +275,7 @@ public class ReservationController {
     @PostMapping("/{reference}/finish")
     public ResponseEntity<Void> finishReservation(@PathVariable String reference, @RequestBody FinishReservationRequest request) {
         reservationService.updateStatus(reference, "Complete");
+        reservationService.clearTableOnly(reference);
         if (request.getAmountPaid() != null) {
             reservationService.updateAmountPaid(reference, request.getAmountPaid());
         }

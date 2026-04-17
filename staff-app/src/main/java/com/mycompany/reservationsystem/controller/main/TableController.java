@@ -46,6 +46,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.mycompany.reservationsystem.util.TableCellFactoryUtil.*;
 
@@ -128,6 +130,7 @@ public class TableController {
 
     public void setAdminUIController(AdministratorUIController adminUIController) {
         this.adminUIController = adminUIController;
+        this.currentuser = adminUIController.getCurrentUser();
     }
 
 
@@ -392,21 +395,47 @@ public class TableController {
 
                 task.setOnSucceeded(e -> {
                     ManageTablesDTO data = task.getValue();
-
-                    // UI THREAD ONLY
                     updateButtonsForStatus(data);
-                    adminUIController.getDashboardController().loadTableView();
-                    adminUIController.getDashboardController().updateLabels();
-                    adminUIController.getReservationController().loadReservationsData();
-                    adminUIController.getReservationController().loadAvailableTable();
-                    loadTableManager();
 
-                    btnStart.setGraphic(utensilIcon);
-                    btnStart.setText("Start Service");
-                    btnStart.setMouseTransparent(false);
-                    btnStart.setFocusTraversable(true);
+                    int loadCount = 5;
+                    CountDownLatch latch = new CountDownLatch(loadCount);
 
-                    resetButtonStates();
+                    Task<Void> loadTask1 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getDashboardController().loadTableView(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask2 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getDashboardController().updateLabels(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask3 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getReservationController().loadReservationsData(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask4 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getReservationController().loadAvailableTable(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask5 = new Task<Void>() {
+                        @Override protected Void call() { loadTableManager(); latch.countDown(); return null; }
+                    };
+
+                    new Thread(loadTask1).start();
+                    new Thread(loadTask2).start();
+                    new Thread(loadTask3).start();
+                    new Thread(loadTask4).start();
+                    new Thread(loadTask5).start();
+
+                    Task<Void> waitTask = new Task<Void>() {
+                        @Override protected Void call() throws Exception {
+                            latch.await();
+                            return null;
+                        }
+                    };
+                    waitTask.setOnSucceeded(ev -> {
+                        btnStart.setGraphic(utensilIcon);
+                        btnStart.setText("Start Service");
+                        btnStart.setMouseTransparent(false);
+                        btnStart.setFocusTraversable(true);
+                        resetButtonStates();
+                    });
+                    new Thread(waitTask).start();
                 });
 
                 task.setOnFailed(e -> {
@@ -537,15 +566,50 @@ public class TableController {
 
                 task.setOnSucceeded(e -> {
                     updateButtonsForStatus(data);
-                    adminUIController.getDashboardController().loadTableView();
-                    adminUIController.getDashboardController().updateLabels();
-                    adminUIController.getReservationController().loadReservationsData();
-                    adminUIController.getReservationController().loadReservationLogs();
-                    adminUIController.getReservationController().loadAvailableTable();
-                    loadTableManager();
-                    loadTableHistory();
 
-                    resetButtonStates();
+                    int loadCount = 7;
+                    CountDownLatch latch = new CountDownLatch(loadCount);
+
+                    Task<Void> loadTask1 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getDashboardController().loadTableView(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask2 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getDashboardController().updateLabels(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask3 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getReservationController().loadReservationsData(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask4 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getReservationController().loadReservationLogs(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask5 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getReservationController().loadAvailableTable(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask6 = new Task<Void>() {
+                        @Override protected Void call() { loadTableManager(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask7 = new Task<Void>() {
+                        @Override protected Void call() { loadTableHistory(); latch.countDown(); return null; }
+                    };
+
+                    new Thread(loadTask1).start();
+                    new Thread(loadTask2).start();
+                    new Thread(loadTask3).start();
+                    new Thread(loadTask4).start();
+                    new Thread(loadTask5).start();
+                    new Thread(loadTask6).start();
+                    new Thread(loadTask7).start();
+
+                    Task<Void> waitTask = new Task<Void>() {
+                        @Override protected Void call() throws Exception {
+                            latch.await();
+                            return null;
+                        }
+                    };
+                    waitTask.setOnSucceeded(ev -> {
+                        resetButtonStates();
+                    });
+                    new Thread(waitTask).start();
                 });
 
                 task.setOnFailed(e -> {
@@ -654,6 +718,15 @@ public class TableController {
                 
                 System.out.println("[handleRemoveCustomer] TableId: " + data.getTableId() + ", TableNo: " + data.getTableNo());
 
+                ProgressIndicator progress = new ProgressIndicator();
+                progress.setPrefSize(15, 15);
+                btnRemoveCustomer.setMouseTransparent(true);
+                btnRemoveCustomer.setFocusTraversable(false);
+                btnRemoveCustomer.setText(null);
+                btnRemoveCustomer.setGraphic(progress);
+                btnEdit.setDisable(true);
+                btnDelete.setDisable(true);
+
                 Task<Void> task = new Task<>() {
                     @Override
                     protected Void call() {
@@ -670,16 +743,64 @@ public class TableController {
                             "Remove Customer",
                             String.format("Removed customer from table %s", data.getTableNo())
                     );
-                    adminUIController.getDashboardController().loadTableView();
-                    adminUIController.getDashboardController().updateLabels();
-                    loadTableManager();
-                    loadTableHistory();
-                    adminUIController.getReservationController().loadAvailableTable();
-                    adminUIController.getReservationController().loadReservationsData();
+
+                    int loadCount = 6;
+                    CountDownLatch latch = new CountDownLatch(loadCount);
+
+                    Task<Void> loadTask1 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getDashboardController().loadTableView(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask2 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getDashboardController().updateLabels(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask3 = new Task<Void>() {
+                        @Override protected Void call() { loadTableManager(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask4 = new Task<Void>() {
+                        @Override protected Void call() { loadTableHistory(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask5 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getReservationController().loadAvailableTable(); latch.countDown(); return null; }
+                    };
+                    Task<Void> loadTask6 = new Task<Void>() {
+                        @Override protected Void call() { adminUIController.getReservationController().loadReservationsData(); latch.countDown(); return null; }
+                    };
+
+                    new Thread(loadTask1).start();
+                    new Thread(loadTask2).start();
+                    new Thread(loadTask3).start();
+                    new Thread(loadTask4).start();
+                    new Thread(loadTask5).start();
+                    new Thread(loadTask6).start();
+
+                    Task<Void> waitTask = new Task<Void>() {
+                        @Override protected Void call() throws Exception {
+                            latch.await();
+                            return null;
+                        }
+                    };
+                    waitTask.setOnSucceeded(ev -> {
+                        Platform.runLater(() -> {
+                            updateButtonsForStatus(data);
+                            btnRemoveCustomer.setGraphic(removeIcon);
+                            btnRemoveCustomer.setText("Remove Customer");
+                            btnRemoveCustomer.setMouseTransparent(false);
+                            btnRemoveCustomer.setFocusTraversable(true);
+                            resetButtonStates();
+                        });
+                    });
+                    new Thread(waitTask).start();
                 });
 
                 task.setOnFailed(e -> {
                     task.getException().printStackTrace();
+                    
+                    Platform.runLater(() -> {
+                        btnRemoveCustomer.setGraphic(removeIcon);
+                        btnRemoveCustomer.setText("Remove Customer");
+                        btnRemoveCustomer.setMouseTransparent(false);
+                        resetButtonStates();
+                    });
                 });
 
                 new Thread(task).start();
@@ -842,29 +963,29 @@ public class TableController {
          System.out.println("[handleRemoveCustomerFromSelected] TableId: " + data.getTableId() + ", TableNo: " + data.getTableNo());
 
          User user = currentuser;
-         Task<Void> task = new Task<>() {
-             @Override
-             protected Void call() {
-                 TablesService.removeCustomerFromTable(data.getTableId());
-                 return null;
-             }
-         };
+          Task<Void> task = new Task<>() {
+              @Override
+              protected Void call() {
+                  TablesService.removeCustomerFromTable(data.getTableId());
+                  return null;
+              }
+          };
 
-         task.setOnSucceeded(e -> {
-             activityLogService.logAction(
-                     user.getUsername(),
-                     user.getPosition().toString(),
-                     "Table",
-                     "Remove Customer",
-                     String.format("Removed customer from table %s", data.getTableNo())
-             );
-             adminUIController.getDashboardController().loadTableView();
-             adminUIController.getDashboardController().updateLabels();
-             loadTableManager();
-             loadTableHistory();
-             adminUIController.getReservationController().loadAvailableTable();
-             adminUIController.getReservationController().loadReservationsData();
-         });
+          task.setOnSucceeded(e -> {
+              activityLogService.logAction(
+                      user.getUsername(),
+                      user.getPosition().toString(),
+                      "Table",
+                      "Remove Customer",
+                      String.format("Removed customer from table %s", data.getTableNo())
+              );
+              adminUIController.getDashboardController().loadTableView();
+              adminUIController.getDashboardController().updateLabels();
+              loadTableManager();
+              loadTableHistory();
+              adminUIController.getReservationController().loadAvailableTable();
+              adminUIController.getReservationController().loadReservationsData();
+          });
 
          task.setOnFailed(e -> {
              task.getException().printStackTrace();

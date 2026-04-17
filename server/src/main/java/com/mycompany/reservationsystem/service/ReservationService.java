@@ -60,6 +60,9 @@ public class ReservationService {
             entity.setStatus("Confirmed");
             entity.setReservationConfirmtime(LocalTime.now());
             reservationRepository.save(entity);
+            
+            table.setReference(Ref);
+            manageTablesRepository.save(table);
         } else {
             throw new RuntimeException("Reservation not found with id table: " + Ref);
         }
@@ -72,6 +75,16 @@ public class ReservationService {
             Reservation entity = optional.get();
             entity.setTable(null);
             entity.setStatus("Pending");
+            reservationRepository.save(entity);
+        }
+    }
+    
+    @Transactional
+    public void clearTableOnly(String Ref) {
+        Optional<Reservation> optional = reservationRepository.findByReference(Ref);
+        if (optional.isPresent()) {
+            Reservation entity = optional.get();
+            entity.setTable(null);
             reservationRepository.save(entity);
         }
     }
