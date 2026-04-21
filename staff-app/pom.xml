@@ -1,14 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.mycompany</groupId>
     <artifactId>ReservationSystemFrontend</artifactId>
     <version>1.0-SNAPSHOT</version>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
+
+    <!-- ===================== DEPENDENCIES ===================== -->
     <dependencies>
 
         <dependency>
@@ -16,40 +22,43 @@
             <artifactId>spring-boot-starter</artifactId>
             <version>3.2.1</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>3.2.1</version>
         </dependency>
-        <!-- Jackson for JSON conversion -->
-    <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>2.15.3</version>
-    </dependency>
 
-    <!-- Java HTTP client (replaces Spring Web) -->
-    <dependency>
-        <groupId>org.apache.httpcomponents.client5</groupId>
-        <artifactId>httpclient5</artifactId>
-        <version>5.2.1</version>
-    </dependency>
-        
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
             <version>1.5.4</version>
         </dependency>
-       
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>21</version>
+            <classifier>win</classifier>
         </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>21</version>
+            <classifier>win</classifier>
         </dependency>
 
         <dependency>
@@ -57,44 +66,56 @@
             <artifactId>jakarta.annotation-api</artifactId>
             <version>2.1.1</version>
         </dependency>
+
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
             <version>3.5.2</version>
         </dependency>
+
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
             <version>3.5.2</version>
         </dependency>
+
         <dependency>
-        <groupId>org.kordamp.bootstrapfx</groupId>
-        <artifactId>bootstrapfx-core</artifactId>
-        <version>0.4.0</version>
+            <groupId>org.kordamp.bootstrapfx</groupId>
+            <artifactId>bootstrapfx-core</artifactId>
+            <version>0.4.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-fontawesome5-pack</artifactId>
             <version>12.2.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-javafx</artifactId>
             <version>12.2.0</version>
         </dependency>
+
         <dependency>
             <groupId>io.github.palexdev</groupId>
             <artifactId>materialfx</artifactId>
             <version>11.17.0</version>
         </dependency>
+
         <dependency>
             <groupId>com.fazecast</groupId>
             <artifactId>jSerialComm</artifactId>
             <version>[2.0.0,3.0.0)</version>
         </dependency>
+
     </dependencies>
+
+    <!-- ===================== BUILD ===================== -->
     <build>
         <plugins>
+
+            <!-- Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -103,184 +124,200 @@
                     <release>21</release>
                 </configuration>
             </plugin>
+
+            <!-- Shade (fat jar) -->
             <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.4</version>
-                <configuration>
-                    <mainClass>com.mycompany.reservationsystem.App</mainClass>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running -->
-                        <!-- Usage: mvn clean javafx:run -->
-                        <id>default-cli</id>
-                    </execution>
-                    <execution>
-                        <!-- Configuration for manual attach debugging -->
-                        <!-- Usage: mvn clean javafx:run@debug -->
-                        <id>debug</id>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
                         <configuration>
-                            <options>
-                                <option>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:8000</option>
-                            </options>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <!-- Configuration for automatic IDE debugging -->
-                        <id>ide-debug</id>
-                        <configuration>
-                            <options>
-                                <option>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</option>
-                            </options>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <!-- Configuration for automatic IDE profiling -->
-                        <id>ide-profile</id>
-                        <configuration>
-                            <options>
-				<option>${profiler.jvmargs.arg1}</option>
-				<option>${profiler.jvmargs.arg2}</option>
-				<option>${profiler.jvmargs.arg3}</option>
-				<option>${profiler.jvmargs.arg4}</option>
-				<option>${profiler.jvmargs.arg5}</option>
-                            </options>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.mycompany.reservationsystem.App</mainClass>
+                                </transformer>
+                            </transformers>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- COPY JAR INTO SAFE INPUT FOLDER (IMPORTANT FIX) -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-jar-to-jpackage</id>
+                        <phase>package</phase>
+                        <goals><goal>copy-resources</goal></goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/jpackage-input</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>${project.build.finalName}.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-settings-to-jpackage</id>
+                        <phase>package</phase>
+                        <goals><goal>copy-resources</goal></goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/jpackage-input</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}</directory>
+                                    <includes>
+                                        <include>settings.properties</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- JavaFX -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.4</version>
+            </plugin>
+
         </plugins>
     </build>
+
+    <!-- ===================== JPACKAGE PROFILES ===================== -->
     <profiles>
+
+        <!-- APP IMAGE -->
         <profile>
             <id>jpackage</id>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>3.5.0</version>
-                        <executions>
-                            <execution>
-                                <id>require-java-home</id>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <requireEnvironmentVariable>
-                                            <variableName>JAVA_HOME</variableName>
-                                            <message>JAVA_HOME must point to the JDK that should be bundled by jpackage.</message>
-                                        </requireEnvironmentVariable>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>3.5.0</version>
+
                         <executions>
                             <execution>
                                 <id>jpackage-app-image</id>
                                 <phase>verify</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
+                                <goals><goal>exec</goal></goals>
+
                                 <configuration>
                                     <executable>${env.JAVA_HOME}\bin\jpackage.exe</executable>
+
                                     <arguments>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
+
+                                        <!-- FIXED INPUT -->
                                         <argument>--input</argument>
-                                        <argument>${project.build.directory}</argument>
+                                        <argument>${project.build.directory}\jpackage-input</argument>
+
+                                        <!-- FIXED OUTPUT -->
                                         <argument>--dest</argument>
-                                        <argument>${project.build.directory}\jpackage</argument>
+                                        <argument>${project.build.directory}\jpackage-output</argument>
+
                                         <argument>--name</argument>
                                         <argument>ReservationSystem</argument>
+
                                         <argument>--main-jar</argument>
                                         <argument>${project.build.finalName}.jar</argument>
-                                        <argument>--runtime-image</argument>
-                                        <argument>${env.JAVA_HOME}</argument>
+
+                                        <argument>--module-path</argument>
+                                        <argument>${env.JAVA_HOME}\jmods</argument>
+
+                                        <argument>--add-modules</argument>
+                                        <argument>javafx.controls,javafx.fxml,java.net.http</argument>
+
                                         <argument>--app-version</argument>
                                         <argument>1.0</argument>
+
                                         <argument>--vendor</argument>
                                         <argument>Romantic Baboy</argument>
+
                                         <argument>--description</argument>
                                         <argument>ReservationSystem for Romantic Baboy</argument>
+
                                         <argument>--icon</argument>
                                         <argument>${project.basedir}\src\main\resources\Images\icon.ico</argument>
                                     </arguments>
+
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
+
+        <!-- EXE BUILD -->
         <profile>
             <id>jpackage-exe</id>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>3.5.0</version>
-                        <executions>
-                            <execution>
-                                <id>require-java-home-for-exe</id>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <requireEnvironmentVariable>
-                                            <variableName>JAVA_HOME</variableName>
-                                            <message>JAVA_HOME must point to the JDK that should be bundled by jpackage.</message>
-                                        </requireEnvironmentVariable>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>3.5.0</version>
+
                         <executions>
                             <execution>
                                 <id>jpackage-exe</id>
                                 <phase>verify</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
+                                <goals><goal>exec</goal></goals>
+
                                 <configuration>
                                     <executable>${env.JAVA_HOME}\bin\jpackage.exe</executable>
+
                                     <arguments>
                                         <argument>--type</argument>
                                         <argument>exe</argument>
+
                                         <argument>--input</argument>
-                                        <argument>${project.build.directory}</argument>
+                                        <argument>${project.build.directory}\jpackage-input</argument>
+
                                         <argument>--dest</argument>
-                                        <argument>${project.build.directory}\jpackage</argument>
+                                        <argument>${project.build.directory}\jpackage-output</argument>
+
                                         <argument>--name</argument>
                                         <argument>ReservationSystem</argument>
+
                                         <argument>--main-jar</argument>
                                         <argument>${project.build.finalName}.jar</argument>
-                                        <argument>--runtime-image</argument>
-                                        <argument>${env.JAVA_HOME}</argument>
+
+                                        <argument>--module-path</argument>
+                                        <argument>${env.JAVA_HOME}\jmods</argument>
+
+                                        <argument>--add-modules</argument>
+                                        <argument>javafx.controls,javafx.fxml,java.net.http</argument>
+
                                         <argument>--app-version</argument>
                                         <argument>1.0</argument>
+
                                         <argument>--vendor</argument>
                                         <argument>Romantic Baboy</argument>
+
                                         <argument>--description</argument>
                                         <argument>ReservationSystem for Romantic Baboy</argument>
+
                                         <argument>--icon</argument>
                                         <argument>${project.basedir}\src\main\resources\Images\icon.ico</argument>
+
                                         <argument>--win-dir-chooser</argument>
                                         <argument>--win-menu</argument>
                                         <argument>--win-shortcut</argument>
@@ -289,8 +326,11 @@
                             </execution>
                         </executions>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
+
     </profiles>
+
 </project>

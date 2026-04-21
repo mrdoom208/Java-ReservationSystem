@@ -1,6 +1,6 @@
 package com.mycompany.reservationsystem.service;
 
-import com.mycompany.reservationsystem.config.AppSettings;
+import com.mycompany.reservationsystem.Config.AppSettings;
 import com.mycompany.reservationsystem.model.Reservation;
 import com.mycompany.reservationsystem.repository.ReservationRepository;
 import org.slf4j.Logger;
@@ -28,6 +28,10 @@ public class AutoNoShowService {
     @Scheduled(fixedRate = 60000)
     @Transactional
     public void autoNoShowConfirmedReservations() {
+        if (!AppSettings.loadAutoNoshowEnabled()) {
+            return;
+        }
+        
         int noshowMinutes = AppSettings.loadNoshowTimeMinutes();
         
         if (noshowMinutes <= 0) {

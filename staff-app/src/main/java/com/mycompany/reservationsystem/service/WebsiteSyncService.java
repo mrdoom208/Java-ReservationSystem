@@ -68,4 +68,26 @@ public class WebsiteSyncService {
             System.err.println("Failed to sync message setting: " + e.getMessage());
         }
     }
+
+    public static void sendAutoCancelEnabled(boolean enabled) {
+        try {
+            String url = ApiClient.getBaseUrl() + "/api/settings";
+            String payload = "{\"autoCancelEnabled\":" + enabled + "}";
+            ApiClient.post(url, payload);
+            System.out.println("Synced auto-cancel enabled to server: " + enabled);
+        } catch (Exception e) {
+            System.err.println("Failed to sync auto-cancel enabled: " + e.getMessage());
+        }
+    }
+
+    public static void sendAutoNoshowEnabled(boolean enabled) {
+        try {
+            String url = ApiClient.getBaseUrl() + "/api/settings";
+            String payload = "{\"autoNoshowEnabled\":" + enabled + "}";
+            ApiClient.post(url, payload);
+            System.out.println("Synced auto-noshow enabled to server: " + enabled);
+        } catch (Exception e) {
+            System.err.println("Failed to sync auto-noshow enabled: " + e.getMessage());
+        }
+    }
 }

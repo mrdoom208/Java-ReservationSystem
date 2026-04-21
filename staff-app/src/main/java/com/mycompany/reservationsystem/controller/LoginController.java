@@ -111,39 +111,52 @@ public class LoginController {
 
     @FXML
     private void initialize() {
-        animateLoginElements();
-        Submit.setDefaultButton(true);
-        buttonAnimator = new LoginTransition.LoginButtonAnimator(Submit);
+        try {
+            animateLoginElements();
+            if (Submit != null) {
+                Submit.setDefaultButton(true);
+                buttonAnimator = new LoginTransition.LoginButtonAnimator(Submit);
+            }
+            if (dragArea != null) {
+                dragArea.setOnMousePressed(event -> {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                });
 
-        dragArea.setOnMousePressed(event -> {
-            xOffset = event.getSceneX();
-            yOffset = event.getSceneY();
-        });
-
-        dragArea.setOnMouseDragged(event -> {
-            App.primaryStage.setX(event.getScreenX() - xOffset);
-            App.primaryStage.setY(event.getScreenY() - yOffset);
-        });
+                dragArea.setOnMouseDragged(event -> {
+                    if (App.primaryStage != null) {
+                        App.primaryStage.setX(event.getScreenX() - xOffset);
+                        App.primaryStage.setY(event.getScreenY() - yOffset);
+                    }
+                });
+            }
+        } catch (Exception e) {
+            System.err.println("Error in LoginController.initialize(): " + e.getMessage());
+        }
     }
 
     private void animateLoginElements() {
-        if (loginLogo != null) {
-            LoginTransition.animateElement(loginLogo, 100);
-        }
-        if (helloText != null) {
-            LoginTransition.animateElement(helloText, 200);
-        }
-        if (welcomeText != null) {
-            LoginTransition.animateElement(welcomeText, 300);
-        }
-        if (titleContainer != null) {
-            LoginTransition.animateTitle(titleContainer, 400);
-        }
-        if (inputContainer != null) {
-            LoginTransition.animateElement(inputContainer, 600);
-        }
-        if (Submit != null) {
-            LoginTransition.animateButton(Submit, 800);
+        try {
+            if (loginLogo != null) {
+                LoginTransition.animateElement(loginLogo, 100);
+            }
+            if (helloText != null) {
+                LoginTransition.animateElement(helloText, 200);
+            }
+            if (welcomeText != null) {
+                LoginTransition.animateElement(welcomeText, 300);
+            }
+            if (titleContainer != null) {
+                LoginTransition.animateTitle(titleContainer, 400);
+            }
+            if (inputContainer != null) {
+                LoginTransition.animateElement(inputContainer, 600);
+            }
+            if (Submit != null) {
+                LoginTransition.animateButton(Submit, 800);
+            }
+        } catch (Exception e) {
+            System.err.println("Animation error: " + e.getMessage());
         }
     }
     public void closeApp(ActionEvent event) {
@@ -168,11 +181,12 @@ public class LoginController {
             Scene configScene = new Scene(configRoot);
             configScene.setFill(Color.TRANSPARENT);
             
-            Stage stage = (Stage) Submit.getScene().getWindow();
-            stage.setScene(configScene);
-            stage.centerOnScreen();
+            if (App.primaryStage != null) {
+                App.primaryStage.setScene(configScene);
+                App.primaryStage.centerOnScreen();
+            }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -244,7 +258,9 @@ public class LoginController {
         isLoggingIn = true;
         retryCount = 0;
         
-        buttonAnimator.startLoading();
+        if (buttonAnimator != null) {
+            buttonAnimator.startLoading();
+        }
         performLogin(event, userf, passf);
     }
 

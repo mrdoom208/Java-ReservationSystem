@@ -1,6 +1,6 @@
 package com.mycompany.reservationsystem.service;
 
-import com.mycompany.reservationsystem.config.AppSettings;
+import com.mycompany.reservationsystem.Config.AppSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.mycompany.reservationsystem.rest;
 
-import com.mycompany.reservationsystem.config.AppSettings;
+import com.mycompany.reservationsystem.Config.AppSettings;
 import com.mycompany.reservationsystem.dto.*;
 import com.mycompany.reservationsystem.model.ManageTables;
 import com.mycompany.reservationsystem.model.Reservation;

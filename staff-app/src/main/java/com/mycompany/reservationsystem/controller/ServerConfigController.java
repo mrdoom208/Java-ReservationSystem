@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -30,52 +31,85 @@ public class ServerConfigController implements Initializable {
     private MFXButton saveBtn;
     @FXML
     private MFXButton testConnectionBtn;
+    @FXML
+    private io.github.palexdev.materialfx.controls.MFXButton closebtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        String savedServerUrl = AppSettings.loadServerUrl();
-        String savedWebsocketUrl = AppSettings.loadWebsocketUrl();
+        try {
+            String savedServerUrl = AppSettings.loadServerUrl();
+            String savedWebsocketUrl = AppSettings.loadWebsocketUrl();
 
-        if (savedServerUrl != null && !savedServerUrl.isEmpty()) {
-            serverUrlField.setText(savedServerUrl);
-        }
-        if (savedWebsocketUrl != null && !savedWebsocketUrl.isEmpty()) {
-            websocketUrlField.setText(savedWebsocketUrl);
+            if (savedServerUrl != null && !savedServerUrl.isEmpty() && serverUrlField != null) {
+                serverUrlField.setText(savedServerUrl);
+            }
+            if (savedWebsocketUrl != null && !savedWebsocketUrl.isEmpty() && websocketUrlField != null) {
+                websocketUrlField.setText(savedWebsocketUrl);
+            }
+        } catch (Exception e) {
+            System.err.println("Error initializing ServerConfigController: " + e.getMessage());
         }
     }
 
     @FXML
     private void saveConfig() {
-        String serverUrl = serverUrlField.getText().trim();
-        String websocketUrl = websocketUrlField.getText().trim();
+        try {
+            if (serverUrlField == null || websocketUrlField == null) {
+                showError("UI not loaded properly");
+                return;
+            }
+            String serverUrl = serverUrlField.getText().trim();
+            String websocketUrl = websocketUrlField.getText().trim();
 
-        if (serverUrl.isEmpty()) {
-            showError("Server URL is required");
-            return;
+            if (serverUrl.isEmpty()) {
+                showError("Server URL is required");
+                return;
+            }
+
+            if (websocketUrl.isEmpty()) {
+                showError("WebSocket URL is required");
+                return;
+            }
+
+            if (!isValidUrl(serverUrl)) {
+                showError("Invalid Server URL format");
+                return;
+            }
+
+            if (!isValidWebsocketUrl(websocketUrl)) {
+                showError("Invalid WebSocket URL format");
+                return;
+            }
+
+            saveBtn.setDisable(true);
+            saveBtn.setText("Saving...");
+
+            AppSettings.saveServerUrl(serverUrl);
+            AppSettings.saveWebsocketUrl(websocketUrl);
+
+            System.setProperty("SERVER_URL", serverUrl);
+            System.setProperty("WEBSOCKET_URL", websocketUrl);
+
+            fadeOutAndProceed();
+        } catch (Exception e) {
+            showError("Error saving config: " + e.getMessage());
+            saveBtn.setDisable(false);
+            saveBtn.setText("Save");
         }
+    }
 
-        if (websocketUrl.isEmpty()) {
-            showError("WebSocket URL is required");
-            return;
+    private void fadeOutAndProceed() {
+        try {
+            javafx.scene.Parent root = serverUrlField.getScene().getRoot();
+            javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(
+                javafx.util.Duration.millis(200), root);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOut.setOnFinished(e -> proceedToLogin());
+            fadeOut.play();
+        } catch (Exception e) {
+            proceedToLogin();
         }
-
-        if (!isValidUrl(serverUrl)) {
-            showError("Invalid Server URL format");
-            return;
-        }
-
-        if (!isValidWebsocketUrl(websocketUrl)) {
-            showError("Invalid WebSocket URL format");
-            return;
-        }
-
-        AppSettings.saveServerUrl(serverUrl);
-        AppSettings.saveWebsocketUrl(websocketUrl);
-
-        System.setProperty("SERVER_URL", serverUrl);
-        System.setProperty("WEBSOCKET_URL", websocketUrl);
-
-        proceedToLogin();
     }
 
     private boolean isValidUrl(String url) {
@@ -98,14 +132,18 @@ public class ServerConfigController implements Initializable {
 
     @FXML
     private void testConnection() {
-        String serverUrl = serverUrlField.getText().trim();
+        try {
+            if (serverUrlField == null || testConnectionBtn == null || messageLabel == null) {
+                return;
+            }
+            String serverUrl = serverUrlField.getText().trim();
 
-        if (serverUrl.isEmpty()) {
-            showError("Enter server URL first");
-            return;
-        }
+            if (serverUrl.isEmpty()) {
+                showError("Enter server URL first");
+                return;
+            }
 
-        testConnectionBtn.setDisable(true);
+            testConnectionBtn.setDisable(true);
         messageLabel.setText("Testing connection...");
         messageLabel.setStyle("-fx-text-fill: #3498DB;");
 
@@ -170,6 +208,9 @@ public class ServerConfigController implements Initializable {
                 }
             });
         }).start();
+        } catch (Exception e) {
+            showError("Connection test error: " + e.getMessage());
+        }
     }
 
     private void showError(String message) {
@@ -184,8 +225,8 @@ public class ServerConfigController implements Initializable {
             FXMLLoader loginLoader = new FXMLLoader(App.class.getResource("/fxml/Login.fxml"));
             Parent loginRoot = loginLoader.load();
 
-            javafx.scene.text.Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Regular.ttf"), 14);
-            javafx.scene.text.Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Bold.ttf"), 14);
+            try { javafx.scene.text.Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Regular.ttf"), 14); } catch (Exception e) {}
+            try { javafx.scene.text.Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Bold.ttf"), 14); } catch (Exception e) {}
 
             loginRoot.setOpacity(0);
             loginRoot.setTranslateX(50);
@@ -225,8 +266,8 @@ public class ServerConfigController implements Initializable {
             FXMLLoader loginLoader = new FXMLLoader(App.class.getResource("/fxml/Login.fxml"));
             Parent loginRoot = loginLoader.load();
 
-            javafx.scene.text.Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Regular.ttf"), 14);
-            javafx.scene.text.Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Bold.ttf"), 14);
+try { javafx.scene.text.Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Regular.ttf"), 14); } catch (Exception e) {}
+            try { javafx.scene.text.Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Bold.ttf"), 14); } catch (Exception e) {}
 
             loginRoot.setOpacity(0);
             loginRoot.setTranslateX(50);
@@ -241,6 +282,7 @@ public class ServerConfigController implements Initializable {
 
             Scene loginScene = new Scene(loginRoot);
             loginScene.setFill(Color.TRANSPARENT);
+
             stage.setScene(loginScene);
 
             stage.centerOnScreen();

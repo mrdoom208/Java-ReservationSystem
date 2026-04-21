@@ -1,4 +1,4 @@
-package com.mycompany.reservationsystem.config;
+package com.mycompany.reservationsystem.Config;
 
 import java.util.prefs.Preferences;
 
@@ -72,6 +72,22 @@ public final class AppSettings {
 
     public static String loadCancelTime() {
         return PREFS.get("cancelTime", DEFAULT_CANCEL_TIME);
+    }
+
+    public static void saveAutoCancelEnabled(boolean enabled) {
+        PREFS.putBoolean("autoCancelEnabled", enabled);
+    }
+
+    public static boolean loadAutoCancelEnabled() {
+        return PREFS.getBoolean("autoCancelEnabled", true);
+    }
+
+    public static void saveAutoNoshowEnabled(boolean enabled) {
+        PREFS.putBoolean("autoNoshowEnabled", enabled);
+    }
+
+    public static boolean loadAutoNoshowEnabled() {
+        return PREFS.getBoolean("autoNoshowEnabled", true);
     }
 
     public static int loadCancelTimeMinutes() {

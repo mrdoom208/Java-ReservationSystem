@@ -1,6 +1,6 @@
 package com.mycompany.reservationsystem.service;
 
-import com.mycompany.reservationsystem.config.AppSettings;
+import com.mycompany.reservationsystem.Config.AppSettings;
 import com.mycompany.reservationsystem.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

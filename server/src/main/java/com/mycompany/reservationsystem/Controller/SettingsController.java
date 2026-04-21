@@ -1,6 +1,6 @@
-package com.mycompany.reservationsystem.rest;
+package com.mycompany.reservationsystem.Controller;
 
-import com.mycompany.reservationsystem.config.AppSettings;
+import com.mycompany.reservationsystem.Config.AppSettings;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +21,12 @@ public class SettingsController {
         }
         if (settings.containsKey("noshowTime")) {
             AppSettings.saveNoshowTime((String) settings.get("noshowTime"));
+        }
+        if (settings.containsKey("autoCancelEnabled")) {
+            AppSettings.saveAutoCancelEnabled((Boolean) settings.get("autoCancelEnabled"));
+        }
+        if (settings.containsKey("autoNoshowEnabled")) {
+            AppSettings.saveAutoNoshowEnabled((Boolean) settings.get("autoNoshowEnabled"));
         }
         if (settings.containsKey("resolution")) {
             AppSettings.saveResolution((String) settings.get("resolution"));
@@ -71,6 +77,8 @@ public class SettingsController {
         settings.put("cancelTime", AppSettings.loadCancelTime());
         settings.put("cancellationPolicy", AppSettings.loadCancelTime());
         settings.put("noshowTime", AppSettings.loadNoshowTime());
+        settings.put("autoCancelEnabled", AppSettings.loadAutoCancelEnabled());
+        settings.put("autoNoshowEnabled", AppSettings.loadAutoNoshowEnabled());
         settings.put("resolution", AppSettings.loadResolution());
         settings.put("applicationUrl", AppSettings.loadApplicationUrl());
         settings.put("serialPort", AppSettings.loadSerialPort());

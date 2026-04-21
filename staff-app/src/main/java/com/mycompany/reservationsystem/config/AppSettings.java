@@ -4,27 +4,83 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class AppSettings {
     private static final String SETTINGS_FILE = "settings.properties";
+    private static final String LOG_FILE = "app.log";
     private static Properties properties = new Properties();
+    private static Path settingsPath;
 
     static {
+        initPaths();
         loadSettings();
     }
 
+    private static void initPaths() {
+        Path appDir = Paths.get(System.getProperty("user.home"), "ReservationSystem");
+        try {
+            if (!Files.exists(appDir)) {
+                Files.createDirectories(appDir);
+            }
+            settingsPath = appDir.resolve(SETTINGS_FILE);
+        } catch (IOException e) {
+            settingsPath = Paths.get(SETTINGS_FILE);
+        }
+    }
+
+    private static void log(String message) {
+        try (PrintWriter pw = new PrintWriter(new java.io.FileWriter(LOG_FILE, true))) {
+            pw.println(message);
+        } catch (IOException e) {
+            System.err.println("[AppSettings] " + message);
+        }
+    }
+
     private static void loadSettings() {
-        try (InputStream input = new FileInputStream(SETTINGS_FILE)) {
-            properties.load(input);
+        try {
+            Path workingDirSettings = Paths.get(System.getProperty("user.dir"), SETTINGS_FILE);
+            if (Files.exists(workingDirSettings)) {
+                try (InputStream input = new FileInputStream(workingDirSettings.toFile())) {
+                    properties.load(input);
+                    log("Loaded settings from working dir: " + workingDirSettings.toAbsolutePath());
+                    return;
+                } catch (IOException ex) {
+                    log("Error loading from working dir: " + ex.getMessage());
+                }
+            }
+            
+            if (Files.exists(settingsPath)) {
+                try (InputStream input = new FileInputStream(settingsPath.toFile())) {
+                    properties.load(input);
+                    log("Loaded settings from: " + settingsPath.toAbsolutePath());
+                }
+            } else {
+                Path workingDir = Paths.get("settings.properties");
+                if (Files.exists(workingDir)) {
+                    try (InputStream input = new FileInputStream(workingDir.toFile())) {
+                        properties.load(input);
+                        log("Loaded settings from working dir: " + workingDir.toAbsolutePath());
+                    }
+                } else {
+                    log("Settings file not found, using defaults. Path: " + settingsPath.toAbsolutePath());
+                }
+            }
         } catch (IOException ex) {
+            log("Could not load settings: " + ex.getMessage());
         }
     }
 
     private static void saveSettings() {
-        try (FileOutputStream output = new FileOutputStream(SETTINGS_FILE)) {
+        try (FileOutputStream output = new FileOutputStream(settingsPath.toFile())) {
             properties.store(output, "Application Settings");
+            log("Saved settings to: " + settingsPath.toAbsolutePath());
         } catch (IOException ex) {
+            log("ERROR saving settings: " + ex.getMessage());
             ex.printStackTrace();
         }
     }
@@ -62,6 +118,24 @@ public class AppSettings {
 
     public static void saveNoshowTime(String noshowTime) {
         properties.setProperty("app.noshowTime", noshowTime);
+        saveSettings();
+    }
+
+    public static boolean loadAutoCancelEnabled() {
+        return Boolean.parseBoolean(properties.getProperty("app.autoCancelEnabled", "true"));
+    }
+
+    public static void saveAutoCancelEnabled(boolean enabled) {
+        properties.setProperty("app.autoCancelEnabled", String.valueOf(enabled));
+        saveSettings();
+    }
+
+    public static boolean loadAutoNoshowEnabled() {
+        return Boolean.parseBoolean(properties.getProperty("app.autoNoshowEnabled", "true"));
+    }
+
+    public static void saveAutoNoshowEnabled(boolean enabled) {
+        properties.setProperty("app.autoNoshowEnabled", String.valueOf(enabled));
         saveSettings();
     }
 
@@ -156,7 +230,8 @@ public class AppSettings {
     }
 
     public static String loadServerUrl() {
-        return properties.getProperty("server.url", "");
+        String val = properties.getProperty("server.url", "");
+        return val.isEmpty() ? null : val;
     }
 
     public static void saveServerUrl(String url) {
@@ -180,7 +255,8 @@ public class AppSettings {
     }
 
     public static String loadWebsocketUrl() {
-        return properties.getProperty("websocket.url", "");
+        String val = properties.getProperty("websocket.url", "");
+        return val.isEmpty() ? null : val;
     }
 
     public static void saveWebsocketUrl(String url) {

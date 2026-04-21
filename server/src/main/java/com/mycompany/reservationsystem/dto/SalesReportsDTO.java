@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public record SalesReportsDTO(
         LocalDate date,
-        long totalReservations,
-        long totalPax,
+        long totalReservation,
+        long totalCustomer,
         BigDecimal totalSales
 ) {}

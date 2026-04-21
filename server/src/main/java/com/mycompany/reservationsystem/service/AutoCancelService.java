@@ -1,6 +1,6 @@
 package com.mycompany.reservationsystem.service;
 
-import com.mycompany.reservationsystem.config.AppSettings;
+import com.mycompany.reservationsystem.Config.AppSettings;
 import com.mycompany.reservationsystem.model.Reservation;
 import com.mycompany.reservationsystem.repository.ReservationRepository;
 import com.mycompany.reservationsystem.service.SmsService;
@@ -29,6 +29,10 @@ public class AutoCancelService {
     @Scheduled(fixedRate = 60000)
     @Transactional
     public void autoCancelConfirmedReservations() {
+        if (!AppSettings.loadAutoCancelEnabled()) {
+            return;
+        }
+        
         String cancelTimeSetting = AppSettings.loadCancelTime();
         
         if (cancelTimeSetting == null || cancelTimeSetting.isBlank() 

@@ -22,7 +22,9 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,19 +43,36 @@ public class App extends Application {
 
     private static final Duration FADE_DURATION = Duration.millis(400);
     private static final String CONFIG_FILE = "config.properties";
+    private static final String LOG_FILE = "app.log";
+
+    private static void log(String message) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(LOG_FILE, true))) {
+            pw.println(message);
+        } catch (IOException e) {
+            System.err.println("[LOG] " + message);
+        }
+    }
 
     @Override
     public void init() throws Exception {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            System.err.println("=== UNCAUGHT EXCEPTION in " + t.getName() + " ===");
+            log("=== UNCAUGHT EXCEPTION in " + t.getName() + " ===");
             e.printStackTrace();
         });
+        
+        log("=== App Starting ===");
+        log("Working directory: " + System.getProperty("user.dir"));
         
         loadConfigFromFile();
     }
 
     private void loadConfigFromFile() {
         Path configPath = Paths.get(CONFIG_FILE);
+        
+        if (!Files.exists(configPath)) {
+            configPath = Paths.get(System.getProperty("user.home"), "ReservationSystem", CONFIG_FILE);
+        }
+        
         if (Files.exists(configPath)) {
             try (FileInputStream fis = new FileInputStream(configPath.toFile())) {
                 Properties props = new Properties();
@@ -66,9 +85,13 @@ public class App extends Application {
                 setPropertyIfPresent(props, "PHILSMS_SENDER_ID");
                 setPropertyIfPresent(props, "WEBSITE_URL");
                 setPropertyIfPresent(props, "SERVER_URL");
+                log("Loaded config from: " + configPath.toAbsolutePath());
             } catch (IOException e) {
+                log("Error loading config: " + e.getMessage());
                 e.printStackTrace();
             }
+        } else {
+            log("Config file not found, checking if it's in settings...");
         }
     }
     
@@ -94,9 +117,11 @@ public class App extends Application {
     }
 
     private void showSplashAndLogin(Stage stage) {
+        log("showSplashAndLogin() called");
         try {
             FXMLLoader splashLoader = new FXMLLoader(App.class.getResource("/fxml/Splash.fxml"));
             Parent splashRoot = splashLoader.load();
+            log("Splash FXML loaded successfully");
 
             scene = new Scene(splashRoot);
             scene.setFill(Color.TRANSPARENT);
@@ -106,6 +131,7 @@ public class App extends Application {
             stage.setTitle(ApplicationTitle);
             stage.centerOnScreen();
             stage.show();
+            log("Splash screen displayed");
 
             Task<Void> switchTask = new Task<>() {
                 @Override
@@ -121,12 +147,21 @@ public class App extends Application {
 
             switchTask.setOnSucceeded(e -> {
                 Platform.runLater(() -> {
-                    String serverUrl = AppSettings.loadServerUrl();
-                    String websocketUrl = AppSettings.loadWebsocketUrl();
-                    if (serverUrl == null || serverUrl.isEmpty() || websocketUrl == null || websocketUrl.isEmpty()) {
+                    try {
+                        String serverUrl = AppSettings.loadServerUrl();
+                        String websocketUrl = AppSettings.loadWebsocketUrl();
+                        log("Server URL: " + serverUrl + ", Websocket URL: " + websocketUrl);
+                        if (serverUrl == null || websocketUrl == null) {
+                            log("Going to show ServerConfig");
+                            showServerConfig(stage);
+                        } else {
+                            log("Going to show Login");
+                            switchToLogin(stage);
+                        }
+                    } catch (Exception ex) {
+                        log("=== ERROR during splash transition ===: " + ex.getMessage());
+                        ex.printStackTrace();
                         showServerConfig(stage);
-                    } else {
-                        switchToLogin(stage);
                     }
                 });
             });
@@ -134,15 +169,17 @@ public class App extends Application {
             new Thread(switchTask, "splash-delay").start();
 
         } catch (Exception e) {
-            System.err.println("=== ERROR showing splash ===");
+            log("=== ERROR showing splash ===: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     private void showServerConfig(Stage stage) {
+        log("showServerConfig() called");
         try {
             FXMLLoader configLoader = new FXMLLoader(App.class.getResource("/fxml/ServerConfig.fxml"));
             Parent configRoot = configLoader.load();
+            log("ServerConfig FXML loaded successfully");
 
             io.github.palexdev.materialfx.theming.UserAgentBuilder.builder()
                     .themes(io.github.palexdev.materialfx.theming.JavaFXThemes.MODENA)
@@ -156,20 +193,31 @@ public class App extends Application {
             configScene.setFill(Color.TRANSPARENT);
             stage.setScene(configScene);
             stage.centerOnScreen();
+            log("ServerConfig scene displayed");
 
-        } catch (Exception e) {
-            System.err.println("=== ERROR showing server config ===");
+        } catch (Throwable e) {
+            log("=== ERROR showing server config ===: " + e.getMessage());
             e.printStackTrace();
+            try {
+                log("Falling back to Login screen");
+                switchToLogin(stage);
+            } catch (Throwable fallbackError) {
+                log("=== CRITICAL: Cannot show any screen ===: " + fallbackError.getMessage());
+            }
         }
     }
 
     private void switchToLogin(Stage stage) {
+        log("switchToLogin() called");
         try {
             FXMLLoader loginLoader = new FXMLLoader(App.class.getResource("/fxml/Login.fxml"));
             Parent loginRoot = loginLoader.load();
+            log("Login FXML loaded successfully");
 
-            Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Regular.ttf"), 14);
-            Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Bold.ttf"), 14);
+            try {
+                Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Regular.ttf"), 14);
+                Font.loadFont(getClass().getResourceAsStream("/fonts/Lora-Bold.ttf"), 14);
+            } catch (Exception ignored) {}
 
             loginRoot.setOpacity(0);
             loginRoot.setTranslateX(50);
@@ -187,6 +235,7 @@ public class App extends Application {
             stage.setScene(loginScene);
 
             stage.centerOnScreen();
+            log("Login screen displayed");
 
             loginRoot.styleProperty().bind(
                     Bindings.createStringBinding(() -> {
@@ -209,9 +258,20 @@ public class App extends Application {
             ParallelTransition parallelTransition = new ParallelTransition(fadeIn, slideIn);
             parallelTransition.play();
 
-        } catch (Exception e) {
-            System.err.println("=== ERROR in switchToLogin() ===");
+        } catch (Throwable e) {
+            log("=== ERROR in switchToLogin() ===: " + e.getMessage());
             e.printStackTrace();
+            try {
+                log("Falling back to Login screen (emergency method)");
+                FXMLLoader loginLoader = new FXMLLoader(App.class.getResource("/fxml/Login.fxml"));
+                Parent loginRoot = loginLoader.load();
+                Scene loginScene = new Scene(loginRoot);
+                stage.setScene(loginScene);
+                stage.centerOnScreen();
+                log("Emergency login screen shown");
+            } catch (Exception emergency) {
+                log("=== CRITICAL: Cannot show any screen ===: " + emergency.getMessage());
+            }
         }
     }
 

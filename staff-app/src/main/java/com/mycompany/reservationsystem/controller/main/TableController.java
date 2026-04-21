@@ -894,7 +894,7 @@ public class TableController {
         TableHistory.setPlaceholder(new Label("No Table set yet"));
 
     }
-    private void loadTableHistory(){
+    public void loadTableHistory(){
         Task<List<ReservationTableLogs>> task = new Task<List<ReservationTableLogs>>() {
             @Override
             protected List<ReservationTableLogs> call() throws Exception {
