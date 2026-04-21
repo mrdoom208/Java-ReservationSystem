@@ -5,5 +5,6 @@
 /.vscode
 /.idea
 *.exe
+/.settings/
 
 target
