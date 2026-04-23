@@ -244,10 +244,7 @@ public class AccountController {
             TableColumn<?, ?> col = column[i];
 
             if (col == null) {
-                System.out.println("❌ NULL COLUMN at index " + i + " (expected: " + namecol[i] + ")");
                 continue;
-            } else {
-                System.out.println("✔ Column OK: index " + i + " = " + col.getText());
             }
 
             col.setResizable(false);
@@ -261,6 +258,9 @@ public class AccountController {
         AccountTable.setPlaceholder(new Label("No Account yet "));
     }
     public void loadAccountTable(){
+        if (adminUIController != null) {
+            adminUIController.showQueryLoading("Loading accounts...");
+        }
         Task<List<User>> task = new Task<List<User>>() {
             @Override
             protected List<User> call() throws Exception {
@@ -269,9 +269,15 @@ public class AccountController {
         };
         task.setOnSucceeded(e->{
             UserData.setAll(task.getValue());
+            if (adminUIController != null) {
+                adminUIController.hideQueryLoading();
+            }
         });
         task.setOnFailed(e->{
             task.getException().printStackTrace();
+            if (adminUIController != null) {
+                adminUIController.hideQueryLoading();
+            }
         });
         new Thread(task).start();
     }

@@ -1,0 +1,6 @@
+# Enable unlimited strength cryptography
+crypto.policy=unlimited
+
+# Disable legacy algorithms
+jdk.tls.disabledAlgorithms=
+jdk.crypto.disabledAlgorithms=

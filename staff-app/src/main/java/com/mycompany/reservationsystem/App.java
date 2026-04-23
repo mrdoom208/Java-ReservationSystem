@@ -32,6 +32,12 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 public class App extends Application {
+    
+    static {
+        System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
+        System.setProperty("javax.net.ssl.keyStoreType", "PKCS12");
+        System.setProperty("javax.net.ssl.trustStoreType", "PKCS12");
+    }
     public static Stage primaryStage;
     private static Scene scene;
     public String ApplicationTitle;

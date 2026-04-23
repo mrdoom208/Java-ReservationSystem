@@ -826,10 +826,7 @@ public class TableController {
             TableColumn<?, ?> col = column[i];
 
             if (col == null) {
-                System.out.println("❌ NULL COLUMN at index " + i + " (expected: " + namecol[i] + ")");
                 continue;
-            } else {
-                System.out.println("✔ Column OK: index " + i + " = " + col.getText());
             }
 
             col.setResizable(false);

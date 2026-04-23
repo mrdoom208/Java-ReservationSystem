@@ -144,11 +144,32 @@ public class ServerConfigController implements Initializable {
             }
 
             testConnectionBtn.setDisable(true);
-        messageLabel.setText("Testing connection...");
-        messageLabel.setStyle("-fx-text-fill: #3498DB;");
+            messageLabel.setText("Testing connection...");
+            messageLabel.setStyle("-fx-text-fill: #3498DB;");
+
+            String wsUrl = websocketUrlField != null ? websocketUrlField.getText().trim() : "";
+            String userDir = System.getProperty("user.home");
+            java.io.File debugFile = new java.io.File(userDir, "server_connection_debug.txt");
+            try {
+                java.io.FileWriter fw = new java.io.FileWriter(debugFile, false);
+                java.io.BufferedWriter bw = new java.io.BufferedWriter(fw);
+                bw.write("=== SERVER CONNECTION TEST ===");
+                bw.newLine();
+                bw.write("Time: " + java.time.LocalDateTime.now());
+                bw.newLine();
+                bw.write("Server URL: " + serverUrl);
+                bw.newLine();
+                bw.write("WebSocket URL: " + wsUrl);
+                bw.newLine();
+                bw.write("===========================");
+                bw.newLine();
+                bw.close();
+            } catch (Exception ex) {
+                System.err.println("Debug init error: " + ex.getMessage());
+            }
 
         new Thread(() -> {
-            String result;
+            String result = "error";
             int statusCode = -1;
 
             try {
@@ -162,29 +183,85 @@ public class ServerConfigController implements Initializable {
                         testUrl = testUrl + "/api/health";
                     }
                 }
-                URI uri = new URI(testUrl);
-                java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
-                java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
-                        .uri(uri)
-                        .timeout(java.time.Duration.ofSeconds(15))
-                        .header("Content-Type", "application/json")
-                        .GET()
-                        .build();
-
-                java.net.http.HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
-                statusCode = response.statusCode();
-
-                if (statusCode >= 200 && statusCode < 300) {
-                    result = "success";
-                } else if (statusCode == 401 || statusCode == 403) {
-                    result = "unauthorized";
-                } else {
-                    result = "failed:" + statusCode;
+                
+                writeDebugInfo("Testing connection to: " + testUrl);
+                
+                // Force TLS 1.2
+                System.setProperty("https.protocols", "TLSv1.2");
+                System.setProperty("jdk.tls.client.protocols", "TLSv1.2");
+                System.setProperty("crypto.policy", "unlimited");
+                writeDebugInfo("TLS properties set");
+                
+                java.net.URL url = new java.net.URI(testUrl).toURL();
+                java.net.URLConnection urlConn = url.openConnection();
+                
+                if (urlConn instanceof javax.net.ssl.HttpsURLConnection) {
+                    javax.net.ssl.HttpsURLConnection httpsConn = (javax.net.ssl.HttpsURLConnection) urlConn;
+                    httpsConn.setConnectTimeout(15000);
+                    httpsConn.setReadTimeout(15000);
+                    httpsConn.setRequestProperty("Connection", "close");
+                    httpsConn.setRequestProperty("User-Agent", "ReservationSystem/1.0");
+                    
+                    // Set SNI hostname
+                    httpsConn.setHostnameVerifier((hostname, session) -> {
+                        writeDebugInfo("SNI: " + hostname);
+                        return true;
+                    });
+                    
+                    // Force TLS 1.2
+                    System.setProperty("https.protocols", "TLSv1.2");
+                    System.setProperty("jdk.tls.client.protocols", "TLSv1.2");
+                    
+                    javax.net.ssl.TrustManager[] trustAllCerts = new javax.net.ssl.TrustManager[]{
+                        new javax.net.ssl.X509TrustManager() {
+                            public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null; }
+                            public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
+                            public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
+                        }
+                    };
+                    
+                    javax.net.ssl.SSLContext sslContext = javax.net.ssl.SSLContext.getInstance("TLSv1.2");
+                    sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+                    httpsConn.setSSLSocketFactory(sslContext.getSocketFactory());
+                    
+writeDebugInfo("Using TLSv1.2 with trust all");
+                    
+                    int code = httpsConn.getResponseCode();
+                    statusCode = code;
+                    writeDebugInfo("Using TLSv1.2 with trust all");
+                    
+                    try {
+                        int responseCode = httpsConn.getResponseCode();
+                        statusCode = responseCode;
+                        writeDebugInfo("HTTP Response: " + responseCode);
+                        
+                        if (statusCode >= 200 && statusCode < 300) {
+                            result = "success";
+                        } else if (statusCode == 401 || statusCode == 403) {
+                            result = "unauthorized";
+                        } else {
+                            result = "failed:" + statusCode;
+                        }
+                    } catch (Exception e) {
+                        writeDebugInfo("Exception: " + e.getClass().getName() + " - " + e.getMessage());
+                        throw e;
+                    }
                 }
-            } catch (java.net.http.HttpConnectTimeoutException e) {
+            } catch (java.net.SocketTimeoutException e) {
                 result = "timeout";
+                writeDebugInfo("HTTP Error: Connection timed out", "Exception: " + e.getClass().getName(), "Message: " + e.getMessage());
+            } catch (java.net.ConnectException e) {
+                result = "timeout";
+                writeDebugInfo("HTTP Error: Connection failed", "Exception: " + e.getClass().getName(), "Message: " + e.getMessage());
             } catch (Exception e) {
                 result = "error:" + e.getMessage();
+                StringBuilder fullError = new StringBuilder();
+                fullError.append("HTTP Error: ").append(e.getMessage()).append("\n");
+                java.io.StringWriter sw = new java.io.StringWriter();
+                java.io.PrintWriter pw = new java.io.PrintWriter(sw);
+                e.printStackTrace(pw);
+                fullError.append("Stack Trace:\n").append(sw.toString());
+                writeDebugInfo(fullError.toString());
             }
 
             final String finalResult = result;
@@ -205,11 +282,29 @@ public class ServerConfigController implements Initializable {
                     showError("Connection failed: HTTP " + finalStatusCode);
                 } else if (finalResult.startsWith("error:")) {
                     showError("Connection failed: " + finalResult.substring(6));
+                    messageLabel.setText("Error: See " + System.getProperty("user.home") + "/server_connection_debug.txt");
                 }
             });
         }).start();
         } catch (Exception e) {
             showError("Connection test error: " + e.getMessage());
+        }
+    }
+    
+    private void writeDebugInfo(String... lines) {
+        try {
+            String userDir = System.getProperty("user.home");
+            java.io.File debugFile = new java.io.File(userDir, "server_connection_debug.txt");
+            java.io.FileWriter fw = new java.io.FileWriter(debugFile, true);
+            java.io.BufferedWriter bw = new java.io.BufferedWriter(fw);
+            java.time.LocalDateTime now = java.time.LocalDateTime.now();
+            for (String line : lines) {
+                bw.write("[" + now + "] " + line);
+                bw.newLine();
+            }
+            bw.close();
+        } catch (Exception e) {
+            System.err.println("Debug write error: " + e.getMessage());
         }
     }
 

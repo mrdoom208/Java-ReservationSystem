@@ -8,6 +8,9 @@ import com.mycompany.reservationsystem.transition.ChartsTransition;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
+import javafx.animation.ParallelTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +28,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -78,7 +82,9 @@ public class ReportsController {
     @FXML private ScrollPane ReportsPane;
     @FXML private HBox CustomerReport, ReservationReport, SalesReport;
     @FXML private GridPane TableUsageReport;
-    @FXML private VBox rootVBox, rootVBoxTableUsage, tableInfopane;
+    @FXML private VBox rootVBox, rootVBoxTableUsage, tableInfopane, listContainer, profileContent;
+    @FXML private StackPane profileContainer;
+    @FXML private ProgressIndicator profileProgress;
 
     @FXML private PieChart reservationPieChart;
     @FXML private BarChart<String, Number> totalCustomerChart, totalReservationChart, totalSalesChart;
@@ -87,6 +93,7 @@ public class ReportsController {
     @FXML private Label tuReservationAvgLabel, tuCustomerAvgLabel, tuSalesAvgLabel;
     @FXML private Label reservationHighLowLabel, customerHighLowLabel, salesHighLowLabel;
     @FXML private Label tuReservationHighLowLabel, tuCustomerHighLowLabel, tuSalesHighLowLabel;
+    @FXML private Label profilePhone, profileTotalVisits, profileTotalSpent, profileInitials;
 
     //======================= StackPane =======================
     @FXML private StackPane ResRepContainer,CusRepContainer, RevRepContainer, TableUseContainer;
@@ -151,12 +158,18 @@ public class ReportsController {
     private boolean allSalesDataLoaded = false;
     private boolean allTableUsageDataLoaded = false;
     private boolean isLoading = false;
+    private Task<List<ReservationCustomerDTO>> currentProfileTask;
 
     // ====================== Initialization ======================
     @FXML
     private void initialize() {
         tableInfopane.setManaged(false);
         tableInfopane.setVisible(false);
+        
+        // Hide and manage profileContainer on initialization
+        profileContainer.setManaged(false);
+        profileContainer.setVisible(false);
+        profileContainer.setOpacity(0);
         
         // Initialize labels - hide initially to prevent showing in corner
         reservationHighLowLabel.setVisible(false);
@@ -173,6 +186,9 @@ public class ReportsController {
         tuCustomerHighLowLabel.setText("");
         tuSalesHighLowLabel.setText("");
         
+        // Add CSS styles for animations to containers
+        setupContainerAnimations();
+        
         // Setup UI first
         setupAllReports();
         setupChartTransitions();
@@ -181,6 +197,54 @@ public class ReportsController {
         Platform.runLater(() -> {
             Reservationrpts.fire();
         });
+    }
+    
+    private void setupContainerAnimations() {
+        if (listContainer != null) {
+            listContainer.setStyle(listContainer.getStyle() + "; -fx-transition: all 0.3s ease-in-out;");
+        }
+        if (profileContainer != null) {
+            profileContainer.setStyle(profileContainer.getStyle() + "; -fx-transition: all 0.3s ease-in-out;");
+        }
+    }
+    
+    private void slideInFromRight(Node node, double duration) {
+        node.setTranslateX(300);
+        node.setOpacity(0);
+        node.setVisible(true);
+        node.setManaged(true);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(duration), node);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(duration), node);
+        slideIn.setFromX(300);
+        slideIn.setToX(0);
+        
+        ParallelTransition parallelTransition = new ParallelTransition(fadeIn, slideIn);
+        parallelTransition.play();
+    }
+    
+    private void slideOutToLeft(Node node, double duration, Runnable onFinished) {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(duration), node);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(duration), node);
+        slideOut.setFromX(0);
+        slideOut.setToX(-300);
+        
+        ParallelTransition parallelTransition = new ParallelTransition(fadeOut, slideOut);
+        parallelTransition.setOnFinished(e -> {
+            node.setVisible(false);
+            node.setManaged(false);
+            node.setTranslateX(0);
+            if (onFinished != null) {
+                onFinished.run();
+            }
+        });
+        parallelTransition.play();
     }
 
     private void setupAllReports() {
@@ -495,7 +559,14 @@ public class ReportsController {
 
         CusRepTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                loadReservationInformation(newSelection.getPhone());
+                String customerPhone = newSelection.getPhone();
+                String customerName = newSelection.getCustomerName();
+                loadReservationInformation(customerPhone, customerName);
+            } else {
+                if (profileContainer != null) {
+                    slideOutToLeft(profileContainer, 250, null);
+                }
+                reservationCustomerDTOS.clear();
             }
         });
     }
@@ -629,33 +700,87 @@ public class ReportsController {
         applyStatusStyle(statusResInCusRep);
 
         setupTableColumns(ResInCusRep,
-                new TableColumn[]{referenceResInCusRep, nameResInCusRep, phoneResInCusRep, statusResInCusRep,
+                new TableColumn[]{nameResInCusRep, referenceResInCusRep, statusResInCusRep,
                         salesResInCusRep, timeResInCusRep, dateResInCusRep},
-                new double[]{0.2, 0.25, 0.24, 0.18, 0.2, 0.2, 0.2},
-                new String[]{"reference", "customerName", "customerPhone", "status", "sales",
-                        "reservationPendingtime", "date"});
+                new double[]{0.2, 0.15, 0.2, 0.15, 0.15, 0.15},
+                new String[]{"customerName", "reference", "status", "sales",
+                        "time", "date"});
 
         ResInCusRep.setItems(reservationCustomerDTOS);
     }
 
-    private void loadReservationInformation(String phone) {
-        LocalDate from = dateFromCusrep.getValue();
-        LocalDate to = dateToCusrep.getValue();
+    private void loadReservationInformation(String phone, String customerName) {
+        if (phone == null || phone.isEmpty()) {
+            return;
+        }
 
-        Task<List<ReservationCustomerDTO>> task = new Task<List<ReservationCustomerDTO>>() {
+        if (currentProfileTask != null && currentProfileTask.isRunning()) {
+            currentProfileTask.cancel();
+        }
+        
+        final boolean wasVisible = profileContainer.isVisible();
+        if (wasVisible) {
+            profileProgress.setVisible(true);
+            profileContent.setOpacity(0.5);
+        }
+
+        final String selectedPhone = phone;
+        final String selectedName = customerName;
+        
+        currentProfileTask = new Task<List<ReservationCustomerDTO>>() {
             @Override
             protected List<ReservationCustomerDTO> call() throws Exception {
-                return ReservationService.getReservationCustomerDTOByPhoneAndDate(phone, from, to);
+                LocalDate from = dateFromCusrep.getValue();
+                LocalDate to = dateToCusrep.getValue();
+                return ReservationService.getReservationCustomerDTOByPhoneAndDate(selectedPhone, from, to);
             }
         };
-        task.setOnSucceeded(e->{
-            reservationCustomerDTOS.setAll(task.getValue());
-        });
-        task.setOnFailed(e->{
-            handleReportFailure(task.getException());
-        });
-        new Thread(task, "reports-reservation-info-loader").start();
 
+        currentProfileTask.setOnSucceeded(e->{
+            List<ReservationCustomerDTO> result = currentProfileTask.getValue();
+            reservationCustomerDTOS.setAll(result);
+            
+            profileProgress.setVisible(false);
+            profileContent.setOpacity(1.0);
+
+            if (profileContainer != null) {
+                if (result.isEmpty()) {
+                    slideOutToLeft(profileContainer, 250, null);
+                } else {
+                    if (profilePhone != null) profilePhone.setText(selectedPhone);
+                    if (profileTotalVisits != null) profileTotalVisits.setText(String.valueOf(result.size()));
+                    if (profileTotalSpent != null) {
+                        double totalSpent = result.stream().mapToDouble(ReservationCustomerDTO::getTotalSpent).sum();
+                        profileTotalSpent.setText(String.format("%.2f", totalSpent));
+                    }
+                    if (profileInitials != null && selectedName != null && !selectedName.isEmpty()) {
+                        String[] parts = selectedName.trim().split("\\s+");
+                        String initials;
+                        if (parts.length >= 2) {
+                            initials = Character.toString(parts[0].charAt(0)) + Character.toString(parts[1].charAt(0));
+                        } else {
+                            initials = Character.toString(selectedName.charAt(0));
+                        }
+                        profileInitials.setText(initials.toUpperCase());
+                    } else if (profileInitials != null) {
+                        profileInitials.setText("?");
+                    }
+                    
+                    if (!wasVisible) {
+                        slideInFromRight(profileContainer, 300);
+                    }
+                }
+            }
+        });
+
+        currentProfileTask.setOnFailed(e->{
+            if (currentProfileTask.isCancelled()) return;
+            profileProgress.setVisible(false);
+            profileContent.setOpacity(1.0);
+            handleReportFailure(currentProfileTask.getException());
+        });
+
+        new Thread(currentProfileTask, "reports-reservation-info-loader").start();
     }
 
     // ====================== Sales Reports ======================

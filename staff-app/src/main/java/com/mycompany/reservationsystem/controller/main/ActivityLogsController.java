@@ -112,7 +112,7 @@ public class ActivityLogsController {
         timestampsAL.setCellFactory(column -> new TableCell<ActivityLog, LocalDateTime>() {
 
             private final DateTimeFormatter formatter =
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
 
             @Override
             protected void updateItem(LocalDateTime item, boolean empty) {

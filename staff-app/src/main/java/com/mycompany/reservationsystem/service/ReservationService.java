@@ -303,12 +303,16 @@ public class ReservationService {
             if (idObj instanceof Number) {
                 dto.setId(((Number) idObj).longValue());
             }
+            Object refObj = map.get("reference");
+            if (refObj instanceof String) dto.setReference((String) refObj);
             Object nameObj = map.get("customerName");
             if (nameObj instanceof String) dto.setCustomerName((String) nameObj);
             Object phoneObj = map.get("customerPhone");
             if (phoneObj instanceof String) dto.setPhoneNumber((String) phoneObj);
             Object dateObj = map.get("date");
             if (dateObj instanceof String) dto.setLastVisit((String) dateObj);
+            Object timeObj = map.get("reservationPendingtime");
+            if (timeObj instanceof String) dto.setRegistrationTime((String) timeObj);
             Object revObj = map.get("sales");
             if (revObj instanceof Number) dto.setTotalSpent(((Number) revObj).doubleValue());
             Object paxObj = map.get("pax");

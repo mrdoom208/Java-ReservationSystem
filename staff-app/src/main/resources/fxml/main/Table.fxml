@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fx:id="TableManagementPane" fitToHeight="true" fitToWidth="true" prefHeight="945.0" prefViewportWidth="1158.0" prefWidth="1131.0" styleClass="Scrollpane" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.TableController">
+<ScrollPane fx:id="TableManagementPane" fitToHeight="true" fitToWidth="true" prefHeight="945.0" prefViewportWidth="1158.0" prefWidth="1131.0" styleClass="Scrollpane" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.TableController">
     <content>
         <BorderPane fx:id="tablepane" minHeight="2.0" prefHeight="1100.0" prefWidth="200.0" styleClass="DashboardPane">
             <left>

@@ -24,7 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: black;" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.SettingsController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: black;" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.SettingsController">
    <children>
       <VBox alignment="TOP_RIGHT" prefHeight="480.0" prefWidth="200.0" spacing="20.0" styleClass="plain-pane-secondary">
          <children>
@@ -314,11 +314,11 @@
                                                <RowConstraints maxHeight="-Infinity" minHeight="35.0" vgrow="SOMETIMES" />
                                            </rowConstraints>
                                            <children>
-                                              <Label alignment="CENTER" styleClass="static-label" text="SERVER URL" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
-                                              <MFXTextField fx:id="serverUrl" floatMode="BORDER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="filter-search" GridPane.columnIndex="1" />
+<Label alignment="CENTER" styleClass="static-label" text="SERVER URL" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+                                               <MFXTextField fx:id="serverUrl" floatMode="BORDER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="filter-search" GridPane.columnIndex="1" />
 
-                                              <Label alignment="CENTER" styleClass="static-label" text="WEBSITE URL" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                                              <MFXTextField fx:id="websiteUrl" floatMode="BORDER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="filter-search" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                               <Label alignment="CENTER" styleClass="static-label" text="(WebSocket is auto-derived)" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                                               <MFXTextField fx:id="websiteUrl" floatMode="BORDER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="filter-search" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                            </children>
                                         </GridPane>
                                      </children>

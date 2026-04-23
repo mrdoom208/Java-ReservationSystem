@@ -311,18 +311,34 @@ public class LoginController {
             }
 
             showSuccess("Login Successfully, Welcome Back!");
-            ActivityLogService.logAction(found.getUsername(), found.getPosition().name(), "Authentication", "Login", "User logged in");
+            buttonAnimator.updateLoadingText("Loading Dashboard...");
+            
+            // Log action in background
+            new Thread(() -> {
+                ActivityLogService.logAction(found.getUsername(), found.getPosition().name(), "Authentication", "Login", "User logged in");
+            }, "login-logger").start();
+            
             App.connectWebSocket();
 
-            try {
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/fxml/main/AdministratorUI.fxml")
-                );
-                Parent root = loader.load();
+            // Load UI in background
+            Task<Parent> loadUITask = new Task<>() {
+                @Override
+                protected Parent call() throws Exception {
+                    FXMLLoader loader = new FXMLLoader(
+                            getClass().getResource("/fxml/main/AdministratorUI.fxml")
+                    );
+                    Parent root = loader.load();
+                    
+                    AdministratorUIController adminController = loader.getController();
+                    // We must set user on UI thread because it updates labels
+                    Platform.runLater(() -> adminController.setUser(found));
+                    
+                    return root;
+                }
+            };
 
-                AdministratorUIController adminController = loader.getController();
-                adminController.setUser(found);
-
+            loadUITask.setOnSucceeded(evt -> {
+                Parent root = loadUITask.getValue();
                 Stage oldStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Scene oldScene = oldStage.getScene();
                 
@@ -350,32 +366,37 @@ public class LoginController {
                 newStage.setMaximized(true);
                 newStage.show();
 
-                FadeTransition fadeOutLogin = new FadeTransition(Duration.millis(100), oldScene.getRoot());
+                FadeTransition fadeOutLogin = new FadeTransition(Duration.millis(200), oldScene.getRoot());
                 fadeOutLogin.setFromValue(1.0);
                 fadeOutLogin.setToValue(0.0);
 
-                FadeTransition fadeInAdmin = new FadeTransition(Duration.millis(150), root);
+                FadeTransition fadeInAdmin = new FadeTransition(Duration.millis(300), root);
                 fadeInAdmin.setFromValue(0.0);
                 fadeInAdmin.setToValue(1.0);
 
-                ScaleTransition scaleInAdmin = new ScaleTransition(Duration.millis(150), root);
+                ScaleTransition scaleInAdmin = new ScaleTransition(Duration.millis(300), root);
                 scaleInAdmin.setFromX(0.95);
                 scaleInAdmin.setFromY(0.95);
                 scaleInAdmin.setToX(1.0);
                 scaleInAdmin.setToY(1.0);
 
                 SequentialTransition transition = new SequentialTransition(fadeOutLogin);
-                transition.setOnFinished(evt -> {
+                transition.setOnFinished(evt2 -> {
                     oldStage.close();
                     fadeInAdmin.play();
                     scaleInAdmin.play();
                 });
                 transition.play();
+            });
 
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            loadUITask.setOnFailed(evt -> {
+                loadUITask.getException().printStackTrace();
                 showError("Failed to load dashboard");
-            }
+                isLoggingIn = false;
+                buttonAnimator.reset();
+            });
+
+            new Thread(loadUITask, "ui-loader-task").start();
         });
 
         loginTask.setOnFailed(e -> {

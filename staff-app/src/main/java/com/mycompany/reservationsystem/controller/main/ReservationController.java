@@ -207,6 +207,10 @@ public class ReservationController {
 
     ///////////////////////LOAD MASTER LIST////////////////////////////////////////
     public void loadReservationsData() {
+        if (adminUIController != null) {
+            adminUIController.showQueryLoading("Loading reservations...");
+        }
+
         Task<List<Reservation>> task = new Task<>() {
             @Override
             protected List<Reservation> call() {
@@ -231,11 +235,18 @@ public class ReservationController {
 
             long noshowsize = reservationsData.stream().filter(r -> "No Show".equals(r.getStatus())).count();
             noshow.setText(String.valueOf(noshowsize));
+            
+            if (adminUIController != null) {
+                adminUIController.hideQueryLoading();
+            }
 
         });
 
         task.setOnFailed(e -> {
             task.getException().printStackTrace();
+            if (adminUIController != null) {
+                adminUIController.hideQueryLoading();
+            }
         });
 
         new Thread(task, "load-reservations").start();
@@ -487,12 +498,7 @@ public class ReservationController {
             TableColumn<?, ?> col = column[i];
 
             if (col == null) {
-                System.out.println("❌ NULL COLUMN at index " + i
-                        + " (expected: " + namecol[i] + ")");
-                continue; // skip this iteration so it won't throw NPE
-            } else {
-                System.out.println("✔ Column OK: index " + i
-                        + " = " + col.getText());
+                continue;
             }
 
             col.setResizable(false);
@@ -555,12 +561,7 @@ public class ReservationController {
             TableColumn<?, ?> col = column[i];
 
             if (col == null) {
-                System.out.println("❌ NULL COLUMN at index " + i
-                        + " (expected: " +")");
-                continue; // skip this iteration so it won't throw NPE
-            } else {
-                System.out.println("✔ Column OK: index " + i
-                        + " = " + col.getText());
+                continue;
             }
 
             col.setResizable(false);
@@ -624,10 +625,7 @@ public class ReservationController {
             TableColumn<?, ?> col = column[i];
 
             if (col == null) {
-                System.out.println("❌ NULL COLUMN at index " + i + " (expected: " + namecol[i] + ")");
                 continue;
-            } else {
-                System.out.println("✔ Column OK: index " + i + " = " + col.getText());
             }
 
             col.setResizable(false);

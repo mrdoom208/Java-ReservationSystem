@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<MFXScrollPane fx:id="MessagingPane" fitToHeight="true" fitToWidth="true" prefHeight="800.0" prefWidth="1131.0" style="-fx-background-color: transparent;" styleClass="Scrollpane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.MessagingController">
+<MFXScrollPane fx:id="MessagingPane" fitToHeight="true" fitToWidth="true" prefHeight="800.0" prefWidth="1131.0" style="-fx-background-color: transparent;" styleClass="Scrollpane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.MessagingController">
     <content>
         <BorderPane prefHeight="200.0" prefWidth="200.0">
             <center>
@@ -69,6 +69,7 @@
                                                 <MFXCheckbox fx:id="selectAllCustomerInfo" maxHeight="1.7976931348623157E308" styleClass="selectAll" text="Select All" />
                                                 <MFXTextField fx:id="SearchCustomerInfo" floatMode="BORDER" floatingText="Search" maxWidth="1.7976931348623157E308" prefWidth="300.0" styleClass="filter-search" HBox.hgrow="ALWAYS" />
                                     <MFXComboBox fx:id="SortCustomer" floatMode="DISABLED" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="120.0" styleClass="filter-date" text="Sort By" HBox.hgrow="ALWAYS" />
+                                                <MFXButton fx:id="refreshCustomerInfo" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleRefreshCustomerInfo" styleClass="filter-btn" text="Refresh" />
                                             </children>
                                         </HBox>
                                         <TableView fx:id="CustomerInfo" maxWidth="1.7976931348623157E308" prefHeight="200.0" styleClass="DefaultTable" VBox.vgrow="ALWAYS">

@@ -137,6 +137,12 @@ public class LoginTransition {
             button.setGraphic(loadingContainer);
         }
 
+        public void updateLoadingText(String newText) {
+            if (loadingContainer != null && loadingContainer.getChildren().get(0) instanceof Text) {
+                ((Text) loadingContainer.getChildren().get(0)).setText(newText);
+            }
+        }
+
         private void createLoadingAnimation() {
             spinner = new ProgressIndicator();
             spinner.setMaxSize(16, 16);

@@ -6,6 +6,7 @@ import com.mycompany.reservationsystem.dto.WebUpdateDTO;
 import com.mycompany.reservationsystem.util.DebugLog;
 import org.java_websocket.handshake.ServerHandshake;
 
+import javax.net.ssl.SSLContext;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -35,12 +36,37 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient {
 
     private WebSocketClient() throws URISyntaxException {
         super(new URI(getWsUrl()));
+        configureSSL();
         DebugLog.logWebSocket("INIT", "WebSocketClient created with URL: " + getWsUrl());
     }
 
     public WebSocketClient(String domain) throws URISyntaxException {
         super(new URI(domain));
+        configureSSL();
         DebugLog.logWebSocket("INIT", "WebSocketClient created with custom URL: " + domain);
+    }
+
+    private void configureSSL() {
+        try {
+            String[] tlsVersions = {"TLSv1.3", "TLSv1.2"};
+            SSLContext sslContext = null;
+            for (String tls : tlsVersions) {
+                try {
+                    sslContext = SSLContext.getInstance(tls);
+                    sslContext.init(null, null, null);
+                    DebugLog.logWebSocket("SSL", "TLS configured: " + tls);
+                    break;
+                } catch (Exception e) {
+                    DebugLog.logWebSocket("SSL", "Failed to configure " + tls + ": " + e.getMessage());
+                }
+            }
+            if (sslContext == null) {
+                throw new Exception("Failed to create SSL context");
+            }
+            setSocketFactory(sslContext.getSocketFactory());
+        } catch (Exception e) {
+            DebugLog.logError("WEBSOCKET", "Failed to configure SSL", e);
+        }
     }
 
     public static WebSocketClient getInstance() {
@@ -68,7 +94,10 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient {
     }
 
     public void connect() {
-        DebugLog.logWebSocket("CONNECT", "Attempting to connect to: " + getURI());
+        URI uri = getURI();
+        DebugLog.logWebSocket("CONNECT", "URL: " + uri);
+        DebugLog.logWebSocket("CONNECT", "Host: " + (uri != null ? uri.getHost() : "null") + ":" + (uri != null ? uri.getPort() : "null"));
+        DebugLog.logWebSocket("CONNECT", "Scheme: " + (uri != null ? uri.getScheme() : "null"));
         isManualDisconnect = false;
         reconnectAttempts = 0;
         isReconnecting = false;
@@ -222,5 +251,13 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient {
         String msg = "WebSocket Error: " + ex.getMessage();
         System.out.println(msg);
         DebugLog.logError("WEBSOCKET", msg, ex);
+        
+        String cause = ex.getCause() != null ? ex.getCause().getMessage() : "no cause";
+        DebugLog.logWebSocket("ERROR", "Cause: " + cause);
+        
+        if (ex.getMessage().contains("handshake")) {
+            DebugLog.logWebSocket("ERROR", "SSL handshake failed - check TLS compatibility");
+            DebugLog.logWebSocket("ERROR", "URL was: " + getURI());
+        }
     }
 }

@@ -1,6 +1,13 @@
 package com.mycompany.reservationsystem.dto;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 public class TableUsageInformationDTO {
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
+    private static final DateTimeFormatter PARSE_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final DateTimeFormatter PARSE_FORMATTER_SHORT = DateTimeFormatter.ofPattern("HH:mm");
+
     private Long tableId;
     private String tableNumber;
     private String date;
@@ -36,7 +43,24 @@ public class TableUsageInformationDTO {
     public int getPax() { return pax; }
     public void setPax(int pax) { this.pax = pax; }
 
-    public String getTime() { return time; }
+    public String getTime() {
+        if (time == null || time.isEmpty()) return "";
+        try {
+            String timePart = time;
+            if (timePart.contains(".")) {
+                timePart = timePart.split("\\.")[0];
+            }
+            LocalTime lt;
+            if (timePart.length() > 5) {
+                lt = LocalTime.parse(timePart, PARSE_FORMATTER);
+            } else {
+                lt = LocalTime.parse(timePart, PARSE_FORMATTER_SHORT);
+            }
+            return lt.format(TIME_FORMATTER);
+        } catch (Exception e) {
+            return time;
+        }
+    }
     public void setTime(String time) { this.time = time; }
 
     public String getDate() { return date; }

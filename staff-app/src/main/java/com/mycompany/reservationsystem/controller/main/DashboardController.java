@@ -36,6 +36,12 @@ import static com.mycompany.reservationsystem.util.TableCellFactoryUtil.applyTim
 
 @Component
 public class DashboardController {
+    private AdministratorUIController adminUIController;
+
+    public void setAdminUIController(AdministratorUIController adminUIController) {
+        this.adminUIController = adminUIController;
+    }
+
     @FXML
     private TableColumn<Reservation, String> CustomerColm;
 
@@ -109,6 +115,9 @@ public class DashboardController {
     private final ObservableList<ManageTablesDTO> manageTablesData = FXCollections.observableArrayList();
 
     public void updateLabels() {
+        if (adminUIController != null) {
+            adminUIController.showQueryLoading("Updating dashboard stats...");
+        }
 
         Task<DashboardCountsDTO> task = new Task<DashboardCountsDTO>() {
             @Override
@@ -144,14 +153,24 @@ public class DashboardController {
             Total_Cancelled.setText(String.valueOf(c.cancelled()));
             Total_Complete.setText(String.valueOf(c.completed()));
 
+            if (adminUIController != null) {
+                adminUIController.hideQueryLoading();
+            }
         });
-        task.setOnFailed(e -> task.getException().printStackTrace());
+        task.setOnFailed(e -> {
+            task.getException().printStackTrace();
+            if (adminUIController != null) {
+                adminUIController.hideQueryLoading();
+            }
+        });
         new Thread(task, "dashboard-counts").start();
-
     }
 
 
     public void barchart() {
+        if (adminUIController != null) {
+            adminUIController.showQueryLoading("Loading chart data...");
+        }
         myBarChart.getData().clear();
 
         CategoryAxis xAxis = (CategoryAxis) myBarChart.getXAxis();
@@ -206,9 +225,18 @@ public class DashboardController {
             if (dashboardTrendLabel != null) {
                 dashboardTrendLabel.setText(calculateAvgAndTrend(series));
             }
+
+            if (adminUIController != null) {
+                adminUIController.hideQueryLoading();
+            }
         });
 
-        task.setOnFailed(e -> task.getException().printStackTrace());
+        task.setOnFailed(e -> {
+            task.getException().printStackTrace();
+            if (adminUIController != null) {
+                adminUIController.hideQueryLoading();
+            }
+        });
 
         new Thread(task, "bar-chart-loader").start();
     }

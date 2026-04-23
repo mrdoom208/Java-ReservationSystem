@@ -109,6 +109,12 @@
             <version>[2.0.0,3.0.0)</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+
     </dependencies>
 
     <!-- ===================== BUILD ===================== -->
@@ -240,7 +246,7 @@
                                         <argument>${env.JAVA_HOME}\jmods</argument>
 
                                         <argument>--add-modules</argument>
-                                        <argument>javafx.controls,javafx.fxml,java.net.http</argument>
+                                        <argument>javafx.controls,javafx.fxml,java.net.http,jdk.crypto.ec,java.logging</argument>
 
                                         <argument>--app-version</argument>
                                         <argument>1.0</argument>
@@ -253,6 +259,21 @@
 
                                         <argument>--icon</argument>
                                         <argument>${project.basedir}\src\main\resources\Images\icon.ico</argument>
+
+                                        <argument>--java-options</argument>
+                                        <argument>-Dhttps.protocols=TLSv1.2,TLSv1.3</argument>
+
+                                        <argument>--java-options</argument>
+                                        <argument>-Djavax.net.ssl.trustStoreType=PKCS12</argument>
+
+                                        <argument>--java-options</argument>
+                                        <argument>-Djdk.tls.client.protocols=TLSv1.2,TLSv1.3</argument>
+
+                                        <argument>--java-options</argument>
+                                        <argument>-Djdk.tls.disabledAlgorithms=</argument>
+
+                                        <argument>--java-options</argument>
+                                        <argument>-Djdk.crypto.keygen.allowed=S</argument>
                                     </arguments>
 
                                 </configuration>
@@ -304,7 +325,7 @@
                                         <argument>${env.JAVA_HOME}\jmods</argument>
 
                                         <argument>--add-modules</argument>
-                                        <argument>javafx.controls,javafx.fxml,java.net.http</argument>
+                                        <argument>javafx.controls,javafx.fxml,java.net.http,jdk.crypto.ec,java.logging</argument>
 
                                         <argument>--app-version</argument>
                                         <argument>1.0</argument>
@@ -317,6 +338,21 @@
 
                                         <argument>--icon</argument>
                                         <argument>${project.basedir}\src\main\resources\Images\icon.ico</argument>
+
+                                        <argument>--java-options</argument>
+                                        <argument>-Dhttps.protocols=TLSv1.2,TLSv1.3</argument>
+
+                                        <argument>--java-options</argument>
+                                        <argument>-Djavax.net.ssl.trustStoreType=PKCS12</argument>
+
+                                        <argument>--java-options</argument>
+                                        <argument>-Djdk.tls.client.protocols=TLSv1.2,TLSv1.3</argument>
+
+                                        <argument>--java-options</argument>
+                                        <argument>-Djdk.tls.disabledAlgorithms=</argument>
+
+                                        <argument>--java-options</argument>
+                                        <argument>-Djdk.crypto.keygen.allowed=S</argument>
 
                                         <argument>--win-dir-chooser</argument>
                                         <argument>--win-menu</argument>

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="220.0" prefWidth="380" spacing="0" style="-fx-background-radius: 15; -fx-background-color: transparent;" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.DeleteDialogController">
+<VBox prefHeight="220.0" prefWidth="380" spacing="0" style="-fx-background-radius: 15; -fx-background-color: transparent;" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.DeleteDialogController">
 
     <!-- Red Warning Header -->
     <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #C62828;" styleClass="message-dialog-header">

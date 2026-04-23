@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.QrCodeDialogController">
+<StackPane style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.QrCodeDialogController">
    <children>
       <VBox prefHeight="450.0" prefWidth="400.0" spacing="0" style="-fx-background-color: transparent; -fx-background-radius: 15;" stylesheets="@../../css/style.css">
           <children>

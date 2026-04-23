@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="350.0" spacing="10.0" styleClass="plain-pane-third" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.setAmountPaidController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="350.0" spacing="10.0" styleClass="plain-pane-third" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.setAmountPaidController">
    <children>
       <Label styleClass="BoldText" text="Final Bill Amount" />
       <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" styleClass="popup-message-hidden" text="Enter Amount Paid" />

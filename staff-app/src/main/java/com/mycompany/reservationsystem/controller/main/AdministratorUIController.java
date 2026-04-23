@@ -263,61 +263,66 @@ public class AdministratorUIController implements Initializable {
         // Start connection status monitoring
         startConnectionStatusMonitor();
 
-        missingDetails();
+        // Run non-critical startup tasks in background
+        new Thread(() -> {
+            missingDetails();
+        }, "startup-tasks").start();
 
-        // Setup WebSocket
-        try {
-            this.wsClient = new WebSocketClient(Domain);
-            this.wsClient.addListener(webUpdateHandler);
-            this.wsClient.addListener(new WebSocketListener() {
-                @Override
-                public void onMessage(WebUpdateDTO dto) {
-                }
+        // Setup WebSocket in background
+        new Thread(() -> {
+            try {
+                this.wsClient = new WebSocketClient(Domain);
+                this.wsClient.addListener(webUpdateHandler);
+                this.wsClient.addListener(new WebSocketListener() {
+                    @Override
+                    public void onMessage(WebUpdateDTO dto) {
+                    }
 
-            @Override
-            public void onConnecting() {
-                Platform.runLater(() -> {
-                    hideInternetWarning();
-                    setInternetReconnectBlocking(false);
-                    showReconnectProgress(SERVER_CONNECTING_MESSAGE, Color.web("#7CC7FF"));
-                });
-            }
+                    @Override
+                    public void onConnecting() {
+                        Platform.runLater(() -> {
+                            hideInternetWarning();
+                            setInternetReconnectBlocking(false);
+                            showReconnectProgress(SERVER_CONNECTING_MESSAGE, Color.web("#7CC7FF"));
+                        });
+                    }
 
-            @Override
-            public void onConnected() {
-                connectionFailedShown = false;
-                Platform.runLater(() -> {
-                    hideInternetWarning();
-                    setInternetReconnectBlocking(false);
-                    showBottomMessage(SERVER_CONNECTED_MESSAGE, false, Color.web("#59D97A"));
-                    PauseTransition hideDelay = new PauseTransition(javafx.util.Duration.seconds(1));
-                    hideDelay.setOnFinished(event -> {
-                        if (SERVER_CONNECTED_MESSAGE.equals(currentBottomMessage) && !navigationLoading) {
-                            hideBottomMessage();
-                        }
-                    });
-                    hideDelay.play();
-                });
-            }
+                    @Override
+                    public void onConnected() {
+                        connectionFailedShown = false;
+                        Platform.runLater(() -> {
+                            hideInternetWarning();
+                            setInternetReconnectBlocking(false);
+                            showBottomMessage(SERVER_CONNECTED_MESSAGE, false, Color.web("#59D97A"));
+                            PauseTransition hideDelay = new PauseTransition(javafx.util.Duration.seconds(1));
+                            hideDelay.setOnFinished(event -> {
+                                if (SERVER_CONNECTED_MESSAGE.equals(currentBottomMessage) && !navigationLoading) {
+                                    hideBottomMessage();
+                                }
+                            });
+                            hideDelay.play();
+                        });
+                    }
 
-            @Override
-            public void onConnectionError(String message) {
-                Platform.runLater(() -> {
-                    hideInternetWarning();
-                    setInternetReconnectBlocking(false);
-                    
-                    if (message != null && message.contains("Max reconnect")) {
-                        showConnectionFailedPopup();
-                    } else {
-                        showReconnectProgress(SERVER_RETRYING_MESSAGE, Color.web("#FFB347"));
+                    @Override
+                    public void onConnectionError(String message) {
+                        Platform.runLater(() -> {
+                            hideInternetWarning();
+                            setInternetReconnectBlocking(false);
+                            
+                            if (message != null && message.contains("Max reconnect")) {
+                                showConnectionFailedPopup();
+                            } else {
+                                showReconnectProgress(SERVER_RETRYING_MESSAGE, Color.web("#FFB347"));
+                            }
+                        });
                     }
                 });
+                this.wsClient.connect();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
-        this.wsClient.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        }, "websocket-setup").start();
 
         // Hide progress initially
         HboxProgress.setManaged(false);
@@ -875,6 +880,10 @@ public class AdministratorUIController implements Initializable {
     }
     
     private void addNotificationItemToMenu(NotificationItem item) {
+        if (notificationContextMenu == null) {
+            createNotificationContextMenu();
+        }
+        
         MenuItem menuItem = new MenuItem();
         menuItem.setUserData(item);
         menuItem.getStyleClass().add("notification-item");

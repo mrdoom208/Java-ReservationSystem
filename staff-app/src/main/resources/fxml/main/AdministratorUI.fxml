@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane prefHeight="1000.0" prefWidth="1300.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.AdministratorUIController">
+<GridPane prefHeight="1000.0" prefWidth="1300.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.main.AdministratorUIController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="678.0" minWidth="10.0" percentWidth="13.0" prefWidth="165.0" />
       <ColumnConstraints hgrow="ALWAYS" maxWidth="1196.0" minWidth="10.0" percentWidth="87.0" />
@@ -134,7 +134,7 @@
       </GridPane>
       <VBox prefHeight="200.0" prefWidth="1112.0" styleClass="DashboardPane" GridPane.columnIndex="1">
          <children>
-             <StackPane prefHeight="55.0" prefWidth="1131.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+             <StackPane prefHeight="55.0" prefWidth="1131.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
                  <children>
                        <Label fx:id="header" alignment="CENTER" styleClass="BoldText" text="Dashboard" StackPane.alignment="CENTER_LEFT">
                            <font>

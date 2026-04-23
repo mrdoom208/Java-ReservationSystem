@@ -12,7 +12,7 @@
 <?import com.mycompany.reservationsystem.util.PhoneFormatter?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ProgressIndicator?>
-<StackPane fx:id="rootPane" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.addReservationController">
+<StackPane fx:id="rootPane" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.reservationsystem.controller.popup.addReservationController">
    <children>
       <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="350.0" spacing="10.0" styleClass="plain-pane-third" stylesheets="@../../css/style.css">
           <children>

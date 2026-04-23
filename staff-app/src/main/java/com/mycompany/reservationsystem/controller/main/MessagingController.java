@@ -58,6 +58,9 @@ public class MessagingController {
     private TextField SearchCustomerInfo,newMessageLabel;
 
     @FXML
+    private MFXButton refreshCustomerInfo;
+
+    @FXML
     private TextArea MessageDetails;
 
     @FXML
@@ -536,6 +539,11 @@ public class MessagingController {
         CustomerInfo.setItems(sortedCustomerInfo);
     }
 
+    @FXML
+    private void handleRefreshCustomerInfo() {
+        loadCustomerInformation();
+    }
+
     public void loadCustomerInformation(){
         customerInformationPage = 0;
         allDataLoaded = false;
@@ -547,6 +555,9 @@ public class MessagingController {
     }
     private void loadCustomerReportPage() {
         if (allDataLoaded) return;
+        if (adminUIController != null) {
+            adminUIController.showQueryLoading("Loading customer information...");
+        }
         Task<List<CustomerReportDTO>> task = new Task<>() {
             @Override
             protected List<CustomerReportDTO> call() {
@@ -558,14 +569,19 @@ public class MessagingController {
 
             if (results.isEmpty()) {
                 allDataLoaded = true;
+                if (adminUIController != null) adminUIController.hideQueryLoading();
                 return;
             }
 
             CustomerInformationData.addAll(results);
             customerInformationPage++; // move to next page
+            if (adminUIController != null) adminUIController.hideQueryLoading();
         });
 
-        task.setOnFailed(e -> task.getException().printStackTrace());
+        task.setOnFailed(e -> {
+            task.getException().printStackTrace();
+            if (adminUIController != null) adminUIController.hideQueryLoading();
+        });
 
         new Thread(task).start();
     }
