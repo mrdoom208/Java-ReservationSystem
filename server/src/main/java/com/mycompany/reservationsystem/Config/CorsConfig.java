@@ -1,4 +1,4 @@
-package com.mycompany.reservationsystem.config;
+package com.mycompany.reservationsystem.Config;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

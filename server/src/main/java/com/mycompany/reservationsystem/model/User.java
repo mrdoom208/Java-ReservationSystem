@@ -30,7 +30,8 @@ public class User {
     private String lastname;
     @Enumerated(EnumType.STRING)
     private Position position;
-    private String Status;
+    private String status;
+    private java.time.LocalDateTime lastActivity;
 
     public enum Position {
         ADMINISTRATOR,
@@ -71,11 +72,19 @@ public class User {
     }
 
     public String getStatus() {
-        return Status;
+        return status;
     }
 
     public void setStatus(String status) {
-        Status = status;
+        this.status = status;
+    }
+
+    public java.time.LocalDateTime getLastActivity() {
+        return lastActivity;
+    }
+
+    public void setLastActivity(java.time.LocalDateTime lastActivity) {
+        this.lastActivity = lastActivity;
     }
 
     public String getPassword() { return password; }

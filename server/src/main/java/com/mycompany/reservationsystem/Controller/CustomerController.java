@@ -1,4 +1,4 @@
-package com.mycompany.reservationsystem.rest;
+package com.mycompany.reservationsystem.Controller;
 
 import com.mycompany.reservationsystem.model.Customer;
 import com.mycompany.reservationsystem.repository.CustomerRepository;

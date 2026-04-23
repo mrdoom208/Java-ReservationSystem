@@ -1,4 +1,4 @@
-package com.mycompany.reservationsystem.rest;
+package com.mycompany.reservationsystem.Controller;
 
 import com.mycompany.reservationsystem.dto.LoginRequest;
 import com.mycompany.reservationsystem.dto.LoginResponse;
@@ -59,12 +59,24 @@ public class AuthController {
 
         HttpSession session = httpRequest.getSession(true);
         
+        user.setStatus("Active");
+        user.setLastActivity(java.time.LocalDateTime.now());
+        userRepository.save(user);
+
         return ResponseEntity.ok(new LoginResponse(true, "Login successful", 
                 user.getId(), user.getUsername(), user.getFirstname(), user.getLastname(), role));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<LoginResponse> logout(HttpServletRequest request) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+            userRepository.findByUsername(auth.getName()).ifPresent(user -> {
+                user.setStatus("Offline");
+                userRepository.save(user);
+            });
+        }
+
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();

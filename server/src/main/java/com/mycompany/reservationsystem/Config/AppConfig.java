@@ -1,4 +1,4 @@
-package com.mycompany.reservationsystem.config;
+package com.mycompany.reservationsystem.Config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

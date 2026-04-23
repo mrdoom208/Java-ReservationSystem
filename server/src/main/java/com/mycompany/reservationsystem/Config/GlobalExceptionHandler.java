@@ -1,4 +1,4 @@
-package com.mycompany.reservationsystem.config;
+package com.mycompany.reservationsystem.Config;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

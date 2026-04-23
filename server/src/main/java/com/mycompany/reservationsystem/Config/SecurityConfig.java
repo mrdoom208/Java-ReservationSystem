@@ -1,4 +1,4 @@
-package com.mycompany.reservationsystem.config;
+package com.mycompany.reservationsystem.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

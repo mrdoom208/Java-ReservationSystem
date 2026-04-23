@@ -1,4 +1,4 @@
-package com.mycompany.reservationsystem.rest;
+package com.mycompany.reservationsystem.Controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
